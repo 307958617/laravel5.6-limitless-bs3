@@ -1,6 +1,6 @@
 
 window._ = require('lodash');
-window.Popper = require('popper.js').default;
+// window.Popper = require('popper.js').default;
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -9,9 +9,11 @@ window.Popper = require('popper.js').default;
  */
 
 try {
-    window.$ = window.jQuery = require('jquery');
-
-    require('bootstrap');
+    window.$ = window.jQuery = require('../limitless/js/jquery.min');
+    require('../limitless/js/bootstrap.min');
+    require('../limitless/js/nicescroll.min'); //滚动条样式
+    require('../limitless/js/drilldown'); //下拉菜单特效
+    require('../limitless/js/layout_04');
 } catch (e) {}
 
 /**
