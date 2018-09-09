@@ -1,5 +1,13 @@
 @extends('layouts.app')
 
+@section('page-title')
+    <span class="text-semibold">Home</span>
+@endsection
+
+@section('breadcrumb')
+    {{ Breadcrumbs::render('home') }}
+@endsection
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">

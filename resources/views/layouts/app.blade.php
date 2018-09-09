@@ -39,42 +39,56 @@
 
                 <div class="navbar-collapse collapse" id="navbar-mobile">
                     <ul class="nav navbar-nav">
-                        <li><a href="#">Text link</a></li>
+                        @guest
+                        @else
+                            <li><a href="#">Text link</a></li>
 
-                        <li>
-                            <a href="#">
-                                <i class="icon-calendar3"></i>
-                                <span class="visible-xs-inline-block position-right">Icon link</span>
-                            </a>
-                        </li>
+                            <li>
+                                <a href="#">
+                                    <i class="icon-calendar3"></i>
+                                    <span class="visible-xs-inline-block position-right">Icon link</span>
+                                </a>
+                            </li>
+                        @endguest
                     </ul>
 
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="#">Text link</a></li>
+                        @guest
+                            <li><a href="{{ route('login') }}">{{ __('Login') }}</a></li>
+                            <li><a href="{{ route('register') }}">{{ __('Register') }}</a></li>
+                        @else
+                            <li><a href="#">Text link</a></li>
 
-                        <li>
-                            <a href="#">
-                                <i class="icon-cog3"></i>
-                                <span class="visible-xs-inline-block position-right">Icon link</span>
-                            </a>
-                        </li>
+                            <li>
+                                <a href="#">
+                                    <i class="icon-cog3"></i>
+                                    <span class="visible-xs-inline-block position-right">Icon link</span>
+                                </a>
+                            </li>
 
-                        <li class="dropdown dropdown-user">
-                            <a class="dropdown-toggle" data-toggle="dropdown">
-                                <img src="{{ asset('limitless/images/image.png') }}" alt="">
-                                <span>Victoria</span>
-                                <i class="caret"></i>
-                            </a>
+                            <li class="dropdown dropdown-user">
+                                <a class="dropdown-toggle" data-toggle="dropdown">
+                                    <img src="{{ asset('limitless/images/image.png') }}" alt="">
+                                    <span>{{ Auth::user()->name }}</span>
+                                    <i class="caret"></i>
+                                </a>
 
-                            <ul class="dropdown-menu dropdown-menu-right">
-                                <li><a href="#"><i class="icon-user-plus"></i> My profile</a></li>
-                                <li><a href="#"><i class="icon-coins"></i> My balance</a></li>
-                                <li><a href="#"><span class="badge badge-warning pull-right">58</span> <i class="icon-comment-discussion"></i> Messages</a></li>
-                                <li class="divider"></li>
-                                <li><a href="#"><i class="icon-cog5"></i> Account settings</a></li>
-                                <li><a href="#"><i class="icon-switch2"></i> Logout</a></li>
-                            </ul>
-                        </li>
+                                <ul class="dropdown-menu dropdown-menu-right">
+                                    <li><a href="#"><i class="icon-user-plus"></i> My profile</a></li>
+                                    <li><a href="#"><i class="icon-coins"></i> My balance</a></li>
+                                    <li><a href="#"><span class="badge badge-warning pull-right">58</span> <i class="icon-comment-discussion"></i> Messages</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="#"><i class="icon-cog5"></i> Account settings</a></li>
+                                    <li><a href="{{ route('logout') }}"
+                                           onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();"><i class="icon-switch2"></i>
+                                            {{ __('Logout') }}</a></li>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                        @csrf
+                                    </form>
+                                </ul>
+                            </li>
+                        @endguest
                     </ul>
                 </div>
             </div>
@@ -85,14 +99,18 @@
         <div class="page-header" style="">
             <div class="page-header-content">
                 <div class="page-title">
-                    <h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold">Home</span> - Dashboard</h4>
+                    <h4><i class="icon-arrow-left52 position-left"></i>
+                        @yield('page-title')
+                        {{--<span class="text-semibold">Home</span> - Dashboard--}}
+                    </h4>
                     <a class="heading-elements-toggle"><i class="icon-more"></i></a></div>
 
                 <div class="heading-elements">
-                    <ul class="breadcrumb heading-text">
-                        <li><a href="{{ route('home') }}"><i class="icon-home2 position-left"></i> Home</a></li>
-                        <li class="active">Dashboard</li>
-                    </ul>
+                    @yield('breadcrumb')
+                    {{--<ul class="breadcrumb heading-text">--}}
+                        {{--<li><a href="{{ route('home') }}"><i class="icon-home2 position-left"></i> Home</a></li>--}}
+                        {{--<li class="active">Dashboard</li>--}}
+                    {{--</ul>--}}
                 </div>
             </div>
         </div>
