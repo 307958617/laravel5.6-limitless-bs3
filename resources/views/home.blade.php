@@ -1,8 +1,10 @@
 @extends('layouts.app')
 
 @section('head')
-    <script src="{{ asset('limitless/js/plugins/ui/moment.min.js') }}" defer></script>
-    <script src="{{ asset('limitless/js/plugins/pickers/daterangepicker.js') }}" defer></script>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    {{--<link href="https://cdn.bootcss.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">--}}
+    {{--<script src="https://cdn.bootcss.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>--}}
+
 @endsection
 
 @section('page-title')
@@ -15,6 +17,6 @@
 
 @section('content')
 <div class="content">
-    <date-range-picker></date-range-picker>
+    <vue-datepicker></vue-datepicker>
 </div>
 @endsection
