@@ -1,10 +1,13 @@
 @extends('layouts.app')
 
 @section('head')
-    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
-    {{--<link href="https://cdn.bootcss.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">--}}
-    {{--<script src="https://cdn.bootcss.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>--}}
-
+    <script src="{{ asset('limitless/js/datatables.min.js') }}" defer></script>
+    <script src="{{ asset('limitless/js/select2.min.js') }}" defer></script>
+    <script src="{{ asset('limitless/js/jszip.min.js') }}" defer></script>
+    <script src="{{ asset('limitless/js/pdfmake.min.js') }}" defer></script>
+    <script src="{{ asset('limitless/js/vfs_fonts.min.js') }}" defer></script>
+    <script src="{{ asset('limitless/js/buttons.min.js') }}" defer></script>
+    <script src="{{ asset('limitless/js/select.min.js') }}" defer></script>
 @endsection
 
 @section('page-title')
@@ -18,5 +21,6 @@
 @section('content')
 <div class="content">
     <vue-datepicker></vue-datepicker>
+    <data-tables></data-tables>
 </div>
 @endsection

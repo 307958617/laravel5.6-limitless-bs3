@@ -377,33 +377,6 @@ module.exports = {
 /* 1 */
 /***/ (function(module, exports) {
 
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports) {
-
 /* globals __VUE_SSR_CONTEXT__ */
 
 // IMPORTANT: Do NOT use ES2015 features in this file.
@@ -507,6 +480,33 @@ module.exports = function normalizeComponent (
     options: options
   }
 }
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
 
 
 /***/ }),
@@ -11785,7 +11785,7 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(15);
-module.exports = __webpack_require__(66);
+module.exports = __webpack_require__(69);
 
 
 /***/ }),
@@ -11811,6 +11811,7 @@ window.Vue = __webpack_require__(43);
 
 Vue.component('example-component', __webpack_require__(46));
 Vue.component('vue-datepicker', __webpack_require__(49));
+Vue.component('data-tables', __webpack_require__(66));
 
 var app = new Vue({
   el: '#app'
@@ -28990,7 +28991,7 @@ if (token) {
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(6)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(6)(module)))
 
 /***/ }),
 /* 18 */
@@ -45524,7 +45525,7 @@ Vue.compile = compileToFunctions;
 
 module.exports = Vue;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(44).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(44).setImmediate))
 
 /***/ }),
 /* 44 */
@@ -45594,7 +45595,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
                          (typeof global !== "undefined" && global.clearImmediate) ||
                          (this && this.clearImmediate);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
 /* 45 */
@@ -45787,14 +45788,14 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
     attachTo.clearImmediate = clearImmediate;
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(9)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(9)))
 
 /***/ }),
 /* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(2)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(47)
 /* template */
@@ -45917,7 +45918,7 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(50)
 }
-var normalizeComponent = __webpack_require__(2)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(53)
 /* template */
@@ -46151,7 +46152,7 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(56)
 }
-var normalizeComponent = __webpack_require__(2)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(58)
 /* template */
@@ -46437,7 +46438,7 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(60)
 }
-var normalizeComponent = __webpack_require__(2)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(62)
 /* template */
@@ -47658,6 +47659,636 @@ if (false) {
 
 /***/ }),
 /* 66 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(67)
+/* template */
+var __vue_template__ = __webpack_require__(68)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/DataTables.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-7acd90a6", Component.options)
+  } else {
+    hotAPI.reload("data-v-7acd90a6", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 67 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    mounted: function mounted() {
+        console.log('Component mounted.');
+        this.tableSetup();
+    },
+
+    methods: {
+        tableSetup: function tableSetup() {
+            $(function () {
+                // Setting datatable defaults
+                $.extend($.fn.dataTable.defaults, {
+                    autoWidth: false,
+                    dom: '<"datatable-header"fBl><"datatable-scroll-wrap"t><"datatable-footer"ip>',
+                    language: {
+                        search: '<span>Filter:</span> _INPUT_',
+                        searchPlaceholder: 'Type to filter...',
+                        info: "第 _PAGE_ 页 / 总 _PAGES_ 页，共 _TOTAL_ 条数据",
+                        sInfoFiltered: "(从 _MAX_ 条记录中过滤)",
+                        zeroRecords: "没有找到记录",
+                        infoEmpty: "无记录",
+                        lengthMenu: '<span>Show:</span> _MENU_',
+                        select: { rows: " , %d 条记录被选中" },
+                        paginate: { 'first': 'First', 'last': 'Last', 'next': $('html').attr('dir') == 'rtl' ? '&larr;' : '&rarr;', 'previous': $('html').attr('dir') == 'rtl' ? '&rarr;' : '&larr;' }
+                    }
+                });
+                // Column selectors
+                $('.datatable-button-html5-columns').DataTable({
+                    buttons: {
+                        buttons: [{
+                            extend: 'copyHtml5',
+                            className: 'btn btn-default',
+                            exportOptions: {
+                                columns: [0, ':visible']
+                            }
+                        }, {
+                            extend: 'excelHtml5',
+                            className: 'btn btn-default',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        }, {
+                            extend: 'pdfHtml5',
+                            className: 'btn btn-default',
+                            exportOptions: {
+                                columns: [0, 1, 2, 5]
+                            }
+                        }, {
+                            extend: 'colvis',
+                            text: '<i class="icon-three-bars"></i> <span class="caret"></span>',
+                            className: 'btn bg-blue btn-icon'
+                        }]
+                    },
+                    select: true
+                });
+
+                // Enable Select2 select for the length option
+                $('.dataTables_length select').select2({
+                    minimumResultsForSearch: Infinity,
+                    width: 'auto'
+                });
+            });
+        }
+    }
+});
+
+/***/ }),
+/* 68 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "panel panel-flat" }, [
+      _c("div", { staticClass: "panel-heading" }, [
+        _c("h5", { staticClass: "panel-title" }, [_vm._v("Columns selectors")]),
+        _vm._v(" "),
+        _c("div", { staticClass: "heading-elements" }, [
+          _c("ul", { staticClass: "icons-list" }, [
+            _c("li", [_c("a", { attrs: { "data-action": "collapse" } })]),
+            _vm._v(" "),
+            _c("li", [_c("a", { attrs: { "data-action": "reload" } })]),
+            _vm._v(" "),
+            _c("li", [_c("a", { attrs: { "data-action": "close" } })])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "panel-body" }, [
+        _vm._v("\n        All of the data export buttons have a "),
+        _c("code", [_vm._v("exportOptions")]),
+        _vm._v(
+          " option which can be used to specify information about what data should be exported and how. In this example the copy button will export column index 0 and all visible columns, the Excel button will export only the visible columns and the PDF button will export column indexes 0, 1, 2 and 5 only. Column visibility controls are also included so you can change the columns easily.\n    "
+        )
+      ]),
+      _vm._v(" "),
+      _c("table", { staticClass: "table datatable-button-html5-columns" }, [
+        _c("thead", [
+          _c("tr", [
+            _c("th", [_vm._v("First Name")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Last Name")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Job Title")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("DOB")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Status")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Salary")])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("tbody", [
+          _c("tr", [
+            _c("td", [_vm._v("Marth")]),
+            _vm._v(" "),
+            _c("td", [_c("a", { attrs: { href: "#" } }, [_vm._v("Enright")])]),
+            _vm._v(" "),
+            _c("td", [_vm._v("Traffic Court Referee")]),
+            _vm._v(" "),
+            _c("td", [_vm._v("22 Jun 1972")]),
+            _vm._v(" "),
+            _c("td", [
+              _c("span", { staticClass: "label label-success" }, [
+                _vm._v("Active")
+              ])
+            ]),
+            _vm._v(" "),
+            _c("td", [_vm._v("$85,600")])
+          ]),
+          _vm._v(" "),
+          _c("tr", [
+            _c("td", [_vm._v("Jackelyn")]),
+            _vm._v(" "),
+            _c("td", [_vm._v("Weible")]),
+            _vm._v(" "),
+            _c("td", [
+              _c("a", { attrs: { href: "#" } }, [
+                _vm._v("Airline Transport Pilot")
+              ])
+            ]),
+            _vm._v(" "),
+            _c("td", [_vm._v("3 Oct 1981")]),
+            _vm._v(" "),
+            _c("td", [
+              _c("span", { staticClass: "label label-default" }, [
+                _vm._v("Inactive")
+              ])
+            ]),
+            _vm._v(" "),
+            _c("td", [_vm._v("$106,450")])
+          ]),
+          _vm._v(" "),
+          _c("tr", [
+            _c("td", [_vm._v("Aura")]),
+            _vm._v(" "),
+            _c("td", [_vm._v("Hard")]),
+            _vm._v(" "),
+            _c("td", [_vm._v("Business Services Sales Representative")]),
+            _vm._v(" "),
+            _c("td", [_vm._v("19 Apr 1969")]),
+            _vm._v(" "),
+            _c("td", [
+              _c("span", { staticClass: "label label-danger" }, [
+                _vm._v("Suspended")
+              ])
+            ]),
+            _vm._v(" "),
+            _c("td", [_vm._v("$237,500")])
+          ]),
+          _vm._v(" "),
+          _c("tr", [
+            _c("td", [_vm._v("Nathalie")]),
+            _vm._v(" "),
+            _c("td", [_c("a", { attrs: { href: "#" } }, [_vm._v("Pretty")])]),
+            _vm._v(" "),
+            _c("td", [_vm._v("Drywall Stripper")]),
+            _vm._v(" "),
+            _c("td", [_vm._v("13 Dec 1977")]),
+            _vm._v(" "),
+            _c("td", [
+              _c("span", { staticClass: "label label-info" }, [
+                _vm._v("Pending")
+              ])
+            ]),
+            _vm._v(" "),
+            _c("td", [_vm._v("$198,500")])
+          ]),
+          _vm._v(" "),
+          _c("tr", [
+            _c("td", [_vm._v("Sharan")]),
+            _vm._v(" "),
+            _c("td", [_vm._v("Leland")]),
+            _vm._v(" "),
+            _c("td", [_vm._v("Aviation Tactical Readiness Officer")]),
+            _vm._v(" "),
+            _c("td", [_vm._v("30 Dec 1991")]),
+            _vm._v(" "),
+            _c("td", [
+              _c("span", { staticClass: "label label-default" }, [
+                _vm._v("Inactive")
+              ])
+            ]),
+            _vm._v(" "),
+            _c("td", [_vm._v("$470,600")])
+          ]),
+          _vm._v(" "),
+          _c("tr", [
+            _c("td", [_vm._v("Maxine")]),
+            _vm._v(" "),
+            _c("td", [_c("a", { attrs: { href: "#" } }, [_vm._v("Woldt")])]),
+            _vm._v(" "),
+            _c("td", [
+              _c("a", { attrs: { href: "#" } }, [
+                _vm._v("Business Services Sales Representative")
+              ])
+            ]),
+            _vm._v(" "),
+            _c("td", [_vm._v("17 Oct 1987")]),
+            _vm._v(" "),
+            _c("td", [
+              _c("span", { staticClass: "label label-info" }, [
+                _vm._v("Pending")
+              ])
+            ]),
+            _vm._v(" "),
+            _c("td", [_vm._v("$90,560")])
+          ]),
+          _vm._v(" "),
+          _c("tr", [
+            _c("td", [_vm._v("Sylvia")]),
+            _vm._v(" "),
+            _c("td", [_c("a", { attrs: { href: "#" } }, [_vm._v("Mcgaughy")])]),
+            _vm._v(" "),
+            _c("td", [_vm._v("Hemodialysis Technician")]),
+            _vm._v(" "),
+            _c("td", [_vm._v("11 Nov 1983")]),
+            _vm._v(" "),
+            _c("td", [
+              _c("span", { staticClass: "label label-danger" }, [
+                _vm._v("Suspended")
+              ])
+            ]),
+            _vm._v(" "),
+            _c("td", [_vm._v("$103,600")])
+          ]),
+          _vm._v(" "),
+          _c("tr", [
+            _c("td", [_vm._v("Lizzee")]),
+            _vm._v(" "),
+            _c("td", [_c("a", { attrs: { href: "#" } }, [_vm._v("Goodlow")])]),
+            _vm._v(" "),
+            _c("td", [_vm._v("Technical Services Librarian")]),
+            _vm._v(" "),
+            _c("td", [_vm._v("1 Nov 1961")]),
+            _vm._v(" "),
+            _c("td", [
+              _c("span", { staticClass: "label label-danger" }, [
+                _vm._v("Suspended")
+              ])
+            ]),
+            _vm._v(" "),
+            _c("td", [_vm._v("$205,500")])
+          ]),
+          _vm._v(" "),
+          _c("tr", [
+            _c("td", [_vm._v("Kennedy")]),
+            _vm._v(" "),
+            _c("td", [_vm._v("Haley")]),
+            _vm._v(" "),
+            _c("td", [_vm._v("Senior Marketing Designer")]),
+            _vm._v(" "),
+            _c("td", [_vm._v("18 Dec 1960")]),
+            _vm._v(" "),
+            _c("td", [
+              _c("span", { staticClass: "label label-success" }, [
+                _vm._v("Active")
+              ])
+            ]),
+            _vm._v(" "),
+            _c("td", [_vm._v("$137,500")])
+          ]),
+          _vm._v(" "),
+          _c("tr", [
+            _c("td", [_vm._v("Chantal")]),
+            _vm._v(" "),
+            _c("td", [_c("a", { attrs: { href: "#" } }, [_vm._v("Nailor")])]),
+            _vm._v(" "),
+            _c("td", [_vm._v("Technical Services Librarian")]),
+            _vm._v(" "),
+            _c("td", [_vm._v("10 Jan 1980")]),
+            _vm._v(" "),
+            _c("td", [
+              _c("span", { staticClass: "label label-default" }, [
+                _vm._v("Inactive")
+              ])
+            ]),
+            _vm._v(" "),
+            _c("td", [_vm._v("$372,000")])
+          ]),
+          _vm._v(" "),
+          _c("tr", [
+            _c("td", [_vm._v("Delma")]),
+            _vm._v(" "),
+            _c("td", [_vm._v("Bonds")]),
+            _vm._v(" "),
+            _c("td", [_vm._v("Lead Brand Manager")]),
+            _vm._v(" "),
+            _c("td", [_vm._v("21 Dec 1968")]),
+            _vm._v(" "),
+            _c("td", [
+              _c("span", { staticClass: "label label-info" }, [
+                _vm._v("Pending")
+              ])
+            ]),
+            _vm._v(" "),
+            _c("td", [_vm._v("$162,700")])
+          ]),
+          _vm._v(" "),
+          _c("tr", [
+            _c("td", [_vm._v("Roland")]),
+            _vm._v(" "),
+            _c("td", [_vm._v("Salmos")]),
+            _vm._v(" "),
+            _c("td", [
+              _c("a", { attrs: { href: "#" } }, [
+                _vm._v("Senior Program Developer")
+              ])
+            ]),
+            _vm._v(" "),
+            _c("td", [_vm._v("5 Jun 1986")]),
+            _vm._v(" "),
+            _c("td", [
+              _c("span", { staticClass: "label label-default" }, [
+                _vm._v("Inactive")
+              ])
+            ]),
+            _vm._v(" "),
+            _c("td", [_vm._v("$433,060")])
+          ]),
+          _vm._v(" "),
+          _c("tr", [
+            _c("td", [_vm._v("Coy")]),
+            _vm._v(" "),
+            _c("td", [_vm._v("Wollard")]),
+            _vm._v(" "),
+            _c("td", [_vm._v("Customer Service Operator")]),
+            _vm._v(" "),
+            _c("td", [_vm._v("12 Oct 1982")]),
+            _vm._v(" "),
+            _c("td", [
+              _c("span", { staticClass: "label label-success" }, [
+                _vm._v("Active")
+              ])
+            ]),
+            _vm._v(" "),
+            _c("td", [_vm._v("$86,000")])
+          ]),
+          _vm._v(" "),
+          _c("tr", [
+            _c("td", [_vm._v("Maxwell")]),
+            _vm._v(" "),
+            _c("td", [_vm._v("Maben")]),
+            _vm._v(" "),
+            _c("td", [_vm._v("Regional Representative")]),
+            _vm._v(" "),
+            _c("td", [_vm._v("25 Feb 1988")]),
+            _vm._v(" "),
+            _c("td", [
+              _c("span", { staticClass: "label label-danger" }, [
+                _vm._v("Suspended")
+              ])
+            ]),
+            _vm._v(" "),
+            _c("td", [_vm._v("$130,500")])
+          ]),
+          _vm._v(" "),
+          _c("tr", [
+            _c("td", [_vm._v("Cicely")]),
+            _vm._v(" "),
+            _c("td", [_vm._v("Sigler")]),
+            _vm._v(" "),
+            _c("td", [
+              _c("a", { attrs: { href: "#" } }, [
+                _vm._v("Senior Research Officer")
+              ])
+            ]),
+            _vm._v(" "),
+            _c("td", [_vm._v("15 Mar 1960")]),
+            _vm._v(" "),
+            _c("td", [
+              _c("span", { staticClass: "label label-info" }, [
+                _vm._v("Pending")
+              ])
+            ]),
+            _vm._v(" "),
+            _c("td", [_vm._v("$159,000")])
+          ])
+        ])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-7acd90a6", module.exports)
+  }
+}
+
+/***/ }),
+/* 69 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

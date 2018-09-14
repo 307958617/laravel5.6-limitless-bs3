@@ -17,6 +17,7 @@ window.Vue = require('vue');
 
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
 Vue.component('vue-datepicker', require('./components/VueDatePicker.vue'));
+Vue.component('data-tables', require('./components/DataTables.vue'));
 
 const app = new Vue({
     el: '#app'
