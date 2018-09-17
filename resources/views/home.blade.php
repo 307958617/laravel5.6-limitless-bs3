@@ -8,6 +8,8 @@
     <script src="{{ asset('limitless/js/vfs_fonts.min.js') }}" defer></script>
     <script src="{{ asset('limitless/js/buttons.min.js') }}" defer></script>
     <script src="{{ asset('limitless/js/select.min.js') }}" defer></script>
+    <script src="{{ asset('limitless/js/col_reorder.min.js') }}" defer></script>
+    <script src="{{ asset('limitless/js/row_reorder.min.js') }}" defer></script>
 @endsection
 
 @section('page-title')

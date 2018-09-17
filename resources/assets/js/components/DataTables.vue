@@ -166,6 +166,8 @@
                     // Setting datatable defaults
                     $.extend( $.fn.dataTable.defaults, {
                         autoWidth: false,
+                        colReorder: true,
+                        rowReorder: true,
                         dom: '<"datatable-header"fBl><"datatable-scroll-wrap"t><"datatable-footer"ip>',
                         language: {
                             search: '<span>Filter:</span> _INPUT_',
@@ -211,6 +213,9 @@
                                 }
                             ]
                         },
+                        columnDefs: [
+                            { targets: 0, visible: false }
+                        ],
                         select: true
                     });
 
