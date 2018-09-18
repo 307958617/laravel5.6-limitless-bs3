@@ -19,6 +19,7 @@
         <table class="table datatable-button-html5-columns">
             <thead>
             <tr>
+                <th>#</th>
                 <th>First Name</th>
                 <th>Last Name</th>
                 <th>Job Title</th>
@@ -29,6 +30,7 @@
             </thead>
             <tbody>
             <tr>
+                <td></td>
                 <td>Marth</td>
                 <td><a href="#">Enright</a></td>
                 <td>Traffic Court Referee</td>
@@ -37,6 +39,7 @@
                 <td>$85,600</td>
             </tr>
             <tr>
+                <td></td>
                 <td>Jackelyn</td>
                 <td>Weible</td>
                 <td><a href="#">Airline Transport Pilot</a></td>
@@ -45,6 +48,7 @@
                 <td>$106,450</td>
             </tr>
             <tr>
+                <td></td>
                 <td>Aura</td>
                 <td>Hard</td>
                 <td>Business Services Sales Representative</td>
@@ -53,6 +57,7 @@
                 <td>$237,500</td>
             </tr>
             <tr>
+                <td></td>
                 <td>Nathalie</td>
                 <td><a href="#">Pretty</a></td>
                 <td>Drywall Stripper</td>
@@ -61,6 +66,7 @@
                 <td>$198,500</td>
             </tr>
             <tr>
+                <td></td>
                 <td>Sharan</td>
                 <td>Leland</td>
                 <td>Aviation Tactical Readiness Officer</td>
@@ -69,6 +75,7 @@
                 <td>$470,600</td>
             </tr>
             <tr>
+                <td></td>
                 <td>Maxine</td>
                 <td><a href="#">Woldt</a></td>
                 <td><a href="#">Business Services Sales Representative</a></td>
@@ -77,6 +84,7 @@
                 <td>$90,560</td>
             </tr>
             <tr>
+                <td></td>
                 <td>Sylvia</td>
                 <td><a href="#">Mcgaughy</a></td>
                 <td>Hemodialysis Technician</td>
@@ -85,6 +93,7 @@
                 <td>$103,600</td>
             </tr>
             <tr>
+                <td></td>
                 <td>Lizzee</td>
                 <td><a href="#">Goodlow</a></td>
                 <td>Technical Services Librarian</td>
@@ -93,6 +102,7 @@
                 <td>$205,500</td>
             </tr>
             <tr>
+                <td></td>
                 <td>Kennedy</td>
                 <td>Haley</td>
                 <td>Senior Marketing Designer</td>
@@ -101,6 +111,7 @@
                 <td>$137,500</td>
             </tr>
             <tr>
+                <td></td>
                 <td>Chantal</td>
                 <td><a href="#">Nailor</a></td>
                 <td>Technical Services Librarian</td>
@@ -109,6 +120,7 @@
                 <td>$372,000</td>
             </tr>
             <tr>
+                <td></td>
                 <td>Delma</td>
                 <td>Bonds</td>
                 <td>Lead Brand Manager</td>
@@ -117,6 +129,7 @@
                 <td>$162,700</td>
             </tr>
             <tr>
+                <td></td>
                 <td>Roland</td>
                 <td>Salmos</td>
                 <td><a href="#">Senior Program Developer</a></td>
@@ -125,6 +138,7 @@
                 <td>$433,060</td>
             </tr>
             <tr>
+                <td></td>
                 <td>Coy</td>
                 <td>Wollard</td>
                 <td>Customer Service Operator</td>
@@ -133,6 +147,7 @@
                 <td>$86,000</td>
             </tr>
             <tr>
+                <td></td>
                 <td>Maxwell</td>
                 <td>Maben</td>
                 <td>Regional Representative</td>
@@ -141,6 +156,7 @@
                 <td>$130,500</td>
             </tr>
             <tr>
+                <td></td>
                 <td>Cicely</td>
                 <td>Sigler</td>
                 <td><a href="#">Senior Research Officer</a></td>
@@ -182,7 +198,7 @@
                         }
                     });
                     // Column selectors
-                    $('.datatable-button-html5-columns').DataTable({
+                    let t = $('.datatable-button-html5-columns').DataTable({
                         buttons: {
                             buttons: [
                                 {
@@ -214,10 +230,24 @@
                             ]
                         },
                         columnDefs: [
-                            { targets: 0, visible: false }
+                            {
+                                "searchable": false,
+                                "orderable": false,
+                                "targets": 0
+                            }
                         ],
                         select: true
                     });
+                    //添加索引列
+                    t.on('order.dt search.dt',
+                        function() {
+                            t.column(0, {
+//                                search: 'applied',
+//                                order: 'applied'
+                            }).nodes().each(function(cell, i) {
+                                cell.innerHTML = i + 1;
+                            });
+                        }).draw();
 
                     // Enable Select2 select for the length option
                     $('.dataTables_length select').select2({

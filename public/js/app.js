@@ -47866,6 +47866,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     mounted: function mounted() {
@@ -47895,7 +47911,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     }
                 });
                 // Column selectors
-                $('.datatable-button-html5-columns').DataTable({
+                var t = $('.datatable-button-html5-columns').DataTable({
                     buttons: {
                         buttons: [{
                             extend: 'copyHtml5',
@@ -47921,9 +47937,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                             className: 'btn bg-blue btn-icon'
                         }]
                     },
-                    columnDefs: [{ targets: 0, visible: false }],
+                    columnDefs: [{
+                        "searchable": false,
+                        "orderable": false,
+                        "targets": 0
+                    }],
                     select: true
                 });
+                //添加索引列
+                t.on('order.dt search.dt', function () {
+                    t.column(0, {
+                        //                                search: 'applied',
+                        //                                order: 'applied'
+                    }).nodes().each(function (cell, i) {
+                        cell.innerHTML = i + 1;
+                    });
+                }).draw();
 
                 // Enable Select2 select for the length option
                 $('.dataTables_length select').select2({
@@ -47976,6 +48005,8 @@ var staticRenderFns = [
       _c("table", { staticClass: "table datatable-button-html5-columns" }, [
         _c("thead", [
           _c("tr", [
+            _c("th", [_vm._v("#")]),
+            _vm._v(" "),
             _c("th", [_vm._v("First Name")]),
             _vm._v(" "),
             _c("th", [_vm._v("Last Name")]),
@@ -47992,6 +48023,8 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("tbody", [
           _c("tr", [
+            _c("td"),
+            _vm._v(" "),
             _c("td", [_vm._v("Marth")]),
             _vm._v(" "),
             _c("td", [_c("a", { attrs: { href: "#" } }, [_vm._v("Enright")])]),
@@ -48010,6 +48043,8 @@ var staticRenderFns = [
           ]),
           _vm._v(" "),
           _c("tr", [
+            _c("td"),
+            _vm._v(" "),
             _c("td", [_vm._v("Jackelyn")]),
             _vm._v(" "),
             _c("td", [_vm._v("Weible")]),
@@ -48032,6 +48067,8 @@ var staticRenderFns = [
           ]),
           _vm._v(" "),
           _c("tr", [
+            _c("td"),
+            _vm._v(" "),
             _c("td", [_vm._v("Aura")]),
             _vm._v(" "),
             _c("td", [_vm._v("Hard")]),
@@ -48050,6 +48087,8 @@ var staticRenderFns = [
           ]),
           _vm._v(" "),
           _c("tr", [
+            _c("td"),
+            _vm._v(" "),
             _c("td", [_vm._v("Nathalie")]),
             _vm._v(" "),
             _c("td", [_c("a", { attrs: { href: "#" } }, [_vm._v("Pretty")])]),
@@ -48068,6 +48107,8 @@ var staticRenderFns = [
           ]),
           _vm._v(" "),
           _c("tr", [
+            _c("td"),
+            _vm._v(" "),
             _c("td", [_vm._v("Sharan")]),
             _vm._v(" "),
             _c("td", [_vm._v("Leland")]),
@@ -48086,6 +48127,8 @@ var staticRenderFns = [
           ]),
           _vm._v(" "),
           _c("tr", [
+            _c("td"),
+            _vm._v(" "),
             _c("td", [_vm._v("Maxine")]),
             _vm._v(" "),
             _c("td", [_c("a", { attrs: { href: "#" } }, [_vm._v("Woldt")])]),
@@ -48108,6 +48151,8 @@ var staticRenderFns = [
           ]),
           _vm._v(" "),
           _c("tr", [
+            _c("td"),
+            _vm._v(" "),
             _c("td", [_vm._v("Sylvia")]),
             _vm._v(" "),
             _c("td", [_c("a", { attrs: { href: "#" } }, [_vm._v("Mcgaughy")])]),
@@ -48126,6 +48171,8 @@ var staticRenderFns = [
           ]),
           _vm._v(" "),
           _c("tr", [
+            _c("td"),
+            _vm._v(" "),
             _c("td", [_vm._v("Lizzee")]),
             _vm._v(" "),
             _c("td", [_c("a", { attrs: { href: "#" } }, [_vm._v("Goodlow")])]),
@@ -48144,6 +48191,8 @@ var staticRenderFns = [
           ]),
           _vm._v(" "),
           _c("tr", [
+            _c("td"),
+            _vm._v(" "),
             _c("td", [_vm._v("Kennedy")]),
             _vm._v(" "),
             _c("td", [_vm._v("Haley")]),
@@ -48162,6 +48211,8 @@ var staticRenderFns = [
           ]),
           _vm._v(" "),
           _c("tr", [
+            _c("td"),
+            _vm._v(" "),
             _c("td", [_vm._v("Chantal")]),
             _vm._v(" "),
             _c("td", [_c("a", { attrs: { href: "#" } }, [_vm._v("Nailor")])]),
@@ -48180,6 +48231,8 @@ var staticRenderFns = [
           ]),
           _vm._v(" "),
           _c("tr", [
+            _c("td"),
+            _vm._v(" "),
             _c("td", [_vm._v("Delma")]),
             _vm._v(" "),
             _c("td", [_vm._v("Bonds")]),
@@ -48198,6 +48251,8 @@ var staticRenderFns = [
           ]),
           _vm._v(" "),
           _c("tr", [
+            _c("td"),
+            _vm._v(" "),
             _c("td", [_vm._v("Roland")]),
             _vm._v(" "),
             _c("td", [_vm._v("Salmos")]),
@@ -48220,6 +48275,8 @@ var staticRenderFns = [
           ]),
           _vm._v(" "),
           _c("tr", [
+            _c("td"),
+            _vm._v(" "),
             _c("td", [_vm._v("Coy")]),
             _vm._v(" "),
             _c("td", [_vm._v("Wollard")]),
@@ -48238,6 +48295,8 @@ var staticRenderFns = [
           ]),
           _vm._v(" "),
           _c("tr", [
+            _c("td"),
+            _vm._v(" "),
             _c("td", [_vm._v("Maxwell")]),
             _vm._v(" "),
             _c("td", [_vm._v("Maben")]),
@@ -48256,6 +48315,8 @@ var staticRenderFns = [
           ]),
           _vm._v(" "),
           _c("tr", [
+            _c("td"),
+            _vm._v(" "),
             _c("td", [_vm._v("Cicely")]),
             _vm._v(" "),
             _c("td", [_vm._v("Sigler")]),
