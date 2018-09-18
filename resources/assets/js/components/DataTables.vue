@@ -19,7 +19,7 @@
         <table class="table datatable-button-html5-columns">
             <thead>
             <tr>
-                <th>#</th>
+                <th>NO.</th>
                 <th>First Name</th>
                 <th>Last Name</th>
                 <th>Job Title</th>
@@ -30,7 +30,7 @@
             </thead>
             <tbody>
             <tr>
-                <td></td>
+                <td>1</td>
                 <td>Marth</td>
                 <td><a href="#">Enright</a></td>
                 <td>Traffic Court Referee</td>
@@ -39,7 +39,7 @@
                 <td>$85,600</td>
             </tr>
             <tr>
-                <td></td>
+                <td>2</td>
                 <td>Jackelyn</td>
                 <td>Weible</td>
                 <td><a href="#">Airline Transport Pilot</a></td>
@@ -48,7 +48,7 @@
                 <td>$106,450</td>
             </tr>
             <tr>
-                <td></td>
+                <td>3</td>
                 <td>Aura</td>
                 <td>Hard</td>
                 <td>Business Services Sales Representative</td>
@@ -57,7 +57,7 @@
                 <td>$237,500</td>
             </tr>
             <tr>
-                <td></td>
+                <td>4</td>
                 <td>Nathalie</td>
                 <td><a href="#">Pretty</a></td>
                 <td>Drywall Stripper</td>
@@ -66,7 +66,7 @@
                 <td>$198,500</td>
             </tr>
             <tr>
-                <td></td>
+                <td>5</td>
                 <td>Sharan</td>
                 <td>Leland</td>
                 <td>Aviation Tactical Readiness Officer</td>
@@ -75,7 +75,7 @@
                 <td>$470,600</td>
             </tr>
             <tr>
-                <td></td>
+                <td>6</td>
                 <td>Maxine</td>
                 <td><a href="#">Woldt</a></td>
                 <td><a href="#">Business Services Sales Representative</a></td>
@@ -84,7 +84,7 @@
                 <td>$90,560</td>
             </tr>
             <tr>
-                <td></td>
+                <td>7</td>
                 <td>Sylvia</td>
                 <td><a href="#">Mcgaughy</a></td>
                 <td>Hemodialysis Technician</td>
@@ -93,7 +93,7 @@
                 <td>$103,600</td>
             </tr>
             <tr>
-                <td></td>
+                <td>8</td>
                 <td>Lizzee</td>
                 <td><a href="#">Goodlow</a></td>
                 <td>Technical Services Librarian</td>
@@ -102,7 +102,7 @@
                 <td>$205,500</td>
             </tr>
             <tr>
-                <td></td>
+                <td>9</td>
                 <td>Kennedy</td>
                 <td>Haley</td>
                 <td>Senior Marketing Designer</td>
@@ -111,7 +111,7 @@
                 <td>$137,500</td>
             </tr>
             <tr>
-                <td></td>
+                <td>10</td>
                 <td>Chantal</td>
                 <td><a href="#">Nailor</a></td>
                 <td>Technical Services Librarian</td>
@@ -120,7 +120,7 @@
                 <td>$372,000</td>
             </tr>
             <tr>
-                <td></td>
+                <td>11</td>
                 <td>Delma</td>
                 <td>Bonds</td>
                 <td>Lead Brand Manager</td>
@@ -129,7 +129,7 @@
                 <td>$162,700</td>
             </tr>
             <tr>
-                <td></td>
+                <td>12</td>
                 <td>Roland</td>
                 <td>Salmos</td>
                 <td><a href="#">Senior Program Developer</a></td>
@@ -138,7 +138,7 @@
                 <td>$433,060</td>
             </tr>
             <tr>
-                <td></td>
+                <td>13</td>
                 <td>Coy</td>
                 <td>Wollard</td>
                 <td>Customer Service Operator</td>
@@ -147,7 +147,7 @@
                 <td>$86,000</td>
             </tr>
             <tr>
-                <td></td>
+                <td>14</td>
                 <td>Maxwell</td>
                 <td>Maben</td>
                 <td>Regional Representative</td>
@@ -156,7 +156,7 @@
                 <td>$130,500</td>
             </tr>
             <tr>
-                <td></td>
+                <td>15</td>
                 <td>Cicely</td>
                 <td>Sigler</td>
                 <td><a href="#">Senior Research Officer</a></td>
@@ -229,21 +229,18 @@
                                 }
                             ]
                         },
-                        columnDefs: [
-                            {
-                                "searchable": false,
-                                "orderable": false,
-                                "targets": 0
-                            }
-                        ],
-                        select: true
+                        select: true,
+//                        columnDefs: [{
+//                            visible: false,//不显示第一列
+//                            targets: 0
+//                        }],
                     });
-                    //添加索引列
+                    //添加索引列,注意：如果要使拖拽排序看起来比较正常，那么必须让索引列这一栏生成递增的数据，即<td></td>中间必须生成数字
                     t.on('order.dt search.dt',
                         function() {
                             t.column(0, {
-//                                search: 'applied',
-//                                order: 'applied'
+                                search: 'applied',
+                                order: 'applied'
                             }).nodes().each(function(cell, i) {
                                 cell.innerHTML = i + 1;
                             });
