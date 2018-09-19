@@ -7,7 +7,7 @@
                 </div>
 
                 <div class="panel-body p-5">
-                    <input type="text" class="form-control input-sm" placeholder="Search...">
+                    <input type="text" v-model="search.name" class="form-control input-sm" @input="searchAndFilterData" placeholder="Name...">
                 </div>
             </div>
         </div>
@@ -57,6 +57,7 @@
 </template>
 
 <script>
+    import $hub from 'hub-js';
     import VueDatepickerLocal from 'vue-datepicker-local'
 
     export default {
@@ -72,12 +73,13 @@
                 },
             }
         },
+        mounted() {
+
+        },
         methods: {
             searchAndFilterData() {
                 console.log('change');
-                if(this.search.startTime !== '' && this.search.endTime !== '' && this.search.startTime > this.search.endTime) {
-                    console.log('不行啊，时间选择不对啊')
-                }
+                $hub.emit( 'test', { code: this.search } );
             }
         }
     }
@@ -91,6 +93,9 @@
         color: #000;
     }.calendar-date-out.calendar-date {
              color: #cccccc;
+    }
+    .datepicker {
+        display: block !important;
     }
     .datepicker>input {
         padding: 0 34px 0 6px !important;

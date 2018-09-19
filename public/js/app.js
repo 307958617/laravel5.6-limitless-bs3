@@ -45995,7 +45995,7 @@ exports = module.exports = __webpack_require__(4)(false);
 
 
 // module
-exports.push([module.i, "\n.panel {\n    border-top-color: #4CAF50;\n}\n.datepicker-popup a {\n    color: #000;\n}\n.calendar-date-out.calendar-date {\n         color: #cccccc;\n}\n.datepicker>input {\n    padding: 0 34px 0 6px !important;\n}\n.heading-elements:not(.visible-elements) .heading-form .form-control {\n    width: 100%;\n}\n", ""]);
+exports.push([module.i, "\n.panel {\n    border-top-color: #4CAF50;\n}\n.datepicker-popup a {\n    color: #000;\n}\n.calendar-date-out.calendar-date {\n         color: #cccccc;\n}\n.datepicker {\n    display: block !important;\n}\n.datepicker>input {\n    padding: 0 34px 0 6px !important;\n}\n.heading-elements:not(.visible-elements) .heading-form .form-control {\n    width: 100%;\n}\n", ""]);
 
 // exports
 
@@ -46039,7 +46039,9 @@ module.exports = function listToStyles (parentId, list) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_datepicker_local__ = __webpack_require__(54);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_hub_js__ = __webpack_require__(101);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_hub_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_hub_js__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_datepicker_local__ = __webpack_require__(54);
 //
 //
 //
@@ -46098,12 +46100,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
-        VueDatepickerLocal: __WEBPACK_IMPORTED_MODULE_0_vue_datepicker_local__["a" /* default */]
+        VueDatepickerLocal: __WEBPACK_IMPORTED_MODULE_1_vue_datepicker_local__["a" /* default */]
     },
     data: function data() {
         return {
@@ -46114,13 +46117,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         };
     },
+    mounted: function mounted() {},
 
     methods: {
         searchAndFilterData: function searchAndFilterData() {
             console.log('change');
-            if (this.search.startTime !== '' && this.search.endTime !== '' && this.search.startTime > this.search.endTime) {
-                console.log('不行啊，时间选择不对啊');
-            }
+            __WEBPACK_IMPORTED_MODULE_0_hub_js___default.a.emit('test', { code: this.search });
         }
     }
 });
@@ -47516,7 +47518,38 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "row" }, [
-    _vm._m(0),
+    _c("div", { staticClass: "col-md-4" }, [
+      _c("div", { staticClass: "panel panel-flat border-top-success" }, [
+        _vm._m(0),
+        _vm._v(" "),
+        _c("div", { staticClass: "panel-body p-5" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.search.name,
+                expression: "search.name"
+              }
+            ],
+            staticClass: "form-control input-sm",
+            attrs: { type: "text", placeholder: "Name..." },
+            domProps: { value: _vm.search.name },
+            on: {
+              input: [
+                function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.search, "name", $event.target.value)
+                },
+                _vm.searchAndFilterData
+              ]
+            }
+          })
+        ])
+      ])
+    ]),
     _vm._v(" "),
     _c("div", { staticClass: "col-md-4" }, [
       _c("div", { staticClass: "panel panel-flat border-top-success" }, [
@@ -47584,19 +47617,8 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-4" }, [
-      _c("div", { staticClass: "panel panel-flat border-top-success" }, [
-        _c("div", { staticClass: "panel-heading p-5" }, [
-          _c("h5", { staticClass: "panel-title text-center" }, [_vm._v("Name")])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "panel-body p-5" }, [
-          _c("input", {
-            staticClass: "form-control input-sm",
-            attrs: { type: "text", placeholder: "Search..." }
-          })
-        ])
-      ])
+    return _c("div", { staticClass: "panel-heading p-5" }, [
+      _c("h5", { staticClass: "panel-title text-center" }, [_vm._v("Name")])
     ])
   },
   function() {
@@ -47710,6 +47732,8 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_hub_js__ = __webpack_require__(101);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_hub_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_hub_js__);
 //
 //
 //
@@ -47883,10 +47907,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
     mounted: function mounted() {
         console.log('Component mounted.');
         this.tableSetup();
+        // 注册监听者
+        __WEBPACK_IMPORTED_MODULE_0_hub_js___default.a.on('test', function (data) {
+            console.log('test', data);
+        });
     },
 
     methods: {
@@ -47937,11 +47966,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                             className: 'btn bg-blue btn-icon'
                         }]
                     },
-                    select: true
-                    //                        columnDefs: [{
-                    //                            visible: false,//不显示第一列
-                    //                            targets: 0
-                    //                        }],
+                    select: true,
+                    columnDefs: [{
+                        orderable: false, //不允许排序
+                        targets: 0
+                    }]
                 });
                 //添加索引列,注意：如果要使拖拽排序看起来比较正常，那么必须让索引列这一栏生成递增的数据，即<td></td>中间必须生成数字
                 t.on('order.dt search.dt', function () {
@@ -48355,6 +48384,48 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 70 */,
+/* 71 */,
+/* 72 */,
+/* 73 */,
+/* 74 */,
+/* 75 */,
+/* 76 */,
+/* 77 */,
+/* 78 */,
+/* 79 */,
+/* 80 */,
+/* 81 */,
+/* 82 */,
+/* 83 */,
+/* 84 */,
+/* 85 */,
+/* 86 */,
+/* 87 */,
+/* 88 */,
+/* 89 */,
+/* 90 */,
+/* 91 */,
+/* 92 */,
+/* 93 */,
+/* 94 */,
+/* 95 */,
+/* 96 */,
+/* 97 */,
+/* 98 */,
+/* 99 */,
+/* 100 */,
+/* 101 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*!
+ * hub.js v0.2.1
+ * (c) 2018 YY UEDC
+ * Released under the MIT License.
+ */
+!function t(e,n){ true?module.exports=n():"function"==typeof define&&define.amd?define([],n):"object"==typeof exports?exports.$hub=n():e.$hub=n()}(this,function(){return function(t){function e(r){if(n[r])return n[r].exports;var o=n[r]={i:r,l:!1,exports:{}};return t[r].call(o.exports,o,o.exports,e),o.l=!0,o.exports}var n={};return e.m=t,e.c=n,e.d=function(t,n,r){e.o(t,n)||Object.defineProperty(t,n,{configurable:!1,enumerable:!0,get:r})},e.n=function(t){var n=t&&t.__esModule?function e(){return t.default}:function e(){return t};return e.d(n,"a",n),n},e.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},e.p="",e(e.s=1)}([function(t,e,n){"use strict";t.exports={iterator:function t(e,n,r,o){var i=this;2!==arguments.length||r?3!==arguments.length||o?n<e.length?r(e[n],function(){i.iterator(e,++n,r,o)}):n>=e.length-1&&o&&o():this.iterator(e,0,n,r):this.iterator(e,0,n,null)},await:function t(e,n){e.then?e.then(function(t){n&&n(t)}):n&&n(e)}}},function(t,e,n){"use strict";function r(t){return t&&t.__esModule?t:{default:t}}var o=n(2),i=r(o),u=n(3),c=r(u),f=n(4),a=r(f),s=n(5),_=r(s),v=n(6),d=r(v),h=n(7),l=r(h),p=n(8),y=r(p),b=n(9),m=r(b),g=n(10),O=r(g),j=n(11),x=r(j),w={},k={ws:[],io:[]},E={},P={},M={};t.exports={observer:w,data:E,chainer:M,socket:k,emit:i.default,on:c.default,off:a.default,store:(0,_.default)(E,w),DOM:d.default,Fetch:l.default,WS:m.default,IO:y.default,chain:O.default,converter:P,once:x.default}},function(t,e,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.default=function(t,e){var n=this.observer,r=this.data,u=this.chainer,c=function c(f){if(0===t.indexOf("@store/")){var a=t.split("@store/")[1];void 0!==r[a]&&(r[a]=e)}if(0===t.indexOf("@chain/")){var s=t.split("@chain/")[1];if(void 0!==u[s])return void o(u[s],e,function(e){i(n,t,e)})}i(n,f,e)};t instanceof Array?t.forEach(function(t){return c(t)}):c(t)};var r=n(0),o=function t(e,n,o){r.iterator(e,function(t,e){r.await(t(n),function(t){n=t,e()})},function(){o(n)})},i=function t(e,n,r){void 0!==e[n]&&e[n].forEach(function(t,e){t(r)})}},function(t,e,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.default=function(t,e){var n=this,r=this.observer,o=this.data,i=this.chainer,u=function t(n){if(void 0===r[n]&&(r[n]=[]),r[n].push(e),0===n.indexOf("@store/")){var i=n.split("@store/")[1];void 0!==o[i]&&e(o[i])}},c={};return c.key=t,t instanceof Array?(t.forEach(function(t){return u(t)}),c.off=function(){return t.forEach(function(t){return n.off(t,e)})}):(u(t),c.off=function(){return n.off(t,e)}),c}},function(t,e,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.default=function(t,e){var n=this.observer,r=function t(r){void 0!==n[r]&&n[r].forEach(function(t,o){t==e&&n[r].splice(o,1)})};t instanceof Array?t.forEach(function(t){return r(t)}):r(t)}},function(t,e,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.default=function(t,e){try{return new Proxy({},{get:function e(n,r,o){return t[r]},set:function n(r,o,i,u){if(!t[o]||t[o]!=i){t[o]=i;var c="@store/"+o;void 0!==e[c]&&e[c].forEach(function(t,e){t(i)})}}})}catch(t){console.error('[hub.js] Browser not support "Proxy"')}}},function(t,e,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.default=function(t){var e=this;if(t){var n=void 0;if(n="string"==typeof t?document.body.querySelector(t):t){var o=this.emit,i=this.format,u=this.converter,c={},f=[],a=function t(e){var n=e.type,o=void 0;if(f.forEach(function(t,e){"__from__"===t.type&&t.func===n&&(o=e)}),void 0!==o){var i=f.slice(o+1,f.length);if(i.length>0){var u=e,c=!1;r.iterator(i,function(t,e){if(!c)switch(t.type){case"__convert__":r.await(t.func(u),function(t){u=t,e()});break;case"__emit__":t.func(u),e();break;case"__from__":c=!0,e()}})}}};return c.convert=function(t){return u[t]&&f.push({type:"__convert__",func:u[t]}),c},c.from=function(t){return f.push({type:"__from__",func:t}),n.addEventListener(t,a),c},c.emit=function(t,n){return f.push({type:"__emit__",func:function r(i){n?o.bind(e)(t,{event:i,data:n}):o.bind(e)(t,i)}}),c},c.off=function(){f.forEach(function(t,e){"__from__"===t.type&&n.removeEventListener(t.func,a)})},c}}};var r=n(0)},function(t,e,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.default=function(t){var e=this,n=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{};if(t){var o=this.emit,i=this.converter,u=void 0,c={},f=[],a=function t(e){f.length>0&&r.iterator(f,function(t,n){switch(t.type){case"__convert__":r.await(t.func(e),function(t){e=t,n()});break;case"__emit__":t.func(e)}})};return c.convert=function(t){return i[t]&&f.push({type:"__convert__",func:i[t]}),c},c.emit=function(t,n){return f.push({type:"__emit__",func:function r(i){n?o.bind(e)(t,{result:i,data:n}):o.bind(e)(t,i)}}),u&&clearTimeout(u),u=setTimeout(function(){c.reload()},0),c},c.reload=function(){fetch(t,n).then(function(t){200===t.status&&t.json?t.json().then(function(t){return a(t)}):a(t)}).catch(function(t){a(t)})},c}};var r=n(0)},function(t,e,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.default=function(t){var e=this,n=this.emit,o=this.socket,i=this.converter;if(t){var u={},c=[],f=io(t);u.socket=f,o.io.push({url:t,socket:o});var a=function t(e,n){var o=void 0;if(c.forEach(function(t,n){"__from__"===t.type&&t.func===e&&(o=n)}),void 0!==o){var i=c.slice(o+1,c.length);if(i.length>0){var u=n,f=!1;r.iterator(i,function(t,e){if(!f)switch(t.type){case"__convert__":r.await(t.func(u),function(t){u=t,e()});break;case"__emit__":t.func(u),e();break;case"__from__":f=!0,e()}})}}};return u.convert=function(t){return i[t]&&c.push({type:"__convert__",func:i[t]}),u},u.from=function(t){var e=function e(n){a(t,n)};return c.push({type:"__from__",func:t,_eventListener:e}),f.on(t,e),u},u.emit=function(t,r){return c.push({type:"__emit__",func:function o(i){r?n.bind(e)(t,{event:i,data:r}):n.bind(e)(t,i)}}),u},u.off=function(){c.forEach(function(t,e){"__from__"===t.type&&f.off(t.func,t._eventListener)})},u}};var r=n(0)},function(t,e,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.default=function(t){var e=this,n=this.emit,o=this.socket,i=this.converter;if(t){var u={},c=[],f=new WebSocket(t);o.ws.push({url:t,socket:o}),u.socket=f;var a=function t(e){if(e.data)try{s(JSON.parse(e.data))}catch(t){s(e.data)}else s(e)};f.addEventListener("message",a);var s=function t(e){if(c.length>0){var n=e;r.iterator(c,function(t,e){switch(t.type){case"__convert__":r.await(t.func(n),function(t){n=t,e()});break;case"__emit__":t.func(n),e()}})}};return u.convert=function(t){return i[t]&&c.push({type:"__convert__",func:i[t]}),u},u.emit=function(t,r){return c.push({type:"__emit__",func:function o(i){r?n.bind(e)(t,{result:i,data:r}):n.bind(e)(t,i)}}),u},u.off=function(){f.removeEventListener("message",a)},u}};var r=n(0)},function(t,e,n){"use strict";t.exports=function(t){var e=this.chainer,n={};return n.pipe=function(){for(var r=arguments.length,o=Array(r),i=0;i<r;i++)o[i]=arguments[i];return e[t]?e[t]=e[t].concat(o):e[t]=o,n},n}},function(t,e,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.default=function(t,e){var n=this.observer,r=this.data,o=this.chainer,i=this.on(t,function(t){e(t),i.off()})}}])});
 
 /***/ })
 /******/ ]);

@@ -171,10 +171,15 @@
 </template>
 
 <script>
+    import $hub from 'hub-js'
     export default {
         mounted() {
             console.log('Component mounted.');
             this.tableSetup();
+            // 注册监听者
+            $hub.on( 'test', ( data ) => {
+                console.log( 'test', data );
+            } );
         },
         methods: {
             tableSetup() {
@@ -230,10 +235,10 @@
                             ]
                         },
                         select: true,
-//                        columnDefs: [{
-//                            visible: false,//不显示第一列
-//                            targets: 0
-//                        }],
+                        columnDefs: [{
+                            orderable: false,//不允许排序
+                            targets: 0
+                        }],
                     });
                     //添加索引列,注意：如果要使拖拽排序看起来比较正常，那么必须让索引列这一栏生成递增的数据，即<td></td>中间必须生成数字
                     t.on('order.dt search.dt',

@@ -19,5 +19,8 @@
         "popper.js": "^1.12",
         "vue": "^2.5.7",
         "vue-datepicker-local": "^1.0.19"
+    },
+    "dependencies": {
+        "hub-js": "^0.2.1"
     }
 }
