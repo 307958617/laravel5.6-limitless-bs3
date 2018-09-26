@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('head')
+    <script src="{{ asset('limitless/js/select2.min.js') }}" defer></script>
+@endsection
+
 @section('page-title')
     <span class="text-semibold">Register</span>
 @endsection
@@ -30,6 +34,27 @@
                             @if ($errors->has('name'))
                                 <span class="help-block text-danger" role="alert">
                                     <strong><i class="icon-cancel-circle2 position-left"></i>{{ $errors->first('name') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+
+                        <div class="form-group has-feedback has-feedback-left">
+                            {{--<input id="gender" type="text" class="form-control{{ $errors->has('gender') ? ' is-invalid' : '' }}" name="name" value="{{ old('gender') }}" required autofocus placeholder="Your gender">--}}
+                            <select id="gender" class="form-control {{ $errors->has('gender') ? ' is-invalid' : '' }}" name="gender"  autofocus>
+                                <option value="" hidden>Your gender</option>
+                                <option value="M">Male</option>
+                                <option value="F">Female</option>
+                            </select>
+
+
+
+                            <div class="form-control-feedback">
+                                <i class="fa fa-venus-mars text-muted" aria-hidden="true"></i>
+                            </div>
+
+                            @if ($errors->has('gender'))
+                                <span class="help-block text-danger" role="alert">
+                                    <strong><i class="icon-cancel-circle2 position-left"></i>{{ $errors->first('gender') }}</strong>
                                 </span>
                             @endif
                         </div>
@@ -77,3 +102,25 @@
         </div>
     </div>
 @endsection
+
+@section('js')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            //修改select默认显示text样式--开始
+            let select = $('select');
+            select.css('color','#999');
+            $('option').css('color','#323232');
+            select.change(function(){
+                let $selltem = $(this).val();
+                if($selltem === $(this).find('option:first').val()){
+                    $(this).css('color','#999');
+                }else{
+                    $(this).css('color','#323232');
+                }
+            });
+            //修改select默认显示text样式--结束
+        })
+    </script>
+
+@endsection
+

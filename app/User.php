@@ -15,7 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name','nick_name','gender','birthday', 'email','avatar','department','education','title','post','phone','sf_id','remarks','order', 'password',
     ];
 
     /**
@@ -26,4 +26,9 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function departments()
+    {
+        return $this->belongsToMany('App\Department');
+    }
 }

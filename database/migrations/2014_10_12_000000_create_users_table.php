@@ -17,10 +17,11 @@ class CreateUsersTable extends Migration
             $table->increments('id')->comment('唯一编码');
             $table->string('name')->comment('姓名');
             $table->string('nick_name')->nullable()->comment('别名');
-            $table->string('gender')->comment('性别');
+            $table->string('gender')->nullable()->comment('性别');
             $table->dateTime('birthday')->nullable()->comment('出生日期');
             $table->string('email')->unique()->comment('Email');
-            $table->smallInteger('is_active')->default(0)->comment('用户是否激活了邮箱验证，默认是没激活');
+            $table->string('avatar')->comment('头像');
+            $table->string('is_active')->default('F')->comment('用户是否激活了邮箱验证，默认是没激活');
             $table->string('department')->nullable()->comment('所在部门');
             $table->string('education')->nullable()->comment('学历');
             $table->string('title')->nullable()->comment('职称');
