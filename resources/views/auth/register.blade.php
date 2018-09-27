@@ -41,16 +41,14 @@
                         <div class="form-group has-feedback has-feedback-left">
                             {{--<input id="gender" type="text" class="form-control{{ $errors->has('gender') ? ' is-invalid' : '' }}" name="name" value="{{ old('gender') }}" required autofocus placeholder="Your gender">--}}
                             <select id="gender" class="form-control {{ $errors->has('gender') ? ' is-invalid' : '' }}" name="gender"  autofocus>
-                                <option value="" hidden>Your gender</option>
-                                <option value="M">Male</option>
-                                <option value="F">Female</option>
+                                <option></option>
+                                <option value="M" data-icon="fa-venus text-muted">Male</option>
+                                <option value="F" data-icon="fa-mars text-muted">Female</option>
                             </select>
 
 
 
-                            <div class="form-control-feedback">
-                                <i class="fa fa-venus-mars text-muted" aria-hidden="true"></i>
-                            </div>
+
 
                             @if ($errors->has('gender'))
                                 <span class="help-block text-danger" role="alert">
@@ -106,19 +104,26 @@
 @section('js')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            //修改select默认显示text样式--开始
-            let select = $('select');
-            select.css('color','#999');
-            $('option').css('color','#323232');
-            select.change(function(){
-                let $selltem = $(this).val();
-                if($selltem === $(this).find('option:first').val()){
-                    $(this).css('color','#999');
-                }else{
-                    $(this).css('color','#323232');
-                }
+            // Format icon
+            function iconFormat(icon) {
+                let originalOption = icon.element;
+                if (!icon.id) { return icon.text; }
+                let $icon = "<i class='fa " + $(icon.element).data('icon') + "'></i>" + icon.text;
+
+                return $icon;
+            }
+
+            let placeholder = "<i class='fa fa-venus-mars'></i>" + "&nbsp;&nbsp;&nbsp;Your gender";
+
+            // Initialize with options
+            $("#gender").select2({
+                minimumResultsForSearch: Infinity,
+                allowClear: true,
+                placeholder:placeholder,
+                templateResult: iconFormat,
+                templateSelection: iconFormat,
+                escapeMarkup: function(m) { return m; }
             });
-            //修改select默认显示text样式--结束
         })
     </script>
 
