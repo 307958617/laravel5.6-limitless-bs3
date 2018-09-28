@@ -20,6 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('gender')->nullable()->comment('性别');
             $table->dateTime('birthday')->nullable()->comment('出生日期');
             $table->string('email')->unique()->comment('Email');
+            $table->string('confirmation_token')->comment('注册时验证邮箱的token');
             $table->string('avatar')->comment('头像');
             $table->string('is_active')->default('F')->comment('用户是否激活了邮箱验证，默认是没激活');
             $table->string('department')->nullable()->comment('所在部门');

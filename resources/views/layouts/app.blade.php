@@ -66,7 +66,7 @@
 
                             <li class="dropdown dropdown-user">
                                 <a class="dropdown-toggle" data-toggle="dropdown">
-                                    <img src="{{ asset('limitless/images/image.png') }}" alt="">
+                                    <img src="{{ asset(Auth::user()->avatar) }}" alt="">
                                     <span>{{ Auth::user()->name }}</span>
                                     <i class="caret"></i>
                                 </a>
@@ -122,9 +122,9 @@
 
                 <!-- Main content -->
                 <div class="content-wrapper">
+                    @include('noty::message')
 
                     @yield('content')
-
                 </div>
                 <!-- /main content -->
 
@@ -172,6 +172,10 @@
         </div>
         <!-- /footer -->
     </div>
+    <script>
+        $('#flash-overlay-modal').modal();//用于显示模板
+        $('div.alert').not('.alert-important').delay(3000).fadeOut(350);
+    </script>
     @yield('js')
 </body>
 </html>

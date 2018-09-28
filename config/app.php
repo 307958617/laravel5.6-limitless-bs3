@@ -152,6 +152,7 @@ return [
          */
 
         DaveJamesMiller\Breadcrumbs\BreadcrumbsServiceProvider::class,
+        Naux\Mail\SendCloudServiceProvider::class,
 
         /*
          * Application Service Providers...

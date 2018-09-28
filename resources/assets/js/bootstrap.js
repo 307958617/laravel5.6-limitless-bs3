@@ -14,6 +14,7 @@ try {
     require('../limitless/js/nicescroll.min'); //滚动条样式
     require('../limitless/js/drilldown'); //下拉菜单特效
     require('../limitless/js/layout_04');
+    require('../limitless/js/noty.min');
 } catch (e) {}
 
 /**

@@ -45,16 +45,6 @@
                                 <option value="M" data-icon="fa-venus text-muted">Male</option>
                                 <option value="F" data-icon="fa-mars text-muted">Female</option>
                             </select>
-
-
-
-
-
-                            @if ($errors->has('gender'))
-                                <span class="help-block text-danger" role="alert">
-                                    <strong><i class="icon-cancel-circle2 position-left"></i>{{ $errors->first('gender') }}</strong>
-                                </span>
-                            @endif
                         </div>
 
                         <div class="form-group has-feedback has-feedback-left">
@@ -112,11 +102,11 @@
 
                 return $icon;
             }
-
+            //设置select2的placeholder，带有图标的哦
             let placeholder = "<i class='fa fa-venus-mars'></i>" + "&nbsp;&nbsp;&nbsp;Your gender";
 
             // Initialize with options
-            $("#gender").select2({
+            let gender = $("#gender").select2({
                 minimumResultsForSearch: Infinity,
                 allowClear: true,
                 placeholder:placeholder,
@@ -124,6 +114,9 @@
                 templateSelection: iconFormat,
                 escapeMarkup: function(m) { return m; }
             });
+            //设置select2的选中状态，根据{{ old('gender') }}值进行切换，代替laravel默认的值。
+            gender.val('{{ old('gender') }}').trigger("change");
+            gender.change();
         })
     </script>
 
