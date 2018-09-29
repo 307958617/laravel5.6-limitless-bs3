@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Symfony\Component\Debug\Tests\FatalErrorHandler\ClassNotFoundFatalErrorHandlerTest;
 
 class LoginController extends Controller
 {
@@ -52,7 +53,9 @@ class LoginController extends Controller
             return $this->sendLockoutResponse($request);
         }
         if ($this->attemptLogin($request)) {
-
+            alert()->success('成功登陆', $this->guard()->user()['name'].'欢迎你回来！')
+                ->showCloseButton()
+                ->autoClose(3000);
             return $this->sendLoginResponse($request);
         }
         // If the login attempt was unsuccessful we will increment the number of attempts

@@ -10,7 +10,9 @@
         "fideloper/proxy": "^4.0",
         "laravel/framework": "5.6.*",
         "laravel/tinker": "^1.0",
-        "naux/sendcloud": "^1.1"
+        "naux/sendcloud": "^1.1",
+        "realrashid/sweet-alert": "^1.1",
+        "rsmalc/laravel-noty": "^1.0"
     },
     "require-dev": {
         "filp/whoops": "^2.0",

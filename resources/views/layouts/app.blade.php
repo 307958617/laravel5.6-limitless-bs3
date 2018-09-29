@@ -19,6 +19,7 @@
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
 
+    <script src="https://unpkg.com/sweetalert2@7.18.0/dist/sweetalert2.all.js"></script>
     @yield('head')
 
 </head>
@@ -122,8 +123,7 @@
 
                 <!-- Main content -->
                 <div class="content-wrapper">
-                    @include('noty::message')
-
+                    @include('sweetalert::alert')
                     @yield('content')
                 </div>
                 <!-- /main content -->
@@ -172,10 +172,6 @@
         </div>
         <!-- /footer -->
     </div>
-    <script>
-        $('#flash-overlay-modal').modal();//用于显示模板
-        $('div.alert').not('.alert-important').delay(3000).fadeOut(350);
-    </script>
     @yield('js')
 </body>
 </html>

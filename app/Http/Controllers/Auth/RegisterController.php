@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Naux\Mail\SendCloudTemplate;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Auth\Events\Registered;
 
 class RegisterController extends Controller
 {
@@ -115,6 +117,9 @@ class RegisterController extends Controller
         $this->validator($request->all())->validate();
 
         event(new Registered($user = $this->create($request->all())));
+
+        //注册成功后会弹出一下提示信息
+        toast('由于你是刚刚注册的用户，第一次登陆前必须通过注册的邮箱进行登陆验证！否则无法登陆！','warning','top-center')->autoClose(500000);
 
         return $this->registered($request, $user)
             ?: redirect($this->redirectPath());
