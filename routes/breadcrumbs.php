@@ -17,3 +17,8 @@ Breadcrumbs::for('login', function ($trail) {
 Breadcrumbs::for('register', function ($trail) {
     $trail->push('Register', route('register'));
 });
+
+Breadcrumbs::for('departments', function ($trail) {
+    $trail->parent('home');
+    $trail->push('Departments', route('departments'));
+});

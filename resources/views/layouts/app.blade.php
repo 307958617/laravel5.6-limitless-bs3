@@ -19,6 +19,10 @@
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
 
+    <!-- 导航栏的下拉特效，必须于app.js分离，不然不起作用，不知道为什么不能打包 -->
+    <script src="{{ asset('limitless/js/drilldown.js') }}" defer></script>
+
+    <!-- 提示信息 -->
     <script src="https://unpkg.com/sweetalert2@7.18.0/dist/sweetalert2.all.js"></script>
     @yield('head')
 
@@ -41,13 +45,6 @@
                         @guest
                         @else
                             <li><a href="#">Text link</a></li>
-
-                            <li>
-                                <a href="#">
-                                    <i class="icon-calendar3"></i>
-                                    <span class="visible-xs-inline-block position-right">Icon link</span>
-                                </a>
-                            </li>
                         @endguest
                     </ul>
 
@@ -56,13 +53,38 @@
                             <li><a href="{{ route('login') }}">{{ __('Login') }}</a></li>
                             <li><a href="{{ route('register') }}">{{ __('Register') }}</a></li>
                         @else
-                            <li><a href="#">Text link</a></li>
-
-                            <li>
-                                <a href="#">
+                            <li class="dropdown mega-menu mega-menu-wide">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                     <i class="icon-cog3"></i>
-                                    <span class="visible-xs-inline-block position-right">Icon link</span>
+                                    <span class="visible-xs-inline-block position-right">设置</span>
                                 </a>
+
+                                <div class="dropdown-menu dropdown-content">
+                                    <div class="dropdown-content-body">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <span class="menu-heading underlined">系统管理</span>
+                                                <ul class="menu-list">
+                                                    <li>
+                                                        <a href="#">部门及人员管理</a>
+                                                        <ul>
+                                                            <li><a href="{{ route('departments') }}">部门信息</a></li>
+                                                            <li><a href="#">人员信息</a></li>
+                                                            <li><a href="#">组织机构设置</a></li>
+                                                        </ul>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#">权限管理</a>
+                                                        <ul>
+                                                            <li><a href="#">角色设置</a></li>
+                                                            <li><a href="#">用户设置</a></li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </li>
 
                             <li class="dropdown dropdown-user">

@@ -18,6 +18,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/departments', 'DepartmentsController@show_departments')->name('departments');
 
 //注册时发送邮件验证
 Route::get('email/verify/{token}', 'EmailController@verify')->name('verify.email');

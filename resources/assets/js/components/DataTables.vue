@@ -2,7 +2,7 @@
     <!-- Column selectors -->
     <div class="panel panel-flat">
         <div class="panel-heading">
-            <h5 class="panel-title">Columns selectors</h5>
+            <h5 class="panel-title">部门信息列表</h5>
             <div class="heading-elements">
                 <ul class="icons-list">
                     <li><a data-action="collapse"></a></li>
@@ -13,7 +13,7 @@
         </div>
 
         <div class="panel-body">
-            All of the data export buttons have a <code>exportOptions</code> option which can be used to specify information about what data should be exported and how. In this example the copy button will export column index 0 and all visible columns, the Excel button will export only the visible columns and the PDF button will export column indexes 0, 1, 2 and 5 only. Column visibility controls are also included so you can change the columns easily.
+            <button class="btn btn-primary btn-sm pull-right" @click="showAddModel()"><i class="fa fa-plus" aria-hidden="true"></i> 新增部门 </button>
         </div>
 
         <table class="table datatable-button-html5-columns">
@@ -30,7 +30,7 @@
             </thead>
             <tbody>
             <tr>
-                <td>1</td>
+                <td>21</td>
                 <td>Marth</td>
                 <td><a href="#">Enright</a></td>
                 <td>Traffic Court Referee</td>
@@ -156,7 +156,7 @@
                 <td>$130,500</td>
             </tr>
             <tr>
-                <td>15</td>
+                <td>19</td>
                 <td>Cicely</td>
                 <td>Sigler</td>
                 <td><a href="#">Senior Research Officer</a></td>
@@ -166,13 +166,28 @@
             </tr>
             </tbody>
         </table>
+
+        <department_modal v-if="showAddDepartmentModel">
+            <div slot="title">增加科室</div>
+        </department_modal>
     </div>
     <!-- /column selectors -->
 </template>
 
 <script>
     import $hub from 'hub-js'
+    import department_modal from './Modal_form_vertical.vue'
     export default {
+        data() {
+            return {
+                showAddDepartmentModel:false
+            }
+        },
+
+        components: {
+            department_modal
+        },
+
         mounted() {
             console.log('Component mounted.');
             this.tableSetup();
@@ -182,6 +197,10 @@
             } );
         },
         methods: {
+            showAddModel() {
+                this.showAddDepartmentModel = true;
+                console.log('showAddModel')
+            },
             tableSetup() {
                 $(function () {
                     // Setting datatable defaults
