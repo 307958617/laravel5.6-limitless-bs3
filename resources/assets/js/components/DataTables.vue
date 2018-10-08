@@ -167,8 +167,82 @@
             </tbody>
         </table>
 
-        <department_modal v-if="showAddDepartmentModel">
-            <div slot="title">增加科室</div>
+        <department_modal v-show="showAddDepartmentModel" @close="closeAddModal" @commit="addDepartment">
+            <div slot="head-title">添加部门</div>
+            <div slot="body">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label>选择上级部门</label>
+                            <input type="text" placeholder="Eugene" class="form-control">
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label>部门名称</label>
+                            <input type="text" placeholder="Kopyov" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label>部门主管</label>
+                            <input type="text" placeholder="Eugene" class="form-control">
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label>部门电话</label>
+                            <input type="text" placeholder="Kopyov" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label>排序NO.</label>
+                            <input type="text" placeholder="Eugene" class="form-control">
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label>启用标志</label>
+                            <input type="text" placeholder="Kopyov" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label>备注信息</label>
+                            <input type="text" placeholder="Eugene" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label>备注信息</label>
+                            <input type="text" placeholder="Eugene" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label>备注信息</label>
+                            <input type="text" placeholder="Eugene" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label>备注信息</label>
+                            <input type="text" placeholder="Eugene" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div slot="footer-commit-text">添 加</div>
         </department_modal>
     </div>
     <!-- /column selectors -->
@@ -200,6 +274,12 @@
             showAddModel() {
                 this.showAddDepartmentModel = true;
                 console.log('showAddModel')
+            },
+            closeAddModal() {
+                this.showAddDepartmentModel = false;
+            },
+            addDepartment() {
+                console.log('add Department')
             },
             tableSetup() {
                 $(function () {
