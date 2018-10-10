@@ -273,10 +273,14 @@
         methods: {
             showAddModel() {
                 this.showAddDepartmentModel = true;
+                //模态框弹出的时候禁止底层body滚动
+                $('body').css('overflow','hidden');
                 console.log('showAddModel')
             },
             closeAddModal() {
                 this.showAddDepartmentModel = false;
+                //模态框关闭的时候启用body滚动
+                $('body').css('overflow','auto');
             },
             addDepartment() {
                 console.log('add Department')

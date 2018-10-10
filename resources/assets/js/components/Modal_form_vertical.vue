@@ -45,6 +45,8 @@
 </script>
 <style scoped>
 .modal-backdrop {
-    background-color:rgba(0,0,0,0.5)
+    background-color:rgba(0,0,0,0.5);
+    /*设置超出可视范围就滚动*/
+    overflow-y:scroll;
 }
 </style>
