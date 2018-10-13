@@ -14,4 +14,21 @@ class Department extends Model
     {
         return $this->belongsToMany('App\User');
     }
+
+    public function getPidAttribute($value)
+    {
+        $p_name = $this->find($value)['name'];
+        if($p_name) {
+            return $p_name;
+        }
+        return '---';
+    }
+
+    public function getStatusAttribute($value)
+    {
+        if( $value=== 'T') {
+            return '已启用';
+        }
+        return '已停用';
+    }
 }

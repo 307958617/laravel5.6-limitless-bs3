@@ -39790,3 +39790,8 @@ h6.panel-title,
   border-color: #dc3545;
 }
 
+.btn-xxs {
+  padding: 3px 5px;
+  font-size: 12px;
+}
+

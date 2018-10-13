@@ -20,155 +20,33 @@
             <thead>
             <tr>
                 <th>NO.</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Job Title</th>
-                <th>DOB</th>
-                <th>Status</th>
-                <th>Salary</th>
+                <th>部门名称</th>
+                <th>上级部门</th>
+                <th>部门主管</th>
+                <th>部门电话</th>
+                <th>备注信息</th>
+                <th>当前状态</th>
+                <th>操 作</th>
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>21</td>
-                <td>Marth</td>
-                <td><a href="#">Enright</a></td>
-                <td>Traffic Court Referee</td>
-                <td>22 Jun 1972</td>
-                <td><span class="label label-success">Active</span></td>
-                <td>$85,600</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>Jackelyn</td>
-                <td>Weible</td>
-                <td><a href="#">Airline Transport Pilot</a></td>
-                <td>3 Oct 1981</td>
-                <td><span class="label label-default">Inactive</span></td>
-                <td>$106,450</td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>Aura</td>
-                <td>Hard</td>
-                <td>Business Services Sales Representative</td>
-                <td>19 Apr 1969</td>
-                <td><span class="label label-danger">Suspended</span></td>
-                <td>$237,500</td>
-            </tr>
-            <tr>
-                <td>4</td>
-                <td>Nathalie</td>
-                <td><a href="#">Pretty</a></td>
-                <td>Drywall Stripper</td>
-                <td>13 Dec 1977</td>
-                <td><span class="label label-info">Pending</span></td>
-                <td>$198,500</td>
-            </tr>
-            <tr>
-                <td>5</td>
-                <td>Sharan</td>
-                <td>Leland</td>
-                <td>Aviation Tactical Readiness Officer</td>
-                <td>30 Dec 1991</td>
-                <td><span class="label label-default">Inactive</span></td>
-                <td>$470,600</td>
-            </tr>
-            <tr>
-                <td>6</td>
-                <td>Maxine</td>
-                <td><a href="#">Woldt</a></td>
-                <td><a href="#">Business Services Sales Representative</a></td>
-                <td>17 Oct 1987</td>
-                <td><span class="label label-info">Pending</span></td>
-                <td>$90,560</td>
-            </tr>
-            <tr>
-                <td>7</td>
-                <td>Sylvia</td>
-                <td><a href="#">Mcgaughy</a></td>
-                <td>Hemodialysis Technician</td>
-                <td>11 Nov 1983</td>
-                <td><span class="label label-danger">Suspended</span></td>
-                <td>$103,600</td>
-            </tr>
-            <tr>
-                <td>8</td>
-                <td>Lizzee</td>
-                <td><a href="#">Goodlow</a></td>
-                <td>Technical Services Librarian</td>
-                <td>1 Nov 1961</td>
-                <td><span class="label label-danger">Suspended</span></td>
-                <td>$205,500</td>
-            </tr>
-            <tr>
-                <td>9</td>
-                <td>Kennedy</td>
-                <td>Haley</td>
-                <td>Senior Marketing Designer</td>
-                <td>18 Dec 1960</td>
-                <td><span class="label label-success">Active</span></td>
-                <td>$137,500</td>
-            </tr>
-            <tr>
-                <td>10</td>
-                <td>Chantal</td>
-                <td><a href="#">Nailor</a></td>
-                <td>Technical Services Librarian</td>
-                <td>10 Jan 1980</td>
-                <td><span class="label label-default">Inactive</span></td>
-                <td>$372,000</td>
-            </tr>
-            <tr>
-                <td>11</td>
-                <td>Delma</td>
-                <td>Bonds</td>
-                <td>Lead Brand Manager</td>
-                <td>21 Dec 1968</td>
-                <td><span class="label label-info">Pending</span></td>
-                <td>$162,700</td>
-            </tr>
-            <tr>
-                <td>12</td>
-                <td>Roland</td>
-                <td>Salmos</td>
-                <td><a href="#">Senior Program Developer</a></td>
-                <td>5 Jun 1986</td>
-                <td><span class="label label-default">Inactive</span></td>
-                <td>$433,060</td>
-            </tr>
-            <tr>
-                <td>13</td>
-                <td>Coy</td>
-                <td>Wollard</td>
-                <td>Customer Service Operator</td>
-                <td>12 Oct 1982</td>
-                <td><span class="label label-success">Active</span></td>
-                <td>$86,000</td>
-            </tr>
-            <tr>
-                <td>14</td>
-                <td>Maxwell</td>
-                <td>Maben</td>
-                <td>Regional Representative</td>
-                <td>25 Feb 1988</td>
-                <td><span class="label label-danger">Suspended</span></td>
-                <td>$130,500</td>
-            </tr>
-            <tr>
-                <td>19</td>
-                <td>Cicely</td>
-                <td>Sigler</td>
-                <td><a href="#">Senior Research Officer</a></td>
-                <td>15 Mar 1960</td>
-                <td><span class="label label-info">Pending</span></td>
-                <td>$159,000</td>
-            </tr>
+                <tr v-for="department in departments">
+                    <td>{{ department.order }}</td> <!-- 默认排序为order字段，datatable必须将order放到第一列才行 -->
+                    <td>{{ department.name }}</td>
+                    <td>{{ department.pid }}</td>
+                    <td>{{ department.manager }}</td>
+                    <td>{{ department.phone }}</td>
+                    <td>{{ department.remarks }}</td>
+                    <td><span :class="[department.status==='已启用'? 'label label-success' : 'label label-danger']">{{ department.status }}</span></td>
+                    <td>
+                        <button class="edit btn btn-xxs btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 修改</button>
+                    </td>
+                </tr>
             </tbody>
         </table>
 
         <department_modal v-show="showAddDepartmentModel" @close="closeAddModal" @commit="addDepartment">
-            <div slot="head-title">添加部门</div>
+            <div slot="head-title">新增部门</div>
             <div slot="body">
                 <div class="form-group">
                     <div class="row">
@@ -217,30 +95,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <label>备注信息</label>
-                            <input type="text" placeholder="Eugene" class="form-control">
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <label>备注信息</label>
-                            <input type="text" placeholder="Eugene" class="form-control">
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <label>备注信息</label>
-                            <input type="text" placeholder="Eugene" class="form-control">
-                        </div>
-                    </div>
-                </div>
             </div>
             <div slot="footer-commit-text">添 加</div>
         </department_modal>
@@ -254,7 +108,8 @@
     export default {
         data() {
             return {
-                showAddDepartmentModel:false
+                showAddDepartmentModel:false,
+                departments:[],
             }
         },
 
@@ -263,14 +118,26 @@
         },
 
         mounted() {
-            console.log('Component mounted.');
-            this.tableSetup();
+            this.$nextTick(function() {
+                this.getDepartments().then((response) => {
+                    // do what you need to do
+                    this.departments = response.data
+                }).then(() => {
+                    // execute the call to render the table, now that you have the data you need
+                    this.tableSetup();
+                })
+            });
+
+
             // 注册监听者
             $hub.on( 'test', ( data ) => {
                 console.log( 'test', data );
             } );
         },
         methods: {
+            getDepartments() {
+               return axios.get('/departments/get')
+            },
             showAddModel() {
                 this.showAddDepartmentModel = true;
                 //模态框弹出的时候禁止底层body滚动
@@ -340,7 +207,7 @@
                         select: true,
                         columnDefs: [{
                             orderable: false,//不允许排序
-                            targets: 0
+                            targets: [0,7]
                         }],
                     });
                     //添加索引列,注意：如果要使拖拽排序看起来比较正常，那么必须让索引列这一栏生成递增的数据，即<td></td>中间必须生成数字
