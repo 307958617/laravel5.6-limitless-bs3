@@ -128,7 +128,6 @@
                         label: node.name,//指定label是用的什么字段，即显示什么字段出来
                     }
                 },
-                name:'',
                 newDepartment: {
                     name:'',
                     pid:null,

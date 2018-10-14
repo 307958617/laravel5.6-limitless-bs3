@@ -33,12 +33,15 @@ class DepartmentsController extends Controller
 
     public function add_department(Request $request)
     {
-        $this->validate($request,[
-            'name'=> 'required|min:2'
+        $department = $request->get('department');
+        Department::create([
+            'name' => $department['name'],
+            'pid' => $department['pid'],
+            'manager' => $department['manager'],
+            'phone' => $department['phone'],
+            'order' => $department['order'],
+            'status' => $department['status'],
+            'remarks' => $department['remarks'],
         ]);
-        $department = Department::create([
-            'name' => $request->get('name'),
-        ]);
-        return $department;
     }
 }
