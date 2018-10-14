@@ -21,7 +21,7 @@ class Department extends Model
         if($p_name) {
             return $p_name;
         }
-        return '---';
+        return '/';
     }
 
     public function getStatusAttribute($value)
@@ -29,6 +29,6 @@ class Department extends Model
         if( $value=== 'T') {
             return '已启用';
         }
-        return '已停用';
+        return '未启用';
     }
 }

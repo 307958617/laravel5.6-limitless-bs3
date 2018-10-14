@@ -39795,3 +39795,7 @@ h6.panel-title,
   font-size: 12px;
 }
 
+.vue-treeselect__control {
+  border-radius: 3px !important;
+}
+

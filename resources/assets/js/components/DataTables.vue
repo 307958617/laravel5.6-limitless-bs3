@@ -25,6 +25,7 @@
                 <th>部门主管</th>
                 <th>部门电话</th>
                 <th>备注信息</th>
+                <th>顺序号</th>
                 <th>当前状态</th>
                 <th>操 作</th>
             </tr>
@@ -34,9 +35,10 @@
                     <td>{{ department.order }}</td> <!-- 默认排序为order字段，datatable必须将order放到第一列才行 -->
                     <td>{{ department.name }}</td>
                     <td>{{ department.pid }}</td>
-                    <td>{{ department.manager }}</td>
-                    <td>{{ department.phone }}</td>
-                    <td>{{ department.remarks }}</td>
+                    <td>{{ department.manager ? department.manager:'/' }}</td>
+                    <td>{{ department.phone ? department.phone:'/'}}</td>
+                    <td>{{ department.remarks ? department.remarks:'/'}}</td>
+                    <td>{{ department.order ? department.order:'/'}}</td>
                     <td><span :class="[department.status==='已启用'? 'label label-success' : 'label label-danger']">{{ department.status }}</span></td>
                     <td>
                         <button class="edit btn btn-xxs btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 修改</button>
@@ -51,26 +53,30 @@
                 <div class="form-group">
                     <div class="row">
                         <div class="col-sm-6">
-                            <label>选择上级部门</label>
-                            <input type="text" placeholder="Eugene" class="form-control">
+                            <label>部门名称 <span class="text-danger">*</span></label>
+                            <input type="text" v-model="newDepartment.name" placeholder="新部门的名称" :class="{'form-control': true, 'is-invalid': errors.has('部门名称') }" v-validate="'required|min:2'" name="部门名称">
+                            <div v-show="errors.has('部门名称')" class="text-danger">{{ errors.first('部门名称') }}</div>
                         </div>
 
                         <div class="col-sm-6">
-                            <label>部门名称</label>
-                            <input type="text" placeholder="Kopyov" class="form-control">
+                            <label>选择上级部门</label>
+                            <!--这里引入了'@riophae/vue-treeselect'插件，具体用法参加GitHub-->
+                            <treeselect @open="reloadOptions" v-model="newDepartment.pid" placeholder="选择上级科室,不选默认为顶级科室" :normalizer="normalizer" :options="treeselectLists"></treeselect>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="row">
                         <div class="col-sm-6">
-                            <label>部门主管</label>
-                            <input type="text" placeholder="Eugene" class="form-control">
+                            <label>部门主管 <span class="text-danger">*</span></label>
+                            <input type="text" v-model="newDepartment.manager" placeholder="部门主管" :class="{'form-control': true, 'is-invalid': errors.has('部门主管') }" v-validate="'required|min:2'" name="部门主管">
+                            <div v-show="errors.has('部门主管')" class="text-danger">{{ errors.first('部门主管') }}</div>
                         </div>
 
                         <div class="col-sm-6">
-                            <label>部门电话</label>
-                            <input type="text" placeholder="Kopyov" class="form-control">
+                            <label>部门电话 <span class="text-danger">*</span></label>
+                            <input type="text" v-model="newDepartment.phone" placeholder="部门电话8位或11位" :class="{'form-control': true, 'is-invalid': errors.has('部门电话') }" v-validate="{required:true,numeric:true,regex: /^(\d{8}|\d{11})$/}" name="部门电话">
+                            <div v-show="errors.has('部门电话')" class="text-danger">{{ errors.first('部门电话') }}</div>
                         </div>
                     </div>
                 </div>
@@ -78,12 +84,12 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <label>排序NO.</label>
-                            <input type="text" placeholder="Eugene" class="form-control">
+                            <input type="text" v-model="newDepartment.order" placeholder="数值越小排名越靠前" class="form-control">
                         </div>
 
                         <div class="col-sm-6">
                             <label>启用标志</label>
-                            <input type="text" placeholder="Kopyov" class="form-control">
+                            <input type="text" v-model="newDepartment.status" placeholder="" class="form-control">
                         </div>
                     </div>
                 </div>
@@ -91,7 +97,7 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <label>备注信息</label>
-                            <input type="text" placeholder="Eugene" class="form-control">
+                            <input type="text" v-model="newDepartment.remarks" placeholder="备注信息" class="form-control">
                         </div>
                     </div>
                 </div>
@@ -103,6 +109,10 @@
 </template>
 
 <script>
+    //引入vue-treeselect
+    import Treeselect from '@riophae/vue-treeselect'
+    //引入vue-treeselect的样式
+    import '@riophae/vue-treeselect/dist/vue-treeselect.css'
     import $hub from 'hub-js'
     import department_modal from './Modal_form_vertical.vue'
     export default {
@@ -110,11 +120,36 @@
             return {
                 showAddDepartmentModel:false,
                 departments:[],
+                treeselectLists:[],
+                //注意，这里必须要用自定义，不然显示不出来的
+                normalizer(node) {
+                    return {
+                        id: node.id,//指定id是什么字段
+                        label: node.name,//指定label是用的什么字段，即显示什么字段出来
+                    }
+                },
+                name:'',
+                newDepartment: {
+                    name:'',
+                    pid:null,
+                    manager:'',
+                    phone:'',
+                    order:null,
+                    status:'',
+                    remarks:''
+                },
+            }
+        },
+
+        validations: {
+            newDepartment: {
+                name: {required: true, minlen: 5},
             }
         },
 
         components: {
-            department_modal
+            department_modal,
+            Treeselect,
         },
 
         mounted() {
@@ -150,7 +185,21 @@
                 $('body').css('overflow','auto');
             },
             addDepartment() {
-                console.log('add Department')
+                this.$validator.validateAll().then((result)=> {
+                    if(result) {
+                        axios.post('/departments/add',{department:this.newDepartment}).then(res=> {
+                            console.log('haha');
+                        }).catch(error=> {
+                            throw error
+                        });
+                    }
+                })
+            },
+            reloadOptions() {
+                axios.get('/departments/get/used').then(res=> {
+                    //console.log(res.data);
+                    this.treeselectLists = res.data;
+                });
             },
             tableSetup() {
                 $(function () {
@@ -207,8 +256,9 @@
                         select: true,
                         columnDefs: [{
                             orderable: false,//不允许排序
-                            targets: [0,7]
+                            targets: [0,8]
                         }],
+                        order:[[0, 'desc']] //默认排序降序
                     });
                     //添加索引列,注意：如果要使拖拽排序看起来比较正常，那么必须让索引列这一栏生成递增的数据，即<td></td>中间必须生成数字
                     t.on('order.dt search.dt',

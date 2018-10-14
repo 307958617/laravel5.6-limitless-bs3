@@ -20,6 +20,8 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/departments', 'DepartmentsController@show_departments')->name('departments');
 Route::get('/departments/get', 'DepartmentsController@get_departments')->name('get_departments');
+Route::get('/departments/get/used', 'DepartmentsController@get_used_departments')->name('get_used_departments');
+Route::post('/departments/add', 'DepartmentsController@add_department')->name('add_department');
 
 //注册时发送邮件验证
 Route::get('email/verify/{token}', 'EmailController@verify')->name('verify.email');
