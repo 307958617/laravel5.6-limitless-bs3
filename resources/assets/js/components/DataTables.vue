@@ -89,7 +89,10 @@
 
                         <div class="col-sm-6">
                             <label>启用标志</label>
-                            <input type="text" v-model="newDepartment.status" placeholder="" class="form-control">
+                            <!--<input type="text" v-model="newDepartment.status" placeholder="" class="form-control">-->
+                            <div>
+                                <toggle-button @change="changeStatus" :v-model="newDepartment.status" :value="newDepartment.status==='F'" :width="140" :height="34" :labels="{checked: '当前处于启用状态', unchecked: '当前处于停用状态'}"/>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -109,12 +112,15 @@
 </template>
 
 <script>
+    import Vue from 'vue'
+    import ToggleButton from 'vue-js-toggle-button'
     //引入vue-treeselect
     import Treeselect from '@riophae/vue-treeselect'
     //引入vue-treeselect的样式
     import '@riophae/vue-treeselect/dist/vue-treeselect.css'
     import $hub from 'hub-js'
     import department_modal from './Modal_form_vertical.vue'
+    Vue.use(ToggleButton);
     export default {
         data() {
             return {
@@ -134,15 +140,9 @@
                     manager:'',
                     phone:'',
                     order:null,
-                    status:'',
+                    status:'T',
                     remarks:''
                 },
-            }
-        },
-
-        validations: {
-            newDepartment: {
-                name: {required: true, minlen: 5},
             }
         },
 
@@ -183,16 +183,25 @@
                 //模态框关闭的时候启用body滚动
                 $('body').css('overflow','auto');
             },
+            changeStatus() {
+                if(this.newDepartment.status==='T') {
+                    this.newDepartment.status = 'F'
+                }else {
+                    this.newDepartment.status = 'T'
+                }
+            },
             addDepartment() {
-                this.$validator.validateAll().then((result)=> {
-                    if(result) {
-                        axios.post('/departments/add',{department:this.newDepartment}).then(res=> {
-                            console.log('haha');
-                        }).catch(error=> {
-                            throw error
-                        });
-                    }
-                })
+//                this.$validator.validateAll().then((result)=> {
+//                    if(result) {
+//                        axios.post('/departments/add',{department:this.newDepartment}).then(res=> {
+//
+//                            console.log('haha');
+//                        }).catch(error=> {
+//                            throw error
+//                        });
+//                    }
+//                })
+                console.log(this.newDepartment);
             },
             reloadOptions() {
                 axios.get('/departments/get/used').then(res=> {
