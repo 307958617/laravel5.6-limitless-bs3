@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Department extends Model
 {
     protected $fillable = [
-        'pid','name','manager','phone','remarks','order'
+        'pid','name','manager','phone','remarks','order','status'
     ];
 
     public function users()

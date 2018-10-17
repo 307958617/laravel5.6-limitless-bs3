@@ -54,7 +54,7 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <label>部门名称 <span class="text-danger">*</span></label>
-                            <input type="text" v-model="newDepartment.name" placeholder="新部门的名称" :class="{'form-control': true, 'is-invalid': errors.has('部门名称') }" v-validate="'required|min:2'" name="部门名称">
+                            <input type="text" @input="checkName"  v-model="newDepartment.name" placeholder="新部门的名称" :class="{'form-control': true, 'is-invalid': errors.has('部门名称') }" v-validate="'required|min:2|unique'" name="部门名称">
                             <div v-show="errors.has('部门名称')" class="text-danger">{{ errors.first('部门名称') }}</div>
                         </div>
 
@@ -91,7 +91,7 @@
                             <label>启用标志</label>
                             <!--<input type="text" v-model="newDepartment.status" placeholder="" class="form-control">-->
                             <div>
-                                <toggle-button @change="changeStatus" :v-model="newDepartment.status" :value="newDepartment.status==='F'" :width="140" :height="34" :labels="{checked: '当前处于启用状态', unchecked: '当前处于停用状态'}"/>
+                                <toggle-button @change="changeStatus" :v-model="newDepartment.status" :value="newDepartment.status==='T'" :width="140" :height="34" :labels="{checked: '当前处于启用状态', unchecked: '当前处于停用状态'}"/>
                             </div>
                         </div>
                     </div>
@@ -190,18 +190,37 @@
                     this.newDepartment.status = 'T'
                 }
             },
+            checkName() {
+                console.log(this.newDepartment.name);
+                let that = this;
+                //判断部门名称的唯一性
+                this.$validator.extend('unique',{
+                    validate: value => {
+                        const promise = new Promise(function(resolve, reject) {
+                            axios.post('/departments/validate/name',{name:that.newDepartment.name}).then(res=> {
+                                resolve(res.data.data);
+                                console.log(res.data.data)
+                            })
+                        });
+                        //必须返回一个promise对象，否则报错
+                        return promise.then((val)=>{
+                            return  !val   //val值取反
+                        })
+                    }
+                })
+            },
             addDepartment() {
-//                this.$validator.validateAll().then((result)=> {
-//                    if(result) {
-//                        axios.post('/departments/add',{department:this.newDepartment}).then(res=> {
-//
-//                            console.log('haha');
-//                        }).catch(error=> {
-//                            throw error
-//                        });
-//                    }
-//                })
                 console.log(this.newDepartment);
+                this.$validator.validateAll().then((result)=> {//验证是否符合表单规则
+                    if(result) {//如果符合才提交
+                        axios.post('/departments/add',{department:this.newDepartment}).then(res=> {
+
+                            console.log('添加成功');
+                        }).catch(error=> {
+                            throw error
+                        });
+                    }
+                })
             },
             reloadOptions() {
                 axios.get('/departments/get/used').then(res=> {

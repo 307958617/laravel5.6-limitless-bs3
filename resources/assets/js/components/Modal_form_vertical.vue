@@ -56,9 +56,16 @@
             部门电话: {
                 regex: '电话号码必须是8位或11位'
             },
+            部门名称: {
+                isUnique: '部门名称已经存在，请更换！'
+            }
         }
     };
     Validator.localize('zh_CN', dict);
+    Validator.extend('unique', {
+        getMessage: 部门名称 => '该部门名称已经存在，请修改！',
+        validate: value => !! value
+    });
     //自定义部门电话判断提示--结束
     export default {
         methods: {

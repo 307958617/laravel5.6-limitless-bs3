@@ -31,6 +31,17 @@ class DepartmentsController extends Controller
         return $used_departments;
     }
 
+    //验证部门(科室)是否重名
+    public function validate_name(Request $request)
+    {
+        $name = $request->get('name');
+        $names = Department::all()->pluck('name');
+        if ($names->contains($name)) {
+            return response()->json(['data'=>true]);
+        }
+        return response()->json(['data'=>false]);
+    }
+
     public function add_department(Request $request)
     {
         $department = $request->get('department');
