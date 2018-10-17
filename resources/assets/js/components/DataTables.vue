@@ -84,14 +84,14 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <label>排序NO.</label>
-                            <input type="text" v-model="newDepartment.order" placeholder="数值越小排名越靠前" class="form-control">
+                            <input type="text" v-model="newDepartment.order" placeholder="数值越大排名越靠前" class="form-control">
                         </div>
 
                         <div class="col-sm-6">
                             <label>启用标志</label>
                             <!--<input type="text" v-model="newDepartment.status" placeholder="" class="form-control">-->
                             <div>
-                                <toggle-button @change="changeStatus" :v-model="newDepartment.status" :value="newDepartment.status==='T'" :width="140" :height="34" :labels="{checked: '当前处于启用状态', unchecked: '当前处于停用状态'}"/>
+                                <toggle-button @change="changeStatus" :sync="true" :v-model="newDepartment.status" :value="newDepartment.status==='T'" :width="140" :height="34" :labels="{checked: '当前处于启用状态', unchecked: '当前处于停用状态'}"/>
                             </div>
                         </div>
                     </div>
@@ -161,8 +161,6 @@
                     this.tableSetup();
                 })
             });
-
-
             // 注册监听者
             $hub.on( 'test', ( data ) => {
                 console.log( 'test', data );
@@ -173,6 +171,8 @@
                return axios.get('/departments/get')
             },
             showAddModel() {
+                //模态框重新显示之前，清空所有的验证提示消息。
+                this.errors.clear();
                 this.showAddDepartmentModel = true;
                 //模态框弹出的时候禁止底层body滚动
                 $('body').css('overflow','hidden');
@@ -180,6 +180,16 @@
             },
             closeAddModal() {
                 this.showAddDepartmentModel = false;
+                //模态框关闭的时候清空表中的数据为初始值
+                this.newDepartment = {
+                    name:'',
+                    pid:null,
+                    manager:'',
+                    phone:'',
+                    order:null,
+                    status:'T',
+                    remarks:''
+                };
                 //模态框关闭的时候启用body滚动
                 $('body').css('overflow','auto');
             },
