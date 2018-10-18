@@ -38,7 +38,7 @@
                     <td>{{ department.manager ? department.manager:'/' }}</td>
                     <td>{{ department.phone ? department.phone:'/'}}</td>
                     <td>{{ department.remarks ? department.remarks:'/'}}</td>
-                    <td>{{ department.order ? department.order:'/'}}</td>
+                    <td>{{ department.order ? department.order:''}}</td>
                     <td><span :class="[department.status==='已启用'? 'label label-success' : 'label label-danger']">{{ department.status }}</span></td>
                     <td>
                         <button class="edit btn btn-xxs btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 修改</button>
@@ -220,12 +220,22 @@
                 })
             },
             addDepartment() {
-                console.log(this.newDepartment);
                 this.$validator.validateAll().then((result)=> {//验证是否符合表单规则
                     if(result) {//如果符合才提交
                         axios.post('/departments/add',{department:this.newDepartment}).then(res=> {
-
-                            console.log('添加成功');
+                            let table = $('.datatable-button-html5-columns').DataTable();
+                            table.row.add([
+                                this.newDepartment.order?this.newDepartment.order:0,
+                                this.newDepartment.name,
+                                this.newDepartment.pid?res.data:'/',
+                                this.newDepartment.manager,
+                                this.newDepartment.phone,
+                                this.newDepartment.remarks?this.newDepartment.remarks:'/',
+                                this.newDepartment.order?this.newDepartment.order:'',
+                                this.newDepartment.status==='T'?'<span class="label label-success">已启用</span>':'<span class="label label-danger">未启用</span>',
+                                '<button class="edit btn btn-xxs btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 修改</button>',
+                            ]).draw(false);
+                            this.closeAddModal();
                         }).catch(error=> {
                             throw error
                         });

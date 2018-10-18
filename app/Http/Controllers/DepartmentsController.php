@@ -54,5 +54,7 @@ class DepartmentsController extends Controller
             'status' => $department['status'],
             'remarks' => $department['remarks'],
         ]);
+        $p_name = Department::find($department['pid'])->name;
+        return $p_name;
     }
 }
