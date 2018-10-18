@@ -5,7 +5,7 @@
             <h5 class="panel-title">部门信息列表</h5>
             <div class="heading-elements">
                 <ul class="icons-list">
-                    <li><a data-action="collapse"></a></li>
+                    <!--<li><a data-action="collapse"></a></li>-->
                     <li><a data-action="reload"></a></li>
                     <li><a data-action="close"></a></li>
                 </ul>
@@ -20,6 +20,7 @@
             <thead>
             <tr>
                 <th>NO.</th>
+                <th>PID</th>
                 <th>部门名称</th>
                 <th>上级部门</th>
                 <th>部门主管</th>
@@ -30,15 +31,17 @@
                 <th>操 作</th>
             </tr>
             </thead>
-            <tbody>
+            <!--这里需要特别注意！！！，@click事件必须放到tbody上面，如果放到tr上，那么新增加的行的点击事件将不会被触发-->
+            <tbody @click="showEditModel($event)">
                 <tr v-for="department in departments">
                     <td>{{ department.order }}</td> <!-- 默认排序为order字段，datatable必须将order放到第一列才行 -->
+                    <td>{{ department.pid[0] }}</td><!-- 上级部门的id -->
                     <td>{{ department.name }}</td>
-                    <td>{{ department.pid }}</td>
+                    <td>{{ department.pid[1] }}</td><!-- 上级部门的名称 -->
                     <td>{{ department.manager ? department.manager:'/' }}</td>
                     <td>{{ department.phone ? department.phone:'/'}}</td>
                     <td>{{ department.remarks ? department.remarks:'/'}}</td>
-                    <td>{{ department.order ? department.order:''}}</td>
+                    <td>{{ department.order ? department.order:'0'}}</td>
                     <td><span :class="[department.status==='已启用'? 'label label-success' : 'label label-danger']">{{ department.status }}</span></td>
                     <td>
                         <button class="edit btn btn-xxs btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 修改</button>
@@ -84,7 +87,7 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <label>排序NO.</label>
-                            <input type="text" v-model="newDepartment.order" placeholder="数值越大排名越靠前" class="form-control">
+                            <input type="text" v-model="newDepartment.order" placeholder="数值越大排名越靠前,默认为0" class="form-control">
                         </div>
 
                         <div class="col-sm-6">
@@ -107,6 +110,69 @@
             </div>
             <div slot="footer-commit-text">添 加</div>
         </department_modal>
+
+        <department_modal v-show="showEditDepartmentModel" @close="closeEditModal" @commit="editDepartment">
+            <div slot="head-title">编辑部门</div>
+            <div slot="body">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label>部门名称 <span class="text-danger">*</span></label>
+                            <input type="text" @input="checkName"  v-model="newDepartment.name" placeholder="新部门的名称" :class="{'form-control': true, 'is-invalid': errors.has('部门名称') }" v-validate="'required|min:2|unique'" name="部门名称">
+                            <div v-show="errors.has('部门名称')" class="text-danger">{{ errors.first('部门名称') }}</div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label>选择上级部门</label>
+                            <!--这里引入了'@riophae/vue-treeselect'插件，具体用法参加GitHub-->
+                            <treeselect @open="reloadOptions" v-model="newDepartment.pid" placeholder="选择上级科室,不选默认为顶级科室" :normalizer="normalizer" :options="treeselectLists"></treeselect>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label>部门主管 <span class="text-danger">*</span></label>
+                            <input type="text" v-model="newDepartment.manager" placeholder="部门主管" :class="{'form-control': true, 'is-invalid': errors.has('部门主管') }" v-validate="'required|min:2'" name="部门主管">
+                            <div v-show="errors.has('部门主管')" class="text-danger">{{ errors.first('部门主管') }}</div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label>部门电话 <span class="text-danger">*</span></label>
+                            <input type="text" v-model="newDepartment.phone" placeholder="部门电话8位或11位" :class="{'form-control': true, 'is-invalid': errors.has('部门电话') }" v-validate="{required:true,numeric:true,regex: /^(\d{8}|\d{11})$/}" name="部门电话">
+                            <div v-show="errors.has('部门电话')" class="text-danger">{{ errors.first('部门电话') }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label>排序NO.</label>
+                            <input type="text" v-model="newDepartment.order" placeholder="数值越大排名越靠前,默认为0" class="form-control">
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label>启用标志</label>
+                            <!--<input type="text" v-model="newDepartment.status" placeholder="" class="form-control">-->
+                            <div>
+                                <toggle-button @change="changeStatus" :sync="true" :v-model="newDepartment.status" :value="newDepartment.status==='T'" :width="140" :height="34" :labels="{checked: '当前处于启用状态', unchecked: '当前处于停用状态'}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label>备注信息</label>
+                            <input type="text" v-model="newDepartment.remarks" placeholder="备注信息" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div slot="footer-commit-text">添 加</div>
+        </department_modal>
+        <!--引入‘vue-snotify’插件，用于显示提示消息，比如成功添加，删除确认等提示-->
+        <vue-snotify></vue-snotify>
     </div>
     <!-- /column selectors -->
 </template>
@@ -125,8 +191,9 @@
         data() {
             return {
                 showAddDepartmentModel:false,
+                showEditDepartmentModel:false,
                 departments:[],
-                treeselectLists:[],
+                treeselectLists:[],//所有的节点
                 //注意，这里必须要用自定义，不然显示不出来的
                 normalizer(node) {
                     return {
@@ -193,6 +260,52 @@
                 //模态框关闭的时候启用body滚动
                 $('body').css('overflow','auto');
             },
+            showEditModel(e) {
+                let buttonClass = $(e.target).get(0).className;
+                if(buttonClass.indexOf('edit') !== -1) {
+                    this.showEditDepartmentModel = true;
+                    this.reloadOptions();
+                    $('body').css('overflow','hidden');
+                    let table = $('.datatable-button-html5-columns').DataTable();
+                    let tr = $(e.target.closest('tr'));
+                    let row = table.row(tr.get(0));
+                    let data = row.data();
+                    this.newDepartment.name = data['2'];
+                    this.newDepartment.manager = data['4'];
+                    this.newDepartment.phone = data['5'];
+                    this.newDepartment.remarks = data['6'];
+                    this.newDepartment.order = data['7'];
+                    if(data['8'] === '<span class="label label-success">已启用</span>') {
+                        this.newDepartment.status = 'T'
+                    }else {
+                        this.newDepartment.status = 'F'
+                    }
+                    if (data['1']) {
+                        this.newDepartment.pid = data['1'];
+                    }
+                    console.log(this.newDepartment.status);
+                }
+
+            },
+            closeEditModal() {
+                this.showEditDepartmentModel = false;
+                //模态框关闭的时候清空表中的数据为初始值
+                this.newDepartment = {
+                    name:'',
+                    pid:null,
+                    manager:'',
+                    phone:'',
+                    order:null,
+                    status:'T',
+                    remarks:''
+                };
+
+                //模态框关闭的时候启用body滚动
+                $('body').css('overflow','auto');
+            },
+            editDepartment() {
+
+            },
             changeStatus() {
                 if(this.newDepartment.status==='T') {
                     this.newDepartment.status = 'F'
@@ -226,16 +339,19 @@
                             let table = $('.datatable-button-html5-columns').DataTable();
                             table.row.add([
                                 this.newDepartment.order?this.newDepartment.order:0,
+                                res.data[0],
                                 this.newDepartment.name,
-                                this.newDepartment.pid?res.data:'/',
+                                this.newDepartment.pid?res.data[1]:'/',
                                 this.newDepartment.manager,
                                 this.newDepartment.phone,
                                 this.newDepartment.remarks?this.newDepartment.remarks:'/',
-                                this.newDepartment.order?this.newDepartment.order:'',
+                                this.newDepartment.order?this.newDepartment.order:'0',
                                 this.newDepartment.status==='T'?'<span class="label label-success">已启用</span>':'<span class="label label-danger">未启用</span>',
                                 '<button class="edit btn btn-xxs btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 修改</button>',
                             ]).draw(false);
                             this.closeAddModal();
+                            console.log(res.data);
+                            this.$snotify.success('添加成功！');
                         }).catch(error=> {
                             throw error
                         });
@@ -296,15 +412,28 @@
                                 {
                                     extend: 'colvis',
                                     text: '<i class="icon-three-bars"></i> <span class="caret"></span>',
-                                    className: 'btn bg-blue btn-icon'
+                                    className: 'btn bg-blue btn-icon',
+                                    columns:':not(.noVis)'//排除class名称为noVis的列
                                 }
                             ]
                         },
                         select: true,
-                        columnDefs: [{
-                            orderable: false,//不允许排序
-                            targets: [0,8]
-                        }],
+                        columnDefs: [
+                            {
+                                orderable: false,//不允许排序
+                                targets: [0,8]
+                            },
+                            //设置隐藏PID列的class名称以便colvis根据它来排除它
+                            {
+                                targets: 1,
+                                className: 'noVis',
+                            },
+                            //隐藏PID这一列
+                            {
+                                visible:false,
+                                targets:1
+                            }
+                        ],
                         order:[[0, 'desc']] //默认排序降序
                     });
                     //添加索引列,注意：如果要使拖拽排序看起来比较正常，那么必须让索引列这一栏生成递增的数据，即<td></td>中间必须生成数字

@@ -45,7 +45,7 @@ class DepartmentsController extends Controller
     public function add_department(Request $request)
     {
         $department = $request->get('department');
-        Department::create([
+        $new_department = Department::create([
             'name' => $department['name'],
             'pid' => $department['pid'],
             'manager' => $department['manager'],
@@ -54,7 +54,16 @@ class DepartmentsController extends Controller
             'status' => $department['status'],
             'remarks' => $department['remarks'],
         ]);
-        $p_name = Department::find($department['pid'])->name;
-        return $p_name;
+        if ($department['pid']) {
+            //根据传递过来的pid值，找到对应的上级科室名称并传给客户端
+            $p_name = Department::find($department['pid'])->name;
+        } else {
+            $p_name = '';
+        }
+
+        //同时将新创建的科室id也传递到客户端
+        $id = $new_department->id;
+
+        return [$id,$p_name];
     }
 }

@@ -19,9 +19,9 @@ class Department extends Model
     {
         $p_name = $this->find($value)['name'];
         if($p_name) {
-            return $p_name;
+            return [$value,$p_name];//将pid和名称同时传递到表格里面，在编辑部门的时候需要用到pid，在显示表格的时候，需要用到p_name
         }
-        return '/';
+        return [$value,'/'];
     }
 
     public function getStatusAttribute($value)
