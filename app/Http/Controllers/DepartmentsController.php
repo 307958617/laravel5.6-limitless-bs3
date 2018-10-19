@@ -38,8 +38,7 @@ class DepartmentsController extends Controller
         $isEdit = $request->get('isEdit');
         $collect= Department::all()->pluck('name');
         $collect2 = $collect->diff([$isEdit]);
-
-        if($isEdit) {
+        if($isEdit) {//判断是否打开的是编辑窗口，如果是编辑窗口，将不检测当前编辑的部门名称
             $names = $collect2;
         }else {
             $names = $collect;
@@ -63,16 +62,46 @@ class DepartmentsController extends Controller
             'status' => $department['status'],
             'remarks' => $department['remarks'],
         ]);
-        if ($department['pid']) {
+//        if ($department['pid']) {
+//            //根据传递过来的pid值，找到对应的上级科室名称并传给客户端
+//            $p_name = Department::find($department['pid'])->name;
+//        } else {
+//            $p_name = '';
+//        }
+        $p_name = $this->get_p_name($department['pid']);
+
+        return [$department['pid'],$p_name];
+    }
+
+    public function edit_department(Request $request)
+    {
+        $isEditName = $request->get('isEdit');
+        $newDepartment = $request->get('department');
+
+        $department = Department::where('name',$isEditName)->first();
+            $department->name = $newDepartment['name'];
+            $department->pid = $newDepartment['pid'];
+            $department->manager = $newDepartment['manager'];
+            $department->phone = $newDepartment['phone'];
+            $department->order = $newDepartment['order'];
+            $department->status = $newDepartment['status'];
+            $department->remarks = $newDepartment['remarks'];
+        $department->save();
+
+        $p_name = $this->get_p_name($newDepartment['pid']);
+
+        return $p_name;
+
+    }
+
+    public function get_p_name($pid)
+    {
+        if ($pid) {
             //根据传递过来的pid值，找到对应的上级科室名称并传给客户端
-            $p_name = Department::find($department['pid'])->name;
+            $p_name = Department::find($pid)->name;
         } else {
             $p_name = '';
         }
-
-        //同时将新创建的科室id也传递到客户端
-        $id = $new_department->id;
-
-        return [$id,$p_name];
+        return $p_name;
     }
 }

@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 20);
+/******/ 	return __webpack_require__(__webpack_require__.s = 21);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -71,7 +71,7 @@
 
 
 var bind = __webpack_require__(8);
-var isBuffer = __webpack_require__(32);
+var isBuffer = __webpack_require__(33);
 
 /*global toString:true*/
 
@@ -375,142 +375,6 @@ module.exports = {
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports) {
-
-/* globals __VUE_SSR_CONTEXT__ */
-
-// IMPORTANT: Do NOT use ES2015 features in this file.
-// This module is a runtime utility for cleaner component module output and will
-// be included in the final webpack user bundle.
-
-module.exports = function normalizeComponent (
-  rawScriptExports,
-  compiledTemplate,
-  functionalTemplate,
-  injectStyles,
-  scopeId,
-  moduleIdentifier /* server only */
-) {
-  var esModule
-  var scriptExports = rawScriptExports = rawScriptExports || {}
-
-  // ES6 modules interop
-  var type = typeof rawScriptExports.default
-  if (type === 'object' || type === 'function') {
-    esModule = rawScriptExports
-    scriptExports = rawScriptExports.default
-  }
-
-  // Vue.extend constructor export interop
-  var options = typeof scriptExports === 'function'
-    ? scriptExports.options
-    : scriptExports
-
-  // render functions
-  if (compiledTemplate) {
-    options.render = compiledTemplate.render
-    options.staticRenderFns = compiledTemplate.staticRenderFns
-    options._compiled = true
-  }
-
-  // functional template
-  if (functionalTemplate) {
-    options.functional = true
-  }
-
-  // scopedId
-  if (scopeId) {
-    options._scopeId = scopeId
-  }
-
-  var hook
-  if (moduleIdentifier) { // server build
-    hook = function (context) {
-      // 2.3 injection
-      context =
-        context || // cached call
-        (this.$vnode && this.$vnode.ssrContext) || // stateful
-        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
-      // 2.2 with runInNewContext: true
-      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
-        context = __VUE_SSR_CONTEXT__
-      }
-      // inject component styles
-      if (injectStyles) {
-        injectStyles.call(this, context)
-      }
-      // register component module identifier for async chunk inferrence
-      if (context && context._registeredComponents) {
-        context._registeredComponents.add(moduleIdentifier)
-      }
-    }
-    // used by ssr in case component is cached and beforeCreate
-    // never gets called
-    options._ssrRegister = hook
-  } else if (injectStyles) {
-    hook = injectStyles
-  }
-
-  if (hook) {
-    var functional = options.functional
-    var existing = functional
-      ? options.render
-      : options.beforeCreate
-
-    if (!functional) {
-      // inject component registration as beforeCreate hook
-      options.beforeCreate = existing
-        ? [].concat(existing, hook)
-        : [hook]
-    } else {
-      // for template-only hot-reload because in that case the render fn doesn't
-      // go through the normalizer
-      options._injectStyles = hook
-      // register for functioal component in vue file
-      options.render = function renderWithStyleInjection (h, context) {
-        hook.call(context)
-        return existing(h, context)
-      }
-    }
-  }
-
-  return {
-    esModule: esModule,
-    exports: scriptExports,
-    options: options
-  }
-}
-
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11473,10 +11337,10 @@ Vue.compile = compileToFunctions;
 
 module.exports = Vue;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(49).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(50).setImmediate))
 
 /***/ }),
-/* 4 */
+/* 2 */
 /***/ (function(module, exports) {
 
 /*
@@ -11558,6 +11422,142 @@ function toComment(sourceMap) {
 
 
 /***/ }),
+/* 3 */
+/***/ (function(module, exports) {
+
+/* globals __VUE_SSR_CONTEXT__ */
+
+// IMPORTANT: Do NOT use ES2015 features in this file.
+// This module is a runtime utility for cleaner component module output and will
+// be included in the final webpack user bundle.
+
+module.exports = function normalizeComponent (
+  rawScriptExports,
+  compiledTemplate,
+  functionalTemplate,
+  injectStyles,
+  scopeId,
+  moduleIdentifier /* server only */
+) {
+  var esModule
+  var scriptExports = rawScriptExports = rawScriptExports || {}
+
+  // ES6 modules interop
+  var type = typeof rawScriptExports.default
+  if (type === 'object' || type === 'function') {
+    esModule = rawScriptExports
+    scriptExports = rawScriptExports.default
+  }
+
+  // Vue.extend constructor export interop
+  var options = typeof scriptExports === 'function'
+    ? scriptExports.options
+    : scriptExports
+
+  // render functions
+  if (compiledTemplate) {
+    options.render = compiledTemplate.render
+    options.staticRenderFns = compiledTemplate.staticRenderFns
+    options._compiled = true
+  }
+
+  // functional template
+  if (functionalTemplate) {
+    options.functional = true
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = scopeId
+  }
+
+  var hook
+  if (moduleIdentifier) { // server build
+    hook = function (context) {
+      // 2.3 injection
+      context =
+        context || // cached call
+        (this.$vnode && this.$vnode.ssrContext) || // stateful
+        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
+      // 2.2 with runInNewContext: true
+      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+        context = __VUE_SSR_CONTEXT__
+      }
+      // inject component styles
+      if (injectStyles) {
+        injectStyles.call(this, context)
+      }
+      // register component module identifier for async chunk inferrence
+      if (context && context._registeredComponents) {
+        context._registeredComponents.add(moduleIdentifier)
+      }
+    }
+    // used by ssr in case component is cached and beforeCreate
+    // never gets called
+    options._ssrRegister = hook
+  } else if (injectStyles) {
+    hook = injectStyles
+  }
+
+  if (hook) {
+    var functional = options.functional
+    var existing = functional
+      ? options.render
+      : options.beforeCreate
+
+    if (!functional) {
+      // inject component registration as beforeCreate hook
+      options.beforeCreate = existing
+        ? [].concat(existing, hook)
+        : [hook]
+    } else {
+      // for template-only hot-reload because in that case the render fn doesn't
+      // go through the normalizer
+      options._injectStyles = hook
+      // register for functioal component in vue file
+      options.render = function renderWithStyleInjection (h, context) {
+        hook.call(context)
+        return existing(h, context)
+      }
+    }
+  }
+
+  return {
+    esModule: esModule,
+    exports: scriptExports,
+    options: options
+  }
+}
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11577,7 +11577,7 @@ if (typeof DEBUG !== 'undefined' && DEBUG) {
   ) }
 }
 
-var listToStyles = __webpack_require__(57)
+var listToStyles = __webpack_require__(62)
 
 /*
 type StyleObject = {
@@ -11793,7 +11793,7 @@ function applyToTag (styleElement, obj) {
 /* WEBPACK VAR INJECTION */(function(process) {
 
 var utils = __webpack_require__(0);
-var normalizeHeaderName = __webpack_require__(34);
+var normalizeHeaderName = __webpack_require__(35);
 
 var DEFAULT_CONTENT_TYPE = {
   'Content-Type': 'application/x-www-form-urlencoded'
@@ -12133,12 +12133,12 @@ process.umask = function() { return 0; };
 
 
 var utils = __webpack_require__(0);
-var settle = __webpack_require__(35);
-var buildURL = __webpack_require__(37);
-var parseHeaders = __webpack_require__(38);
-var isURLSameOrigin = __webpack_require__(39);
+var settle = __webpack_require__(36);
+var buildURL = __webpack_require__(38);
+var parseHeaders = __webpack_require__(39);
+var isURLSameOrigin = __webpack_require__(40);
 var createError = __webpack_require__(11);
-var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(40);
+var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(41);
 
 module.exports = function xhrAdapter(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -12235,7 +12235,7 @@ module.exports = function xhrAdapter(config) {
     // This is only done if running in a standard browser environment.
     // Specifically not if we're in a web worker, or react-native.
     if (utils.isStandardBrowserEnv()) {
-      var cookies = __webpack_require__(41);
+      var cookies = __webpack_require__(42);
 
       // Add xsrf header
       var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -12319,7 +12319,7 @@ module.exports = function xhrAdapter(config) {
 "use strict";
 
 
-var enhanceError = __webpack_require__(36);
+var enhanceError = __webpack_require__(37);
 
 /**
  * Create an Error with the specified message, config, error code, request and response.
@@ -12379,6 +12379,365 @@ module.exports = Cancel;
 /* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+
+var stylesInDom = {};
+
+var	memoize = function (fn) {
+	var memo;
+
+	return function () {
+		if (typeof memo === "undefined") memo = fn.apply(this, arguments);
+		return memo;
+	};
+};
+
+var isOldIE = memoize(function () {
+	// Test for IE <= 9 as proposed by Browserhacks
+	// @see http://browserhacks.com/#hack-e71d8692f65334173fee715c222cb805
+	// Tests for existence of standard globals is to allow style-loader
+	// to operate correctly into non-standard environments
+	// @see https://github.com/webpack-contrib/style-loader/issues/177
+	return window && document && document.all && !window.atob;
+});
+
+var getElement = (function (fn) {
+	var memo = {};
+
+	return function(selector) {
+		if (typeof memo[selector] === "undefined") {
+			memo[selector] = fn.call(this, selector);
+		}
+
+		return memo[selector]
+	};
+})(function (target) {
+	return document.querySelector(target)
+});
+
+var singleton = null;
+var	singletonCounter = 0;
+var	stylesInsertedAtTop = [];
+
+var	fixUrls = __webpack_require__(55);
+
+module.exports = function(list, options) {
+	if (typeof DEBUG !== "undefined" && DEBUG) {
+		if (typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
+	}
+
+	options = options || {};
+
+	options.attrs = typeof options.attrs === "object" ? options.attrs : {};
+
+	// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+	// tags it will allow on a page
+	if (!options.singleton) options.singleton = isOldIE();
+
+	// By default, add <style> tags to the <head> element
+	if (!options.insertInto) options.insertInto = "head";
+
+	// By default, add <style> tags to the bottom of the target
+	if (!options.insertAt) options.insertAt = "bottom";
+
+	var styles = listToStyles(list, options);
+
+	addStylesToDom(styles, options);
+
+	return function update (newList) {
+		var mayRemove = [];
+
+		for (var i = 0; i < styles.length; i++) {
+			var item = styles[i];
+			var domStyle = stylesInDom[item.id];
+
+			domStyle.refs--;
+			mayRemove.push(domStyle);
+		}
+
+		if(newList) {
+			var newStyles = listToStyles(newList, options);
+			addStylesToDom(newStyles, options);
+		}
+
+		for (var i = 0; i < mayRemove.length; i++) {
+			var domStyle = mayRemove[i];
+
+			if(domStyle.refs === 0) {
+				for (var j = 0; j < domStyle.parts.length; j++) domStyle.parts[j]();
+
+				delete stylesInDom[domStyle.id];
+			}
+		}
+	};
+};
+
+function addStylesToDom (styles, options) {
+	for (var i = 0; i < styles.length; i++) {
+		var item = styles[i];
+		var domStyle = stylesInDom[item.id];
+
+		if(domStyle) {
+			domStyle.refs++;
+
+			for(var j = 0; j < domStyle.parts.length; j++) {
+				domStyle.parts[j](item.parts[j]);
+			}
+
+			for(; j < item.parts.length; j++) {
+				domStyle.parts.push(addStyle(item.parts[j], options));
+			}
+		} else {
+			var parts = [];
+
+			for(var j = 0; j < item.parts.length; j++) {
+				parts.push(addStyle(item.parts[j], options));
+			}
+
+			stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
+		}
+	}
+}
+
+function listToStyles (list, options) {
+	var styles = [];
+	var newStyles = {};
+
+	for (var i = 0; i < list.length; i++) {
+		var item = list[i];
+		var id = options.base ? item[0] + options.base : item[0];
+		var css = item[1];
+		var media = item[2];
+		var sourceMap = item[3];
+		var part = {css: css, media: media, sourceMap: sourceMap};
+
+		if(!newStyles[id]) styles.push(newStyles[id] = {id: id, parts: [part]});
+		else newStyles[id].parts.push(part);
+	}
+
+	return styles;
+}
+
+function insertStyleElement (options, style) {
+	var target = getElement(options.insertInto)
+
+	if (!target) {
+		throw new Error("Couldn't find a style target. This probably means that the value for the 'insertInto' parameter is invalid.");
+	}
+
+	var lastStyleElementInsertedAtTop = stylesInsertedAtTop[stylesInsertedAtTop.length - 1];
+
+	if (options.insertAt === "top") {
+		if (!lastStyleElementInsertedAtTop) {
+			target.insertBefore(style, target.firstChild);
+		} else if (lastStyleElementInsertedAtTop.nextSibling) {
+			target.insertBefore(style, lastStyleElementInsertedAtTop.nextSibling);
+		} else {
+			target.appendChild(style);
+		}
+		stylesInsertedAtTop.push(style);
+	} else if (options.insertAt === "bottom") {
+		target.appendChild(style);
+	} else {
+		throw new Error("Invalid value for parameter 'insertAt'. Must be 'top' or 'bottom'.");
+	}
+}
+
+function removeStyleElement (style) {
+	if (style.parentNode === null) return false;
+	style.parentNode.removeChild(style);
+
+	var idx = stylesInsertedAtTop.indexOf(style);
+	if(idx >= 0) {
+		stylesInsertedAtTop.splice(idx, 1);
+	}
+}
+
+function createStyleElement (options) {
+	var style = document.createElement("style");
+
+	options.attrs.type = "text/css";
+
+	addAttrs(style, options.attrs);
+	insertStyleElement(options, style);
+
+	return style;
+}
+
+function createLinkElement (options) {
+	var link = document.createElement("link");
+
+	options.attrs.type = "text/css";
+	options.attrs.rel = "stylesheet";
+
+	addAttrs(link, options.attrs);
+	insertStyleElement(options, link);
+
+	return link;
+}
+
+function addAttrs (el, attrs) {
+	Object.keys(attrs).forEach(function (key) {
+		el.setAttribute(key, attrs[key]);
+	});
+}
+
+function addStyle (obj, options) {
+	var style, update, remove, result;
+
+	// If a transform function was defined, run it on the css
+	if (options.transform && obj.css) {
+	    result = options.transform(obj.css);
+
+	    if (result) {
+	    	// If transform returns a value, use that instead of the original css.
+	    	// This allows running runtime transformations on the css.
+	    	obj.css = result;
+	    } else {
+	    	// If the transform function returns a falsy value, don't add this css.
+	    	// This allows conditional loading of css
+	    	return function() {
+	    		// noop
+	    	};
+	    }
+	}
+
+	if (options.singleton) {
+		var styleIndex = singletonCounter++;
+
+		style = singleton || (singleton = createStyleElement(options));
+
+		update = applyToSingletonTag.bind(null, style, styleIndex, false);
+		remove = applyToSingletonTag.bind(null, style, styleIndex, true);
+
+	} else if (
+		obj.sourceMap &&
+		typeof URL === "function" &&
+		typeof URL.createObjectURL === "function" &&
+		typeof URL.revokeObjectURL === "function" &&
+		typeof Blob === "function" &&
+		typeof btoa === "function"
+	) {
+		style = createLinkElement(options);
+		update = updateLink.bind(null, style, options);
+		remove = function () {
+			removeStyleElement(style);
+
+			if(style.href) URL.revokeObjectURL(style.href);
+		};
+	} else {
+		style = createStyleElement(options);
+		update = applyToTag.bind(null, style);
+		remove = function () {
+			removeStyleElement(style);
+		};
+	}
+
+	update(obj);
+
+	return function updateStyle (newObj) {
+		if (newObj) {
+			if (
+				newObj.css === obj.css &&
+				newObj.media === obj.media &&
+				newObj.sourceMap === obj.sourceMap
+			) {
+				return;
+			}
+
+			update(obj = newObj);
+		} else {
+			remove();
+		}
+	};
+}
+
+var replaceText = (function () {
+	var textStore = [];
+
+	return function (index, replacement) {
+		textStore[index] = replacement;
+
+		return textStore.filter(Boolean).join('\n');
+	};
+})();
+
+function applyToSingletonTag (style, index, remove, obj) {
+	var css = remove ? "" : obj.css;
+
+	if (style.styleSheet) {
+		style.styleSheet.cssText = replaceText(index, css);
+	} else {
+		var cssNode = document.createTextNode(css);
+		var childNodes = style.childNodes;
+
+		if (childNodes[index]) style.removeChild(childNodes[index]);
+
+		if (childNodes.length) {
+			style.insertBefore(cssNode, childNodes[index]);
+		} else {
+			style.appendChild(cssNode);
+		}
+	}
+}
+
+function applyToTag (style, obj) {
+	var css = obj.css;
+	var media = obj.media;
+
+	if(media) {
+		style.setAttribute("media", media)
+	}
+
+	if(style.styleSheet) {
+		style.styleSheet.cssText = css;
+	} else {
+		while(style.firstChild) {
+			style.removeChild(style.firstChild);
+		}
+
+		style.appendChild(document.createTextNode(css));
+	}
+}
+
+function updateLink (link, options, obj) {
+	var css = obj.css;
+	var sourceMap = obj.sourceMap;
+
+	/*
+		If convertToAbsoluteUrls isn't defined, but sourcemaps are enabled
+		and there is no publicPath defined then lets turn convertToAbsoluteUrls
+		on by default.  Otherwise default to the convertToAbsoluteUrls option
+		directly
+	*/
+	var autoFixUrls = options.convertToAbsoluteUrls === undefined && sourceMap;
+
+	if (options.convertToAbsoluteUrls || autoFixUrls) {
+		css = fixUrls(css);
+	}
+
+	if (sourceMap) {
+		// http://stackoverflow.com/a/26603875
+		css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
+	}
+
+	var blob = new Blob([css], { type: "text/css" });
+
+	var oldSrc = link.href;
+
+	link.href = URL.createObjectURL(blob);
+
+	if(oldSrc) URL.revokeObjectURL(oldSrc);
+}
+
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
 /*!
  * hub.js v0.2.1
  * (c) 2018 YY UEDC
@@ -12387,7 +12746,7 @@ module.exports = Cancel;
 !function t(e,n){ true?module.exports=n():"function"==typeof define&&define.amd?define([],n):"object"==typeof exports?exports.$hub=n():e.$hub=n()}(this,function(){return function(t){function e(r){if(n[r])return n[r].exports;var o=n[r]={i:r,l:!1,exports:{}};return t[r].call(o.exports,o,o.exports,e),o.l=!0,o.exports}var n={};return e.m=t,e.c=n,e.d=function(t,n,r){e.o(t,n)||Object.defineProperty(t,n,{configurable:!1,enumerable:!0,get:r})},e.n=function(t){var n=t&&t.__esModule?function e(){return t.default}:function e(){return t};return e.d(n,"a",n),n},e.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},e.p="",e(e.s=1)}([function(t,e,n){"use strict";t.exports={iterator:function t(e,n,r,o){var i=this;2!==arguments.length||r?3!==arguments.length||o?n<e.length?r(e[n],function(){i.iterator(e,++n,r,o)}):n>=e.length-1&&o&&o():this.iterator(e,0,n,r):this.iterator(e,0,n,null)},await:function t(e,n){e.then?e.then(function(t){n&&n(t)}):n&&n(e)}}},function(t,e,n){"use strict";function r(t){return t&&t.__esModule?t:{default:t}}var o=n(2),i=r(o),u=n(3),c=r(u),f=n(4),a=r(f),s=n(5),_=r(s),v=n(6),d=r(v),h=n(7),l=r(h),p=n(8),y=r(p),b=n(9),m=r(b),g=n(10),O=r(g),j=n(11),x=r(j),w={},k={ws:[],io:[]},E={},P={},M={};t.exports={observer:w,data:E,chainer:M,socket:k,emit:i.default,on:c.default,off:a.default,store:(0,_.default)(E,w),DOM:d.default,Fetch:l.default,WS:m.default,IO:y.default,chain:O.default,converter:P,once:x.default}},function(t,e,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.default=function(t,e){var n=this.observer,r=this.data,u=this.chainer,c=function c(f){if(0===t.indexOf("@store/")){var a=t.split("@store/")[1];void 0!==r[a]&&(r[a]=e)}if(0===t.indexOf("@chain/")){var s=t.split("@chain/")[1];if(void 0!==u[s])return void o(u[s],e,function(e){i(n,t,e)})}i(n,f,e)};t instanceof Array?t.forEach(function(t){return c(t)}):c(t)};var r=n(0),o=function t(e,n,o){r.iterator(e,function(t,e){r.await(t(n),function(t){n=t,e()})},function(){o(n)})},i=function t(e,n,r){void 0!==e[n]&&e[n].forEach(function(t,e){t(r)})}},function(t,e,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.default=function(t,e){var n=this,r=this.observer,o=this.data,i=this.chainer,u=function t(n){if(void 0===r[n]&&(r[n]=[]),r[n].push(e),0===n.indexOf("@store/")){var i=n.split("@store/")[1];void 0!==o[i]&&e(o[i])}},c={};return c.key=t,t instanceof Array?(t.forEach(function(t){return u(t)}),c.off=function(){return t.forEach(function(t){return n.off(t,e)})}):(u(t),c.off=function(){return n.off(t,e)}),c}},function(t,e,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.default=function(t,e){var n=this.observer,r=function t(r){void 0!==n[r]&&n[r].forEach(function(t,o){t==e&&n[r].splice(o,1)})};t instanceof Array?t.forEach(function(t){return r(t)}):r(t)}},function(t,e,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.default=function(t,e){try{return new Proxy({},{get:function e(n,r,o){return t[r]},set:function n(r,o,i,u){if(!t[o]||t[o]!=i){t[o]=i;var c="@store/"+o;void 0!==e[c]&&e[c].forEach(function(t,e){t(i)})}}})}catch(t){console.error('[hub.js] Browser not support "Proxy"')}}},function(t,e,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.default=function(t){var e=this;if(t){var n=void 0;if(n="string"==typeof t?document.body.querySelector(t):t){var o=this.emit,i=this.format,u=this.converter,c={},f=[],a=function t(e){var n=e.type,o=void 0;if(f.forEach(function(t,e){"__from__"===t.type&&t.func===n&&(o=e)}),void 0!==o){var i=f.slice(o+1,f.length);if(i.length>0){var u=e,c=!1;r.iterator(i,function(t,e){if(!c)switch(t.type){case"__convert__":r.await(t.func(u),function(t){u=t,e()});break;case"__emit__":t.func(u),e();break;case"__from__":c=!0,e()}})}}};return c.convert=function(t){return u[t]&&f.push({type:"__convert__",func:u[t]}),c},c.from=function(t){return f.push({type:"__from__",func:t}),n.addEventListener(t,a),c},c.emit=function(t,n){return f.push({type:"__emit__",func:function r(i){n?o.bind(e)(t,{event:i,data:n}):o.bind(e)(t,i)}}),c},c.off=function(){f.forEach(function(t,e){"__from__"===t.type&&n.removeEventListener(t.func,a)})},c}}};var r=n(0)},function(t,e,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.default=function(t){var e=this,n=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{};if(t){var o=this.emit,i=this.converter,u=void 0,c={},f=[],a=function t(e){f.length>0&&r.iterator(f,function(t,n){switch(t.type){case"__convert__":r.await(t.func(e),function(t){e=t,n()});break;case"__emit__":t.func(e)}})};return c.convert=function(t){return i[t]&&f.push({type:"__convert__",func:i[t]}),c},c.emit=function(t,n){return f.push({type:"__emit__",func:function r(i){n?o.bind(e)(t,{result:i,data:n}):o.bind(e)(t,i)}}),u&&clearTimeout(u),u=setTimeout(function(){c.reload()},0),c},c.reload=function(){fetch(t,n).then(function(t){200===t.status&&t.json?t.json().then(function(t){return a(t)}):a(t)}).catch(function(t){a(t)})},c}};var r=n(0)},function(t,e,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.default=function(t){var e=this,n=this.emit,o=this.socket,i=this.converter;if(t){var u={},c=[],f=io(t);u.socket=f,o.io.push({url:t,socket:o});var a=function t(e,n){var o=void 0;if(c.forEach(function(t,n){"__from__"===t.type&&t.func===e&&(o=n)}),void 0!==o){var i=c.slice(o+1,c.length);if(i.length>0){var u=n,f=!1;r.iterator(i,function(t,e){if(!f)switch(t.type){case"__convert__":r.await(t.func(u),function(t){u=t,e()});break;case"__emit__":t.func(u),e();break;case"__from__":f=!0,e()}})}}};return u.convert=function(t){return i[t]&&c.push({type:"__convert__",func:i[t]}),u},u.from=function(t){var e=function e(n){a(t,n)};return c.push({type:"__from__",func:t,_eventListener:e}),f.on(t,e),u},u.emit=function(t,r){return c.push({type:"__emit__",func:function o(i){r?n.bind(e)(t,{event:i,data:r}):n.bind(e)(t,i)}}),u},u.off=function(){c.forEach(function(t,e){"__from__"===t.type&&f.off(t.func,t._eventListener)})},u}};var r=n(0)},function(t,e,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.default=function(t){var e=this,n=this.emit,o=this.socket,i=this.converter;if(t){var u={},c=[],f=new WebSocket(t);o.ws.push({url:t,socket:o}),u.socket=f;var a=function t(e){if(e.data)try{s(JSON.parse(e.data))}catch(t){s(e.data)}else s(e)};f.addEventListener("message",a);var s=function t(e){if(c.length>0){var n=e;r.iterator(c,function(t,e){switch(t.type){case"__convert__":r.await(t.func(n),function(t){n=t,e()});break;case"__emit__":t.func(n),e()}})}};return u.convert=function(t){return i[t]&&c.push({type:"__convert__",func:i[t]}),u},u.emit=function(t,r){return c.push({type:"__emit__",func:function o(i){r?n.bind(e)(t,{result:i,data:r}):n.bind(e)(t,i)}}),u},u.off=function(){f.removeEventListener("message",a)},u}};var r=n(0)},function(t,e,n){"use strict";t.exports=function(t){var e=this.chainer,n={};return n.pipe=function(){for(var r=arguments.length,o=Array(r),i=0;i<r;i++)o[i]=arguments[i];return e[t]?e[t]=e[t].concat(o):e[t]=o,n},n}},function(t,e,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.default=function(t,e){var n=this.observer,r=this.data,o=this.chainer,i=this.on(t,function(t){e(t),i.off()})}}])});
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports) {
 
 function _defineProperty(obj, key, value) {
@@ -12408,7 +12767,7 @@ function _defineProperty(obj, key, value) {
 module.exports = _defineProperty;
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports) {
 
 /**
@@ -12445,10 +12804,10 @@ module.exports = isObject;
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var freeGlobal = __webpack_require__(88);
+var freeGlobal = __webpack_require__(93);
 
 /** Detect free variable `self`. */
 var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
@@ -12460,11 +12819,11 @@ module.exports = root;
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isObject = __webpack_require__(16),
-    isSymbol = __webpack_require__(89);
+var isObject = __webpack_require__(17),
+    isSymbol = __webpack_require__(94);
 
 /** Used as references for various `Number` constants. */
 var NAN = 0 / 0;
@@ -12532,10 +12891,10 @@ module.exports = toNumber;
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var root = __webpack_require__(17);
+var root = __webpack_require__(18);
 
 /** Built-in value references. */
 var Symbol = root.Symbol;
@@ -12544,21 +12903,21 @@ module.exports = Symbol;
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(21);
-module.exports = __webpack_require__(118);
+__webpack_require__(22);
+module.exports = __webpack_require__(121);
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_snotify__ = __webpack_require__(155);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_snotify_styles_material_css__ = __webpack_require__(156);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_snotify__ = __webpack_require__(52);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_snotify_styles_material_css__ = __webpack_require__(53);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_snotify_styles_material_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vue_snotify_styles_material_css__);
 
 /**
@@ -12567,9 +12926,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-__webpack_require__(22);
+__webpack_require__(23);
 
-window.Vue = __webpack_require__(3);
+window.Vue = __webpack_require__(1);
 
 
 
@@ -12586,20 +12945,20 @@ Vue.use(__WEBPACK_IMPORTED_MODULE_0_vue_snotify__["b" /* default */], options);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('example-component', __webpack_require__(51));
-Vue.component('vue-datepicker', __webpack_require__(54));
-Vue.component('data-tables', __webpack_require__(71));
+Vue.component('example-component', __webpack_require__(56));
+Vue.component('vue-datepicker', __webpack_require__(59));
+Vue.component('data-tables', __webpack_require__(76));
 
 var app = new Vue({
     el: '#app'
 });
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-window._ = __webpack_require__(23);
+window._ = __webpack_require__(24);
 // window.Popper = require('popper.js').default;
 
 /**
@@ -12609,10 +12968,10 @@ window._ = __webpack_require__(23);
  */
 
 try {
-  window.$ = window.jQuery = __webpack_require__(24);
-  __webpack_require__(26);
-  __webpack_require__(27); //滚动条样式
-  __webpack_require__(29);
+  window.$ = window.jQuery = __webpack_require__(25);
+  __webpack_require__(27);
+  __webpack_require__(28); //滚动条样式
+  __webpack_require__(30);
 } catch (e) {}
 
 /**
@@ -12621,7 +12980,7 @@ try {
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-window.axios = __webpack_require__(30);
+window.axios = __webpack_require__(31);
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
@@ -12657,7 +13016,7 @@ if (token) {
 // });
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -29767,10 +30126,10 @@ if (token) {
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(7)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(7)(module)))
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module) {var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -32055,7 +32414,7 @@ if (token) {
     e ? w.readyWait++ : w.ready(!0);
   }, w.isArray = Array.isArray, w.parseJSON = JSON.parse, w.nodeName = N, w.isFunction = g, w.isWindow = y, w.camelCase = G, w.type = x, w.now = Date.now, w.isNumeric = function (e) {
     var t = w.type(e);return ("number" === t || "string" === t) && !isNaN(e - parseFloat(e));
-  }, "function" == "function" && __webpack_require__(25) && !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = (function () {
+  }, "function" == "function" && __webpack_require__(26) && !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = (function () {
     return w;
   }).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));var Jt = e.jQuery,
@@ -32066,7 +32425,7 @@ if (token) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)(module)))
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports) {
 
 /* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {/* globals __webpack_amd_options__ */
@@ -32075,7 +32434,7 @@ module.exports = __webpack_amd_options__;
 /* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports) {
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -32662,13 +33021,13 @@ if ("undefined" == typeof jQuery) throw new Error("Bootstrap's JavaScript requir
 }(jQuery);
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 /* jquery.nicescroll 3.6.8 InuYaksa*2015 MIT http://nicescroll.areaaperta.com */(function (f) {
-   true ? !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(28)], __WEBPACK_AMD_DEFINE_FACTORY__ = (f),
+   true ? !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(29)], __WEBPACK_AMD_DEFINE_FACTORY__ = (f),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)) : "object" === (typeof exports === "undefined" ? "undefined" : _typeof(exports)) ? module.exports = f(require("jquery")) : f(jQuery);
@@ -33385,7 +33744,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 });
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -43756,7 +44115,7 @@ return jQuery;
 
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports) {
 
 /* ------------------------------------------------------------------------------
@@ -44350,13 +44709,13 @@ window.addEventListener('load', function () {
 });
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(31);
+module.exports = __webpack_require__(32);
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -44364,7 +44723,7 @@ module.exports = __webpack_require__(31);
 
 var utils = __webpack_require__(0);
 var bind = __webpack_require__(8);
-var Axios = __webpack_require__(33);
+var Axios = __webpack_require__(34);
 var defaults = __webpack_require__(6);
 
 /**
@@ -44399,14 +44758,14 @@ axios.create = function create(instanceConfig) {
 
 // Expose Cancel & CancelToken
 axios.Cancel = __webpack_require__(13);
-axios.CancelToken = __webpack_require__(47);
+axios.CancelToken = __webpack_require__(48);
 axios.isCancel = __webpack_require__(12);
 
 // Expose all/spread
 axios.all = function all(promises) {
   return Promise.all(promises);
 };
-axios.spread = __webpack_require__(48);
+axios.spread = __webpack_require__(49);
 
 module.exports = axios;
 
@@ -44415,7 +44774,7 @@ module.exports.default = axios;
 
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports) {
 
 /*!
@@ -44442,7 +44801,7 @@ function isSlowBuffer (obj) {
 
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -44450,8 +44809,8 @@ function isSlowBuffer (obj) {
 
 var defaults = __webpack_require__(6);
 var utils = __webpack_require__(0);
-var InterceptorManager = __webpack_require__(42);
-var dispatchRequest = __webpack_require__(43);
+var InterceptorManager = __webpack_require__(43);
+var dispatchRequest = __webpack_require__(44);
 
 /**
  * Create a new instance of Axios
@@ -44528,7 +44887,7 @@ module.exports = Axios;
 
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -44547,7 +44906,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -44580,7 +44939,7 @@ module.exports = function settle(resolve, reject, response) {
 
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -44608,7 +44967,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
 
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -44681,7 +45040,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -44741,7 +45100,7 @@ module.exports = function parseHeaders(headers) {
 
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -44816,7 +45175,7 @@ module.exports = (
 
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -44859,7 +45218,7 @@ module.exports = btoa;
 
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -44919,7 +45278,7 @@ module.exports = (
 
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -44978,18 +45337,18 @@ module.exports = InterceptorManager;
 
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(0);
-var transformData = __webpack_require__(44);
+var transformData = __webpack_require__(45);
 var isCancel = __webpack_require__(12);
 var defaults = __webpack_require__(6);
-var isAbsoluteURL = __webpack_require__(45);
-var combineURLs = __webpack_require__(46);
+var isAbsoluteURL = __webpack_require__(46);
+var combineURLs = __webpack_require__(47);
 
 /**
  * Throws a `Cancel` if cancellation has been requested.
@@ -45071,7 +45430,7 @@ module.exports = function dispatchRequest(config) {
 
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -45098,7 +45457,7 @@ module.exports = function transformData(data, headers, fns) {
 
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -45119,7 +45478,7 @@ module.exports = function isAbsoluteURL(url) {
 
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -45140,7 +45499,7 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -45204,7 +45563,7 @@ module.exports = CancelToken;
 
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -45238,7 +45597,7 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {var scope = (typeof global !== "undefined" && global) ||
@@ -45294,7 +45653,7 @@ exports._unrefActive = exports.active = function(item) {
 };
 
 // setimmediate attaches itself to the global object
-__webpack_require__(50);
+__webpack_require__(51);
 // On some exotic environments, it's not clear which object `setimmediate` was
 // able to install onto.  Search each possibility in the same order as the
 // `setimmediate` library.
@@ -45305,10 +45664,10 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
                          (typeof global !== "undefined" && global.clearImmediate) ||
                          (this && this.clearImmediate);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -45498,18 +45857,1592 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
     attachTo.clearImmediate = clearImmediate;
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(9)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(9)))
 
 /***/ }),
-/* 51 */
+/* 52 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SnotifyPosition; });
+/* unused harmony export SnotifyStyle */
+/* unused harmony export SnotifyToast */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
+/**
+ * vue-snotify v3.2.0
+ * (c) 2018 artemsky <mr.artemsky@gmail.com>
+ * @license MIT
+ */
+
+
+/**
+ * Toast position
+ */
+var SnotifyPosition;
+(function (SnotifyPosition) {
+    SnotifyPosition["leftTop"] = "leftTop";
+    SnotifyPosition["leftCenter"] = "leftCenter";
+    SnotifyPosition["leftBottom"] = "leftBottom";
+    SnotifyPosition["rightTop"] = "rightTop";
+    SnotifyPosition["rightCenter"] = "rightCenter";
+    SnotifyPosition["rightBottom"] = "rightBottom";
+    SnotifyPosition["centerTop"] = "centerTop";
+    SnotifyPosition["centerCenter"] = "centerCenter";
+    SnotifyPosition["centerBottom"] = "centerBottom";
+})(SnotifyPosition || (SnotifyPosition = {}));
+
+/**
+ * Toast style.
+ */
+var SnotifyStyle = {
+    simple: 'simple',
+    success: 'success',
+    error: 'error',
+    warning: 'warning',
+    info: 'info',
+    async: 'async',
+    confirm: 'confirm',
+    prompt: 'prompt'
+};
+
+var script = __WEBPACK_IMPORTED_MODULE_0_vue___default.a.extend({
+    props: ['toast'],
+    data: function () {
+        return {
+            isPromptFocused: false,
+        };
+    },
+    methods: {
+        valueChanged: function (e) {
+            this.toast.value = e.target.value;
+            this.toast.eventEmitter.$emit('input');
+        }
+    }
+});
+
+/* script */
+
+            const __vue_script__ = script;
+            
+/* template */
+var __vue_render__ = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('span',{staticClass:"snotifyToast__input",class:{'snotifyToast__input--filled': _vm.isPromptFocused}},[_c('input',{staticClass:"snotifyToast__input__field",attrs:{"type":"text","id":_vm.toast.id},on:{"input":_vm.valueChanged,"focus":function($event){_vm.isPromptFocused = true;},"blur":function($event){_vm.isPromptFocused = !!_vm.toast.value.length;}}}),_vm._v(" "),_c('label',{staticClass:"snotifyToast__input__label",attrs:{"for":_vm.toast.id}},[_c('span',{staticClass:"snotifyToast__input__labelContent"},[_vm._v(_vm._s(_vm._f("truncate")(_vm.toast.config.placeholder)))])])])};
+var __vue_staticRenderFns__ = [];
+
+  /* style */
+  const __vue_inject_styles__ = undefined;
+  /* scoped */
+  const __vue_scope_id__ = undefined;
+  /* module identifier */
+  const __vue_module_identifier__ = undefined;
+  /* functional template */
+  const __vue_is_functional_template__ = false;
+  /* component normalizer */
+  function __vue_normalize__(
+    template, style, script$$1,
+    scope, functional, moduleIdentifier,
+    createInjector, createInjectorSSR
+  ) {
+    const component = (typeof script$$1 === 'function' ? script$$1.options : script$$1) || {};
+
+    if (!component.render) {
+      component.render = template.render;
+      component.staticRenderFns = template.staticRenderFns;
+      component._compiled = true;
+
+      if (functional) component.functional = true;
+    }
+
+    component._scopeId = scope;
+
+    return component
+  }
+  /* style inject */
+  function __vue_create_injector__() {
+    const head = document.head || document.getElementsByTagName('head')[0];
+    const styles = __vue_create_injector__.styles || (__vue_create_injector__.styles = {});
+    const isOldIE =
+      typeof navigator !== 'undefined' &&
+      /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
+
+    return function addStyle(id, css) {
+      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return // SSR styles are present.
+
+      const group = isOldIE ? css.media || 'default' : id;
+      const style = styles[group] || (styles[group] = { ids: [], parts: [], element: undefined });
+
+      if (!style.ids.includes(id)) {
+        let code = css.source;
+        let index = style.ids.length;
+
+        style.ids.push(id);
+
+        if (true && css.map) {
+          // https://developer.chrome.com/devtools/docs/javascript-debugging
+          // this makes source maps inside style tags work properly in Chrome
+          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */';
+          // http://stackoverflow.com/a/26603875
+          code +=
+            '\n/*# sourceMappingURL=data:application/json;base64,' +
+            btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) +
+            ' */';
+        }
+
+        if (isOldIE) {
+          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
+        }
+
+        if (!style.element) {
+          const el = style.element = document.createElement('style');
+          el.type = 'text/css';
+
+          if (css.media) el.setAttribute('media', css.media);
+          if (isOldIE) {
+            el.setAttribute('data-group', group);
+            el.setAttribute('data-next-index', '0');
+          }
+
+          head.appendChild(el);
+        }
+
+        if (isOldIE) {
+          index = parseInt(style.element.getAttribute('data-next-index'));
+          style.element.setAttribute('data-next-index', index + 1);
+        }
+
+        if (style.element.styleSheet) {
+          style.parts.push(code);
+          style.element.styleSheet.cssText = style.parts
+            .filter(Boolean)
+            .join('\n');
+        } else {
+          const textNode = document.createTextNode(code);
+          const nodes = style.element.childNodes;
+          if (nodes[index]) style.element.removeChild(nodes[index]);
+          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);
+          else style.element.appendChild(textNode);
+        }
+      }
+    }
+  }
+  /* style inject SSR */
+  
+
+  
+  var SnotifyPrompt = __vue_normalize__(
+    { render: __vue_render__, staticRenderFns: __vue_staticRenderFns__ },
+    __vue_inject_styles__,
+    __vue_script__,
+    __vue_scope_id__,
+    __vue_is_functional_template__,
+    __vue_module_identifier__,
+    __vue_create_injector__,
+    undefined
+  )
+
+var script$1 = __WEBPACK_IMPORTED_MODULE_0_vue___default.a.extend({
+    props: ['toast'],
+    methods: {
+        remove: function () {
+            this.$snotify.remove(this.toast.id);
+        }
+    }
+});
+
+/* script */
+
+            const __vue_script__$1 = script$1;
+            
+/* template */
+var __vue_render__$1 = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"snotifyToast__buttons"},_vm._l((_vm.toast.config.buttons),function(button){return _c('button',{class:[{'snotifyToast__buttons--bold': button.bold}, button.className],attrs:{"type":"button"},on:{"click":function($event){$event.preventDefault();$event.stopPropagation();button.action ? button.action(_vm.toast) : _vm.remove();}}},[_vm._v("\n    "+_vm._s(button.text)+"\n  ")])}))};
+var __vue_staticRenderFns__$1 = [];
+
+  /* style */
+  const __vue_inject_styles__$1 = undefined;
+  /* scoped */
+  const __vue_scope_id__$1 = undefined;
+  /* module identifier */
+  const __vue_module_identifier__$1 = undefined;
+  /* functional template */
+  const __vue_is_functional_template__$1 = false;
+  /* component normalizer */
+  function __vue_normalize__$1(
+    template, style, script,
+    scope, functional, moduleIdentifier,
+    createInjector, createInjectorSSR
+  ) {
+    const component = (typeof script === 'function' ? script.options : script) || {};
+
+    if (!component.render) {
+      component.render = template.render;
+      component.staticRenderFns = template.staticRenderFns;
+      component._compiled = true;
+
+      if (functional) component.functional = true;
+    }
+
+    component._scopeId = scope;
+
+    return component
+  }
+  /* style inject */
+  function __vue_create_injector__$1() {
+    const head = document.head || document.getElementsByTagName('head')[0];
+    const styles = __vue_create_injector__$1.styles || (__vue_create_injector__$1.styles = {});
+    const isOldIE =
+      typeof navigator !== 'undefined' &&
+      /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
+
+    return function addStyle(id, css) {
+      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return // SSR styles are present.
+
+      const group = isOldIE ? css.media || 'default' : id;
+      const style = styles[group] || (styles[group] = { ids: [], parts: [], element: undefined });
+
+      if (!style.ids.includes(id)) {
+        let code = css.source;
+        let index = style.ids.length;
+
+        style.ids.push(id);
+
+        if (true && css.map) {
+          // https://developer.chrome.com/devtools/docs/javascript-debugging
+          // this makes source maps inside style tags work properly in Chrome
+          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */';
+          // http://stackoverflow.com/a/26603875
+          code +=
+            '\n/*# sourceMappingURL=data:application/json;base64,' +
+            btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) +
+            ' */';
+        }
+
+        if (isOldIE) {
+          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
+        }
+
+        if (!style.element) {
+          const el = style.element = document.createElement('style');
+          el.type = 'text/css';
+
+          if (css.media) el.setAttribute('media', css.media);
+          if (isOldIE) {
+            el.setAttribute('data-group', group);
+            el.setAttribute('data-next-index', '0');
+          }
+
+          head.appendChild(el);
+        }
+
+        if (isOldIE) {
+          index = parseInt(style.element.getAttribute('data-next-index'));
+          style.element.setAttribute('data-next-index', index + 1);
+        }
+
+        if (style.element.styleSheet) {
+          style.parts.push(code);
+          style.element.styleSheet.cssText = style.parts
+            .filter(Boolean)
+            .join('\n');
+        } else {
+          const textNode = document.createTextNode(code);
+          const nodes = style.element.childNodes;
+          if (nodes[index]) style.element.removeChild(nodes[index]);
+          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);
+          else style.element.appendChild(textNode);
+        }
+      }
+    }
+  }
+  /* style inject SSR */
+  
+
+  
+  var SnotifyButton = __vue_normalize__$1(
+    { render: __vue_render__$1, staticRenderFns: __vue_staticRenderFns__$1 },
+    __vue_inject_styles__$1,
+    __vue_script__$1,
+    __vue_scope_id__$1,
+    __vue_is_functional_template__$1,
+    __vue_module_identifier__$1,
+    __vue_create_injector__$1,
+    undefined
+  )
+
+var script$2 = __WEBPACK_IMPORTED_MODULE_0_vue___default.a.extend({
+    props: ['toastData'],
+    components: {
+        SnotifyPrompt: SnotifyPrompt,
+        SnotifyButton: SnotifyButton
+    },
+    data: function () {
+        return {
+            toast: this.toastData,
+            animationFrame: null,
+            state: {
+                paused: false,
+                progress: 0,
+                animation: '',
+                isDestroying: false,
+                promptType: SnotifyStyle.prompt
+            }
+        };
+    },
+    methods: {
+        /**
+         * Initialize base toast config
+         */
+        initToast: function () {
+            if (this.toast.config.timeout > 0) {
+                this.startTimeout(0);
+            }
+        },
+        onClick: function () {
+            this.toast.eventEmitter.$emit('click');
+            if (this.toast.config.closeOnClick) {
+                this.$snotify.remove(this.toast.id);
+            }
+        },
+        onMouseEnter: function () {
+            this.toast.eventEmitter.$emit('mouseenter');
+            if (this.toast.config.pauseOnHover) {
+                this.state.paused = true;
+            }
+        },
+        onMouseLeave: function () {
+            if (this.toast.config.pauseOnHover && this.toast.config.timeout) {
+                this.state.paused = false;
+                this.startTimeout(this.toast.config.timeout * this.state.progress);
+            }
+            this.toast.eventEmitter.$emit('mouseleave');
+        },
+        /**
+         * Remove toast completely after animation
+         */
+        onExitTransitionEnd: function () {
+            if (this.state.isDestroying) {
+                return;
+            }
+            this.initToast();
+            this.toast.eventEmitter.$emit('shown');
+        },
+        /**
+         * Start progress bar
+         * @param startTime {number}
+         * @default 0
+         */
+        startTimeout: function (startTime) {
+            var _this = this;
+            if (startTime === void 0) { startTime = 0; }
+            var start = performance.now();
+            var calculate = function () {
+                _this.animationFrame = requestAnimationFrame(function (timestamp) {
+                    var runtime = timestamp + startTime - start;
+                    var progress = Math.min(runtime / _this.toast.config.timeout, 1);
+                    if (_this.state.paused) {
+                        cancelAnimationFrame(_this.animationFrame);
+                    }
+                    else if (runtime < _this.toast.config.timeout) {
+                        _this.state.progress = progress;
+                        calculate();
+                    }
+                    else {
+                        _this.state.progress = 1;
+                        cancelAnimationFrame(_this.animationFrame);
+                        _this.$snotify.emitter.$emit('remove', _this.toast.id);
+                    }
+                });
+            };
+            calculate();
+        },
+        /**
+         * Trigger beforeDestroy lifecycle. Removes toast
+         */
+        onRemove: function () {
+            var _this = this;
+            this.state.isDestroying = true;
+            this.$emit('stateChanged', 'beforeHide');
+            this.toast.eventEmitter.$emit('beforeHide');
+            this.state.animation = this.toast.config.animation.exit;
+            setTimeout(function () {
+                _this.$emit('stateChanged', 'hidden');
+                _this.state.animation = 'snotifyToast--out';
+                _this.toast.eventEmitter.$emit('hidden');
+                setTimeout(function () { return _this.$snotify.remove(_this.toast.id, true); }, _this.toast.config.animation.time / 2);
+            }, this.toast.config.animation.time / 2);
+        },
+    },
+    created: function () {
+        var _this = this;
+        this.$snotify.emitter.$on('toastChanged', function (toast) {
+            if (_this.toast.id === toast.id) {
+                _this.initToast();
+            }
+        });
+        this.$snotify.emitter.$on('remove', function (id) {
+            if (_this.toast.id === id) {
+                _this.onRemove();
+            }
+        });
+    },
+    mounted: function () {
+        var _this = this;
+        this.$nextTick(function () {
+            _this.toast.eventEmitter.$emit('mounted');
+            _this.state.animation = 'snotifyToast--in';
+            _this.$nextTick(function () {
+                setTimeout(function () {
+                    _this.$emit('stateChanged', 'beforeShow');
+                    _this.toast.eventEmitter.$emit('beforeShow');
+                    _this.state.animation = _this.toast.config.animation.enter;
+                }, _this.toast.config.animation.time / 5); // time to show toast push animation (snotifyToast--in)
+            });
+        });
+    },
+    destroyed: function () {
+        cancelAnimationFrame(this.animationFrame);
+        this.toast.eventEmitter.$emit('destroyed');
+    }
+});
+
+/* script */
+
+            const __vue_script__$2 = script$2;
+            
+/* template */
+var __vue_render__$2 = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"snotifyToast animated",class:['snotify-' + _vm.toast.config.type,
+          _vm.state.animation,
+          _vm.toast.valid === undefined ? '' : (_vm.toast.valid ? 'snotifyToast--valid' : 'snotifyToast--invalid')
+        ],style:({
+          '-webkit-animation-duration': _vm.toast.config.animation.time + 'ms',
+          'animation-duration': _vm.toast.config.animation.time + 'ms',
+          '-webkit-transition': _vm.toast.config.animation.time + 'ms',
+          transition: _vm.toast.config.animation.time + 'ms'
+        }),on:{"click":_vm.onClick,"mouseenter":_vm.onMouseEnter,"mouseleave":_vm.onMouseLeave,"animationend":_vm.onExitTransitionEnd}},[(_vm.toast.config.showProgressBar && _vm.toast.config.timeout > 0)?_c('div',{staticClass:"snotifyToast__progressBar"},[_c('span',{staticClass:"snotifyToast__progressBar__percentage",style:({'width': (_vm.state.progress * 100) + '%'})})]):_vm._e(),_vm._v(" "),(!_vm.toast.config.html)?_c('div',{staticClass:"snotifyToast__inner",class:{'snotifyToast__noIcon': _vm.toast.config.icon === false}},[(_vm.toast.title)?_c('div',{staticClass:"snotifyToast__title"},[_vm._v(_vm._s(_vm._f("truncate")(_vm.toast.title,_vm.toast.config.titleMaxLength)))]):_vm._e(),_vm._v(" "),(_vm.toast.body)?_c('div',{staticClass:"snotifyToast__body"},[_vm._v(_vm._s(_vm._f("truncate")(_vm.toast.body,_vm.toast.config.bodyMaxLength)))]):_vm._e(),_vm._v(" "),(_vm.toast.config.type === _vm.state.promptType)?_c('snotify-prompt',{attrs:{"toast":_vm.toast}}):_vm._e(),_vm._v(" "),(typeof _vm.toast.config.icon === 'undefined')?_c('div',{class:['snotify-icon', 'snotify-icon--' + _vm.toast.config.type]}):(_vm.toast.config.icon !== false)?_c('div',[_c('img',{staticClass:"snotify-icon",attrs:{"src":_vm.toast.config.icon}})]):_vm._e()],1):_c('div',{staticClass:"snotifyToast__inner",domProps:{"innerHTML":_vm._s(_vm.toast.config.html)}}),_vm._v(" "),(_vm.toast.config.buttons)?_c('snotify-button',{attrs:{"toast":_vm.toast}}):_vm._e()],1)};
+var __vue_staticRenderFns__$2 = [];
+
+  /* style */
+  const __vue_inject_styles__$2 = undefined;
+  /* scoped */
+  const __vue_scope_id__$2 = undefined;
+  /* module identifier */
+  const __vue_module_identifier__$2 = undefined;
+  /* functional template */
+  const __vue_is_functional_template__$2 = false;
+  /* component normalizer */
+  function __vue_normalize__$2(
+    template, style, script,
+    scope, functional, moduleIdentifier,
+    createInjector, createInjectorSSR
+  ) {
+    const component = (typeof script === 'function' ? script.options : script) || {};
+
+    if (!component.render) {
+      component.render = template.render;
+      component.staticRenderFns = template.staticRenderFns;
+      component._compiled = true;
+
+      if (functional) component.functional = true;
+    }
+
+    component._scopeId = scope;
+
+    return component
+  }
+  /* style inject */
+  function __vue_create_injector__$2() {
+    const head = document.head || document.getElementsByTagName('head')[0];
+    const styles = __vue_create_injector__$2.styles || (__vue_create_injector__$2.styles = {});
+    const isOldIE =
+      typeof navigator !== 'undefined' &&
+      /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
+
+    return function addStyle(id, css) {
+      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return // SSR styles are present.
+
+      const group = isOldIE ? css.media || 'default' : id;
+      const style = styles[group] || (styles[group] = { ids: [], parts: [], element: undefined });
+
+      if (!style.ids.includes(id)) {
+        let code = css.source;
+        let index = style.ids.length;
+
+        style.ids.push(id);
+
+        if (true && css.map) {
+          // https://developer.chrome.com/devtools/docs/javascript-debugging
+          // this makes source maps inside style tags work properly in Chrome
+          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */';
+          // http://stackoverflow.com/a/26603875
+          code +=
+            '\n/*# sourceMappingURL=data:application/json;base64,' +
+            btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) +
+            ' */';
+        }
+
+        if (isOldIE) {
+          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
+        }
+
+        if (!style.element) {
+          const el = style.element = document.createElement('style');
+          el.type = 'text/css';
+
+          if (css.media) el.setAttribute('media', css.media);
+          if (isOldIE) {
+            el.setAttribute('data-group', group);
+            el.setAttribute('data-next-index', '0');
+          }
+
+          head.appendChild(el);
+        }
+
+        if (isOldIE) {
+          index = parseInt(style.element.getAttribute('data-next-index'));
+          style.element.setAttribute('data-next-index', index + 1);
+        }
+
+        if (style.element.styleSheet) {
+          style.parts.push(code);
+          style.element.styleSheet.cssText = style.parts
+            .filter(Boolean)
+            .join('\n');
+        } else {
+          const textNode = document.createTextNode(code);
+          const nodes = style.element.childNodes;
+          if (nodes[index]) style.element.removeChild(nodes[index]);
+          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);
+          else style.element.appendChild(textNode);
+        }
+      }
+    }
+  }
+  /* style inject SSR */
+  
+
+  
+  var Toast = __vue_normalize__$2(
+    { render: __vue_render__$2, staticRenderFns: __vue_staticRenderFns__$2 },
+    __vue_inject_styles__$2,
+    __vue_script__$2,
+    __vue_scope_id__$2,
+    __vue_is_functional_template__$2,
+    __vue_module_identifier__$2,
+    __vue_create_injector__$2,
+    undefined
+  )
+
+var script$3 = __WEBPACK_IMPORTED_MODULE_0_vue___default.a.extend({
+    components: {
+        Toast: Toast
+    },
+    data: function () {
+        return {
+            /**
+             * Toasts array
+             */
+            notifications: {
+                left_top: [],
+                left_center: [],
+                left_bottom: [],
+                right_top: [],
+                right_center: [],
+                right_bottom: [],
+                center_top: [],
+                center_center: [],
+                center_bottom: []
+            },
+            /**
+             * Helper for slice pipe (maxOnScreen)
+             */
+            dockSize_a: 0,
+            /**
+             * Helper for slice pipe (maxOnScreen)
+             */
+            dockSize_b: 0,
+            /**
+             * Helper for slice pipe (maxAtPosition)
+             */
+            blockSize_a: 0,
+            /**
+             * Helper for slice pipe (maxAtPosition)
+             */
+            blockSize_b: 0,
+            /**
+             * Backdrop Opacity
+             */
+            backdrop: -1,
+            /**
+             * How many toasts with backdrop in current queue
+             */
+            withBackdrop: [],
+        };
+    },
+    methods: {
+        setOptions: function (toasts) {
+            if (this.$snotify.config.global.newOnTop) {
+                this.dockSize_a = -this.$snotify.config.global.maxOnScreen;
+                this.dockSize_b = undefined;
+                this.blockSize_a = -this.$snotify.config.global.maxAtPosition;
+                this.blockSize_b = undefined;
+                this.withBackdrop = toasts.filter(function (toast) { return toast.config.backdrop >= 0; });
+            }
+            else {
+                this.dockSize_a = 0;
+                this.dockSize_b = this.$snotify.config.global.maxOnScreen;
+                this.blockSize_a = 0;
+                this.blockSize_b = this.$snotify.config.global.maxAtPosition;
+                this.withBackdrop = toasts.filter(function (toast) { return toast.config.backdrop >= 0; }).reverse();
+            }
+            this.notifications = this.splitToasts(toasts.slice(this.dockSize_a, this.dockSize_b));
+            this.stateChanged('mounted');
+        },
+        // TODO: fix backdrop if more than one toast called in a row
+        /**
+         * Changes the backdrop opacity
+         * @param {SnotifyEvent} event
+         */
+        stateChanged: function (event) {
+            if (!this.withBackdrop.length) {
+                return;
+            }
+            switch (event) {
+                case 'mounted':
+                    if (this.backdrop < 0) {
+                        this.backdrop = 0;
+                    }
+                    break;
+                case 'beforeShow':
+                    this.backdrop = this.withBackdrop[this.withBackdrop.length - 1].config.backdrop;
+                    break;
+                case 'beforeHide':
+                    if (this.withBackdrop.length === 1) {
+                        this.backdrop = 0;
+                    }
+                    break;
+                case 'hidden':
+                    if (this.withBackdrop.length === 1) {
+                        this.backdrop = -1;
+                    }
+                    break;
+            }
+        },
+        /**
+         * Split toasts toasts into different objects
+         * @param {SnotifyToast[]} toasts
+         * @returns {SnotifyNotifications}
+         */
+        splitToasts: function (toasts) {
+            var result = {};
+            for (var property in SnotifyPosition) {
+                if (SnotifyPosition.hasOwnProperty(property)) {
+                    result[SnotifyPosition[property]] = [];
+                }
+            }
+            toasts.forEach(function (toast) {
+                result[toast.config.position].push(toast);
+            });
+            return result;
+        },
+    },
+    created: function () {
+        var _this = this;
+        this.$snotify.emitter.$on('snotify', function (toasts) {
+            _this.setOptions(toasts);
+        });
+    }
+});
+
+/* script */
+
+            const __vue_script__$3 = script$3;
+            
+/* template */
+var __vue_render__$3 = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[(_vm.backdrop >= 0)?_c('div',{staticClass:"snotify-backdrop",style:({opacity: _vm.backdrop})}):_vm._e(),_vm._v(" "),_vm._l((_vm.notifications),function(position,index){return _c('div',{staticClass:"snotify",class:'snotify-' + index},_vm._l((_vm.notifications[index].slice(_vm.blockSize_a, _vm.blockSize_b)),function(toast){return _c('toast',{key:toast.id,attrs:{"toastData":toast},on:{"stateChanged":_vm.stateChanged}})}))})],2)};
+var __vue_staticRenderFns__$3 = [];
+
+  /* style */
+  const __vue_inject_styles__$3 = undefined;
+  /* scoped */
+  const __vue_scope_id__$3 = undefined;
+  /* module identifier */
+  const __vue_module_identifier__$3 = undefined;
+  /* functional template */
+  const __vue_is_functional_template__$3 = false;
+  /* component normalizer */
+  function __vue_normalize__$3(
+    template, style, script,
+    scope, functional, moduleIdentifier,
+    createInjector, createInjectorSSR
+  ) {
+    const component = (typeof script === 'function' ? script.options : script) || {};
+
+    if (!component.render) {
+      component.render = template.render;
+      component.staticRenderFns = template.staticRenderFns;
+      component._compiled = true;
+
+      if (functional) component.functional = true;
+    }
+
+    component._scopeId = scope;
+
+    return component
+  }
+  /* style inject */
+  function __vue_create_injector__$3() {
+    const head = document.head || document.getElementsByTagName('head')[0];
+    const styles = __vue_create_injector__$3.styles || (__vue_create_injector__$3.styles = {});
+    const isOldIE =
+      typeof navigator !== 'undefined' &&
+      /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
+
+    return function addStyle(id, css) {
+      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return // SSR styles are present.
+
+      const group = isOldIE ? css.media || 'default' : id;
+      const style = styles[group] || (styles[group] = { ids: [], parts: [], element: undefined });
+
+      if (!style.ids.includes(id)) {
+        let code = css.source;
+        let index = style.ids.length;
+
+        style.ids.push(id);
+
+        if (true && css.map) {
+          // https://developer.chrome.com/devtools/docs/javascript-debugging
+          // this makes source maps inside style tags work properly in Chrome
+          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */';
+          // http://stackoverflow.com/a/26603875
+          code +=
+            '\n/*# sourceMappingURL=data:application/json;base64,' +
+            btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) +
+            ' */';
+        }
+
+        if (isOldIE) {
+          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
+        }
+
+        if (!style.element) {
+          const el = style.element = document.createElement('style');
+          el.type = 'text/css';
+
+          if (css.media) el.setAttribute('media', css.media);
+          if (isOldIE) {
+            el.setAttribute('data-group', group);
+            el.setAttribute('data-next-index', '0');
+          }
+
+          head.appendChild(el);
+        }
+
+        if (isOldIE) {
+          index = parseInt(style.element.getAttribute('data-next-index'));
+          style.element.setAttribute('data-next-index', index + 1);
+        }
+
+        if (style.element.styleSheet) {
+          style.parts.push(code);
+          style.element.styleSheet.cssText = style.parts
+            .filter(Boolean)
+            .join('\n');
+        } else {
+          const textNode = document.createTextNode(code);
+          const nodes = style.element.childNodes;
+          if (nodes[index]) style.element.removeChild(nodes[index]);
+          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);
+          else style.element.appendChild(textNode);
+        }
+      }
+    }
+  }
+  /* style inject SSR */
+  
+
+  
+  var Snotify = __vue_normalize__$3(
+    { render: __vue_render__$3, staticRenderFns: __vue_staticRenderFns__$3 },
+    __vue_inject_styles__$3,
+    __vue_script__$3,
+    __vue_scope_id__$3,
+    __vue_is_functional_template__$3,
+    __vue_module_identifier__$3,
+    __vue_create_injector__$3,
+    undefined
+  )
+
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation. All rights reserved.
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this file except in compliance with the License. You may obtain a copy of the
+License at http://www.apache.org/licenses/LICENSE-2.0
+
+THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+MERCHANTABLITY OR NON-INFRINGEMENT.
+
+See the Apache Version 2.0 License for specific language governing permissions
+and limitations under the License.
+***************************************************************************** */
+/* global Reflect, Promise */
+
+
+
+var __assign = Object.assign || function __assign(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+    }
+    return t;
+};
+
+
+
+function __decorate(decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+}
+
+
+
+function __metadata(metadataKey, metadataValue) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(metadataKey, metadataValue);
+}
+
+/**
+ * Toast model
+ */
+var SnotifyToast = /** @class */ (function () {
+    /**
+     *
+     * @param {number|string} id
+     * @param {string} title
+     * @param {string} body
+     * @param {SnotifyToastConfig} [config]
+     */
+    function SnotifyToast(id, title, body, config) {
+        var _this = this;
+        this.id = id;
+        this.title = title;
+        this.body = body;
+        this.config = config;
+        /**
+         * Emits {SnotifyEvent}
+         * @type {Vue}
+         */
+        this.eventEmitter = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a();
+        /**
+         * Holds all subscribers because we need to unsubscribe from all before toast get destroyed
+         * @type {Vue[]}
+         * @private
+         */
+        this._eventsHolder = [];
+        /**
+         * Toast validator
+         */
+        this.valid = undefined;
+        if (this.config.type === SnotifyStyle.prompt) {
+            this.value = '';
+        }
+        this.on('hidden', function () {
+            _this._eventsHolder.forEach(function (o) {
+                _this.eventEmitter.$off(o.event, o.action);
+            });
+        });
+    }
+    /**
+     * This callback is displayed as a global member.
+     * @callback action
+     * @param {toast} responseCode
+     * @returns {void}
+     */
+    /**
+     * Subscribe to toast events
+     * @param {String<SnotifyEvent>} event
+     * @param  {SnotifyToast~action} action
+     * @returns {SnotifyToast}
+     */
+    SnotifyToast.prototype.on = function (event, action) {
+        var _this = this;
+        this._eventsHolder.push({ event: event, action: action });
+        this.eventEmitter.$on(event, function () { return action(_this); });
+        return this;
+    };
+    return SnotifyToast;
+}());
+
+/**
+ * Snotify default configuration object
+ * @type {SnotifyDefaults}
+ */
+var ToastDefaults = {
+    global: {
+        newOnTop: true,
+        maxOnScreen: 8,
+        maxAtPosition: 8,
+        oneAtTime: false,
+        preventDuplicates: false
+    },
+    toast: {
+        type: SnotifyStyle.simple,
+        showProgressBar: true,
+        timeout: 2000,
+        closeOnClick: true,
+        pauseOnHover: true,
+        bodyMaxLength: 150,
+        titleMaxLength: 16,
+        backdrop: -1,
+        icon: undefined,
+        html: null,
+        position: SnotifyPosition.rightBottom,
+        animation: { enter: 'fadeIn', exit: 'fadeOut', time: 400 }
+    },
+    type: (_a = {}, _a[SnotifyStyle.prompt] = {
+            timeout: 0,
+            closeOnClick: false,
+            buttons: [
+                { text: 'Ok', action: null, bold: true },
+                { text: 'Cancel', action: null, bold: false },
+            ],
+            placeholder: 'Enter answer here...',
+            type: SnotifyStyle.prompt,
+        }, _a[SnotifyStyle.confirm] = {
+            timeout: 0,
+            closeOnClick: false,
+            buttons: [
+                { text: 'Ok', action: null, bold: true },
+                { text: 'Cancel', action: null, bold: false },
+            ],
+            type: SnotifyStyle.confirm,
+        }, _a[SnotifyStyle.simple] = {
+            type: SnotifyStyle.simple
+        }, _a[SnotifyStyle.success] = {
+            type: SnotifyStyle.success
+        }, _a[SnotifyStyle.error] = {
+            type: SnotifyStyle.error
+        }, _a[SnotifyStyle.warning] = {
+            type: SnotifyStyle.warning
+        }, _a[SnotifyStyle.info] = {
+            type: SnotifyStyle.info
+        }, _a[SnotifyStyle.async] = {
+            pauseOnHover: false,
+            closeOnClick: false,
+            timeout: 0,
+            showProgressBar: false,
+            type: SnotifyStyle.async
+        }, _a)
+};
+var _a;
+
+/**
+ * Transform arguments to Snotify object
+ * @param target
+ * @param {SnotifyType} propertyKey
+ * @param {PropertyDescriptor} descriptor
+ * @returns {Snotify}
+ * @constructor
+ */
+function TransformArgument(target, propertyKey, descriptor) {
+    if (propertyKey === SnotifyStyle.async) {
+        return {
+            value: function () {
+                var args = [];
+                for (var _i = 0; _i < arguments.length; _i++) {
+                    args[_i] = arguments[_i];
+                }
+                var result;
+                if (args.length === 2) {
+                    result = {
+                        title: null,
+                        body: args[0],
+                        config: null,
+                        action: args[1]
+                    };
+                }
+                else if (args.length === 3) {
+                    if (typeof args[1] === 'string') {
+                        result = {
+                            title: args[1],
+                            body: args[0],
+                            config: null,
+                            action: args[2]
+                        };
+                    }
+                    else {
+                        result = {
+                            title: null,
+                            body: args[0],
+                            config: args[2],
+                            action: args[1]
+                        };
+                    }
+                }
+                else {
+                    result = {
+                        title: args[1],
+                        body: args[0],
+                        config: args[3],
+                        action: args[2]
+                    };
+                }
+                return descriptor.value.apply(this, [result]);
+            }
+        };
+    }
+    else {
+        return {
+            value: function () {
+                var args = [];
+                for (var _i = 0; _i < arguments.length; _i++) {
+                    args[_i] = arguments[_i];
+                }
+                var result;
+                if (args.length === 1) {
+                    result = {
+                        title: null,
+                        body: args[0],
+                        config: null
+                    };
+                }
+                else if (args.length === 3) {
+                    result = {
+                        title: args[1],
+                        body: args[0],
+                        config: args[2]
+                    };
+                }
+                else {
+                    result = (_a = {
+                            title: null,
+                            config: null,
+                            body: args[0]
+                        }, _a[typeof args[1] === 'string' ? 'title' : 'config'] = args[1], _a);
+                }
+                return descriptor.value.apply(this, [result]);
+                var _a;
+            }
+        };
+    }
+}
+
+/**
+ * Generates random id
+ * @return {number}
+ */
+function uuid() {
+    return Math.floor(Math.random() * (Date.now() - 1)) + 1;
+}
+/**
+ * Simple is object check.
+ * @param item {Object<any>}
+ * @returns {boolean}
+ */
+function isObject(item) {
+    return (item && typeof item === 'object' && !Array.isArray(item) && item !== null);
+}
+/**
+ * Deep merge objects.
+ * @param sources {Array<Object<any>>}
+ * @returns {Object<any>}
+ */
+function mergeDeep() {
+    var sources = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        sources[_i] = arguments[_i];
+    }
+    var target = {};
+    if (!sources.length) {
+        return target;
+    }
+    while (sources.length > 0) {
+        var source = sources.shift();
+        if (isObject(source)) {
+            for (var key in source) {
+                if (isObject(source[key])) {
+                    target[key] = mergeDeep(target[key], source[key]);
+                }
+                else {
+                    Object.assign(target, (_a = {}, _a[key] = source[key], _a));
+                }
+            }
+        }
+    }
+    return target;
+    var _a;
+}
+
+/**
+ * Defines toast style depending on method name
+ * @param target
+ * @param {SnotifyType} propertyKey
+ * @param {PropertyDescriptor} descriptor
+ * @returns {{value: ((...args: any[]) => any)}}
+ * @constructor
+ */
+function SetToastType(target, propertyKey, descriptor) {
+    return {
+        value: function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            args[0].config = __assign({}, args[0].config, { type: propertyKey });
+            return descriptor.value.apply(this, args);
+        }
+    };
+}
+
+/**
+ * this - create, remove, config toasts
+ */
+// tslint:disable:unified-signatures
+var SnotifyService = /** @class */ (function () {
+    function SnotifyService() {
+        this.emitter = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a();
+        this.notifications = [];
+        this.config = ToastDefaults;
+    }
+    /**
+     * emit changes in notifications array
+     */
+    SnotifyService.prototype.emit = function () {
+        this.emitter.$emit('snotify', this.notifications.slice());
+    };
+    /**
+     * returns SnotifyToast object
+     * @param id {Number}
+     * @return {SnotifyToast|undefined}
+     */
+    SnotifyService.prototype.get = function (id) {
+        return this.notifications.find(function (toast) { return toast.id === id; });
+    };
+    /**
+     * add SnotifyToast to notifications array
+     * @param toast {SnotifyToast}
+     */
+    SnotifyService.prototype.add = function (toast) {
+        if (this.config.global.newOnTop) {
+            this.notifications.unshift(toast);
+        }
+        else {
+            this.notifications.push(toast);
+        }
+        this.emit();
+    };
+    /**
+     * If ID passed, emits toast animation remove, if ID & REMOVE passed, removes toast from notifications array
+     * @param id {number}
+     * @param remove {boolean}
+     */
+    SnotifyService.prototype.remove = function (id, remove) {
+        if (!id) {
+            return this.clear();
+        }
+        else if (remove) {
+            this.notifications = this.notifications.filter(function (toast) { return toast.id !== id; });
+            return this.emit();
+        }
+        this.emitter.$emit('remove', id);
+    };
+    /**
+     * Clear notifications array
+     */
+    SnotifyService.prototype.clear = function () {
+        this.notifications = [];
+        this.emit();
+    };
+    SnotifyService.prototype.button = function (text, closeOnClick, action, bold) {
+        var _this = this;
+        if (closeOnClick === void 0) { closeOnClick = true; }
+        if (action === void 0) { action = null; }
+        if (bold === void 0) { bold = false; }
+        return {
+            text: text,
+            action: closeOnClick ? function (toast) {
+                action(toast);
+                _this.remove(toast.id);
+            } : action,
+            bold: bold
+        };
+    };
+    /**
+     * Creates toast and add it to array, returns toast id
+     * @param snotify {Snotify}
+     * @return {number}
+     */
+    SnotifyService.prototype.create = function (snotify) {
+        if (this.config.global.oneAtTime && this.notifications.length !== 0)
+            return;
+        if (this.config.global.preventDuplicates
+            && this.notifications.filter(function (t) { return t.config.type === snotify.config.type; }).length === 1)
+            return;
+        var config = mergeDeep(this.config.toast, this.config.type[snotify.config.type], snotify.config);
+        var toast = new SnotifyToast(config.id ? config.id : uuid(), snotify.title, snotify.body, config);
+        this.add(toast);
+        return toast;
+    };
+    SnotifyService.prototype.setDefaults = function (defaults) {
+        return this.config = mergeDeep(this.config, defaults);
+    };
+    /**
+     * Transform toast arguments into {Snotify} object
+     */
+    SnotifyService.prototype.simple = function (args) {
+        return this.create(args);
+    };
+    /**
+     * Transform toast arguments into {Snotify} object
+     */
+    SnotifyService.prototype.success = function (args) {
+        return this.create(args);
+    };
+    /**
+     * Transform toast arguments into {Snotify} object
+     */
+    SnotifyService.prototype.error = function (args) {
+        return this.create(args);
+    };
+    /**
+     * Transform toast arguments into {Snotify} object
+     */
+    SnotifyService.prototype.info = function (args) {
+        return this.create(args);
+    };
+    /**
+     * Transform toast arguments into {Snotify} object
+     */
+    SnotifyService.prototype.warning = function (args) {
+        return this.create(args);
+    };
+    /**
+     * Transform toast arguments into {Snotify} object
+     */
+    SnotifyService.prototype.confirm = function (args) {
+        return this.create(args);
+    };
+    /**
+     * Transform toast arguments into {Snotify} object
+     */
+    SnotifyService.prototype.prompt = function (args) {
+        return this.create(args);
+    };
+    /**
+     * Transform toast arguments into {Snotify} object
+     */
+    SnotifyService.prototype.async = function (args) {
+        var _this = this;
+        var async = args.action;
+        var toast = this.create(args);
+        toast.on('mounted', function () {
+            async()
+                .then(function (next) { return _this.mergeToast(toast, next, SnotifyStyle.success); })
+                .catch(function (error) { return _this.mergeToast(toast, error, SnotifyStyle.error); });
+        });
+        return toast;
+    };
+    SnotifyService.prototype.mergeToast = function (toast, next, type) {
+        if (next.body) {
+            toast.body = next.body;
+        }
+        if (next.title) {
+            toast.title = next.title;
+        }
+        if (type) {
+            toast.config = mergeDeep(toast.config, this.config.global, this.config.toast[type], { type: type }, next.config);
+        }
+        else {
+            toast.config = mergeDeep(toast.config, next.config);
+        }
+        if (next.html) {
+            toast.config.html = next.html;
+        }
+        this.emit();
+        this.emitter.$emit('toastChanged', toast);
+    };
+    /**
+     * Creates empty toast with html string inside
+     * @param {string} html
+     * @param {SnotifyToastConfig} config
+     * @returns {number}
+     */
+    SnotifyService.prototype.html = function (html, config) {
+        return this.create({
+            title: null,
+            body: null,
+            config: __assign({}, config, { html: html })
+        });
+    };
+    __decorate([
+        TransformArgument
+        /**
+         * Determines current toast type and collects default configuration
+         */
+        ,
+        SetToastType,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Object]),
+        __metadata("design:returntype", SnotifyToast)
+    ], SnotifyService.prototype, "simple", null);
+    __decorate([
+        TransformArgument
+        /**
+         * Determines current toast type and collects default configuration
+         */
+        ,
+        SetToastType,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Object]),
+        __metadata("design:returntype", SnotifyToast)
+    ], SnotifyService.prototype, "success", null);
+    __decorate([
+        TransformArgument
+        /**
+         * Determines current toast type and collects default configuration
+         */
+        ,
+        SetToastType,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Object]),
+        __metadata("design:returntype", SnotifyToast)
+    ], SnotifyService.prototype, "error", null);
+    __decorate([
+        TransformArgument
+        /**
+         * Determines current toast type and collects default configuration
+         */
+        ,
+        SetToastType,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Object]),
+        __metadata("design:returntype", SnotifyToast)
+    ], SnotifyService.prototype, "info", null);
+    __decorate([
+        TransformArgument
+        /**
+         * Determines current toast type and collects default configuration
+         */
+        ,
+        SetToastType,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Object]),
+        __metadata("design:returntype", SnotifyToast)
+    ], SnotifyService.prototype, "warning", null);
+    __decorate([
+        TransformArgument
+        /**
+         * Determines current toast type and collects default configuration
+         */
+        ,
+        SetToastType,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Object]),
+        __metadata("design:returntype", SnotifyToast)
+    ], SnotifyService.prototype, "confirm", null);
+    __decorate([
+        TransformArgument
+        /**
+         * Determines current toast type and collects default configuration
+         */
+        ,
+        SetToastType,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Object]),
+        __metadata("design:returntype", SnotifyToast)
+    ], SnotifyService.prototype, "prompt", null);
+    __decorate([
+        TransformArgument
+        /**
+         * Determines current toast type and collects default configuration
+         */
+        ,
+        SetToastType,
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Object]),
+        __metadata("design:returntype", SnotifyToast)
+    ], SnotifyService.prototype, "async", null);
+    return SnotifyService;
+}());
+
+var Plugin = {
+    install: function (Vue$$1, options) {
+        if (options === void 0) { options = {}; }
+        Vue$$1.filter('truncate', function (value, limit, trail) {
+            if (limit === void 0) { limit = 40; }
+            if (trail === void 0) { trail = '...'; }
+            return value.length > limit ? value.substring(0, limit) + trail : value;
+        });
+        var service = new SnotifyService();
+        service.setDefaults(options);
+        Vue$$1.prototype.$snotify = service;
+        Vue$$1.component('vue-snotify', Snotify);
+        // auto install
+        if (typeof window !== 'undefined' && window.hasOwnProperty('Vue')) {
+            window.Snotify = service;
+        }
+    }
+};
+// auto install
+if (typeof window !== 'undefined' && window.hasOwnProperty('Vue')) {
+    window.Vue.use(Plugin.install);
+}
+
+
+/* harmony default export */ __webpack_exports__["b"] = (Plugin);
+
+
+/***/ }),
+/* 53 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(54);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// Prepare cssTransformation
+var transform;
+
+var options = {}
+options.transform = transform
+// add the styles to the DOM
+var update = __webpack_require__(14)(content, options);
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../css-loader/index.js!./material.css", function() {
+			var newContent = require("!!../../css-loader/index.js!./material.css");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 54 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(2)(false);
+// imports
+
+
+// module
+exports.push([module.i, ".snotifyToast {\n  -webkit-animation-fill-mode: both;\n  animation-fill-mode: both; }\n\n.snotify-leftTop .fadeIn,\n.snotify-leftCenter .fadeIn,\n.snotify-leftBottom .fadeIn {\n  -webkit-animation-name: fadeInLeft;\n  animation-name: fadeInLeft; }\n\n.snotify-leftTop .fadeOut,\n.snotify-leftCenter .fadeOut,\n.snotify-leftBottom .fadeOut {\n  -webkit-animation-name: fadeOutLeft;\n  animation-name: fadeOutLeft; }\n\n.snotify-rightTop .fadeIn,\n.snotify-rightCenter .fadeIn,\n.snotify-rightBottom .fadeIn {\n  -webkit-animation-name: fadeInRight;\n  animation-name: fadeInRight; }\n\n.snotify-rightTop .fadeOut,\n.snotify-rightCenter .fadeOut,\n.snotify-rightBottom .fadeOut {\n  -webkit-animation-name: fadeOutRight;\n  animation-name: fadeOutRight; }\n\n.snotify-centerTop .fadeIn {\n  -webkit-animation-name: fadeInDown;\n  animation-name: fadeInDown; }\n\n.snotify-centerTop .fadeOut {\n  -webkit-animation-name: fadeOutUp;\n  animation-name: fadeOutUp; }\n\n.snotify-centerCenter .fadeIn {\n  -webkit-animation-name: fadeIn;\n  animation-name: fadeIn; }\n\n.snotify-centerCenter .fadeOut {\n  -webkit-animation-name: fadeOut;\n  animation-name: fadeOut; }\n\n.snotify-centerBottom .fadeIn {\n  -webkit-animation-name: fadeInUp;\n  animation-name: fadeInUp; }\n\n.snotify-centerBottom .fadeOut {\n  -webkit-animation-name: fadeOutDown;\n  animation-name: fadeOutDown; }\n\n@-webkit-keyframes fadeInLeft {\n  0% {\n    opacity: 0;\n    -webkit-transform: translate3d(-100%, 0, 0) scaleX(1.2);\n    transform: translate3d(-100%, 0, 0) scaleX(1.2); }\n  100% {\n    opacity: 1;\n    -webkit-transform: none;\n    transform: none; } }\n\n@keyframes fadeInLeft {\n  0% {\n    opacity: 0;\n    -webkit-transform: translate3d(-100%, 0, 0) scaleX(1.2);\n    transform: translate3d(-100%, 0, 0) scaleX(1.2); }\n  100% {\n    opacity: 1;\n    -webkit-transform: none;\n    transform: none; } }\n\n@-webkit-keyframes fadeInRight {\n  0% {\n    opacity: 0;\n    -webkit-transform: translate3d(100%, 0, 0) scaleX(1.2);\n    transform: translate3d(100%, 0, 0) scaleX(1.2); }\n  100% {\n    opacity: 1;\n    -webkit-transform: none;\n    transform: none; } }\n\n@keyframes fadeInRight {\n  0% {\n    opacity: 0;\n    -webkit-transform: translate3d(100%, 0, 0) scaleX(1.2);\n    transform: translate3d(100%, 0, 0) scaleX(1.2); }\n  100% {\n    opacity: 1;\n    -webkit-transform: none;\n    transform: none; } }\n\n@-webkit-keyframes fadeInUp {\n  0% {\n    opacity: 0;\n    -webkit-transform: translate3d(0, 100%, 0) scaleY(1.2);\n    transform: translate3d(0, 100%, 0) scaleY(1.2); }\n  100% {\n    opacity: 1;\n    -webkit-transform: none;\n    transform: none; } }\n\n@keyframes fadeInUp {\n  0% {\n    opacity: 0;\n    -webkit-transform: translate3d(0, 100%, 0) scaleY(1.2);\n    transform: translate3d(0, 100%, 0) scaleY(1.2); }\n  100% {\n    opacity: 1;\n    -webkit-transform: none;\n    transform: none; } }\n\n@-webkit-keyframes fadeInDown {\n  0% {\n    opacity: 0;\n    -webkit-transform: translate3d(0, -100%, 0) scaleY(1.2);\n    transform: translate3d(0, -100%, 0) scaleY(1.2); }\n  100% {\n    opacity: 1;\n    -webkit-transform: none;\n    transform: none; } }\n\n@keyframes fadeInDown {\n  0% {\n    opacity: 0;\n    -webkit-transform: translate3d(0, -100%, 0) scaleY(1.2);\n    transform: translate3d(0, -100%, 0) scaleY(1.2); }\n  100% {\n    opacity: 1;\n    -webkit-transform: none;\n    transform: none; } }\n\n@-webkit-keyframes fadeIn {\n  0% {\n    opacity: 0; }\n  100% {\n    opacity: 1; } }\n\n@keyframes fadeIn {\n  0% {\n    opacity: 0; }\n  100% {\n    opacity: 1; } }\n\n@-webkit-keyframes fadeOut {\n  0% {\n    opacity: 1; }\n  100% {\n    opacity: 0; } }\n\n@keyframes fadeOut {\n  0% {\n    opacity: 1; }\n  100% {\n    opacity: 0; } }\n\n@-webkit-keyframes fadeOutDown {\n  0% {\n    opacity: 1; }\n  100% {\n    opacity: 0;\n    -webkit-transform: translate3d(0, 100%, 0);\n    transform: translate3d(0, 100%, 0); } }\n\n@keyframes fadeOutDown {\n  0% {\n    opacity: 1; }\n  100% {\n    opacity: 0;\n    -webkit-transform: translate3d(0, 100%, 0);\n    transform: translate3d(0, 100%, 0); } }\n\n@-webkit-keyframes fadeOutLeft {\n  0% {\n    opacity: 1; }\n  100% {\n    opacity: 0;\n    -webkit-transform: translate3d(-100%, 0, 0);\n    transform: translate3d(-100%, 0, 0); } }\n\n@keyframes fadeOutLeft {\n  0% {\n    opacity: 1; }\n  100% {\n    opacity: 0;\n    -webkit-transform: translate3d(-100%, 0, 0);\n    transform: translate3d(-100%, 0, 0); } }\n\n@-webkit-keyframes fadeOutRight {\n  0% {\n    opacity: 1; }\n  100% {\n    opacity: 0;\n    -webkit-transform: translate3d(100%, 0, 0);\n    transform: translate3d(100%, 0, 0); } }\n\n@keyframes fadeOutRight {\n  0% {\n    opacity: 1; }\n  100% {\n    opacity: 0;\n    -webkit-transform: translate3d(100%, 0, 0);\n    transform: translate3d(100%, 0, 0); } }\n\n@-webkit-keyframes fadeOutUp {\n  0% {\n    opacity: 1; }\n  100% {\n    opacity: 0;\n    -webkit-transform: translate3d(0, -100%, 0);\n    transform: translate3d(0, -100%, 0); } }\n\n@keyframes fadeOutUp {\n  0% {\n    opacity: 1; }\n  100% {\n    opacity: 0;\n    -webkit-transform: translate3d(0, -100%, 0);\n    transform: translate3d(0, -100%, 0); } }\n\n@-webkit-keyframes appear {\n  0% {\n    max-height: 0; }\n  100% {\n    max-height: 50vh; } }\n\n@keyframes appear {\n  0% {\n    max-height: 0; }\n  100% {\n    max-height: 50vh; } }\n\n@-webkit-keyframes disappear {\n  0% {\n    opacity: 0;\n    max-height: 50vh; }\n  100% {\n    opacity: 0;\n    max-height: 0; } }\n\n@keyframes disappear {\n  0% {\n    opacity: 0;\n    max-height: 50vh; }\n  100% {\n    opacity: 0;\n    max-height: 0; } }\n\n@-webkit-keyframes async {\n  0% {\n    -webkit-transform: translate(0, -50%) rotate(0deg);\n    transform: translate(0, -50%) rotate(0deg); }\n  100% {\n    -webkit-transform: translate(0, -50%) rotate(360deg);\n    transform: translate(0, -50%) rotate(360deg); } }\n\n@keyframes async {\n  0% {\n    -webkit-transform: translate(0, -50%) rotate(0deg);\n    transform: translate(0, -50%) rotate(0deg); }\n  100% {\n    -webkit-transform: translate(0, -50%) rotate(360deg);\n    transform: translate(0, -50%) rotate(360deg); } }\n\n.snotify {\n  display: block;\n  position: fixed;\n  width: 300px;\n  z-index: 9999;\n  -webkit-box-sizing: border-box;\n  box-sizing: border-box;\n  pointer-events: none; }\n  .snotify * {\n    -webkit-box-sizing: border-box;\n    box-sizing: border-box; }\n\n.snotify-leftTop,\n.snotify-leftCenter,\n.snotify-leftBottom {\n  left: 10px; }\n\n.snotify-rightTop,\n.snotify-rightCenter,\n.snotify-rightBottom {\n  right: 10px; }\n\n.snotify-centerTop,\n.snotify-centerCenter,\n.snotify-centerBottom {\n  left: calc(50% - 300px / 2); }\n\n.snotify-leftTop,\n.snotify-centerTop,\n.snotify-rightTop {\n  top: 10px; }\n\n.snotify-leftCenter,\n.snotify-rightCenter,\n.snotify-centerCenter {\n  top: 50%;\n  -webkit-transform: translateY(-50%);\n  transform: translateY(-50%); }\n\n.snotify-leftBottom,\n.snotify-rightBottom,\n.snotify-centerBottom {\n  bottom: 10px; }\n\n.snotify-backdrop {\n  position: fixed;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  left: 0;\n  background-color: #000;\n  opacity: 0;\n  z-index: 9998;\n  -webkit-transition: opacity .3s;\n  transition: opacity .3s; }\n\n.snotifyToast {\n  display: block;\n  cursor: pointer;\n  background-color: #fff;\n  height: 100%;\n  margin: 5px;\n  opacity: 0;\n  border-radius: 5px;\n  overflow: hidden;\n  pointer-events: auto; }\n  .snotifyToast--in {\n    -webkit-animation-name: appear;\n    animation-name: appear; }\n  .snotifyToast--out {\n    -webkit-animation-name: disappear;\n    animation-name: disappear; }\n  .snotifyToast__inner {\n    display: -webkit-box;\n    display: -webkit-flex;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n    -webkit-flex-flow: column nowrap;\n    -ms-flex-flow: column nowrap;\n    flex-flow: column nowrap;\n    -webkit-box-align: start;\n    -webkit-align-items: flex-start;\n    -ms-flex-align: start;\n    align-items: flex-start;\n    -webkit-box-pack: center;\n    -webkit-justify-content: center;\n    -ms-flex-pack: center;\n    justify-content: center;\n    position: relative;\n    padding: 5px 65px 5px 15px;\n    min-height: 78px;\n    font-size: 16px;\n    color: #000; }\n  .snotifyToast__noIcon {\n    padding: 5px 15px 5px 15px; }\n  .snotifyToast__progressBar {\n    position: relative;\n    width: 100%;\n    height: 10px;\n    background-color: #c7c7c7; }\n    .snotifyToast__progressBar__percentage {\n      position: absolute;\n      top: 0;\n      left: 0;\n      height: 10px;\n      background-color: #4c4c4c;\n      max-width: 100%; }\n  .snotifyToast__title {\n    font-size: 1.8em;\n    line-height: 1.2em;\n    margin-bottom: 5px;\n    color: #fff; }\n  .snotifyToast__body {\n    font-size: 1em; }\n\n.snotifyToast-show {\n  -webkit-transform: translate(0, 0);\n  transform: translate(0, 0);\n  opacity: 1; }\n\n.snotifyToast-remove {\n  max-height: 0;\n  overflow: hidden;\n  -webkit-transform: translate(0, 50%);\n  transform: translate(0, 50%);\n  opacity: 0; }\n\n.fadeOutRight {\n  -webkit-animation-name: fadeOutRight;\n  animation-name: fadeOutRight; }\n\n/***************\r\n ** Modifiers **\r\n **************/\n.snotify-simple .snotifyToast__title,\n.snotify-simple .snotifyToast__body {\n  color: #000; }\n\n.snotify-success {\n  background-color: #4caf50; }\n  .snotify-success .snotifyToast__progressBar {\n    background-color: #388e3c; }\n  .snotify-success .snotifyToast__progressBar__percentage {\n    background-color: #81c784; }\n  .snotify-success .snotifyToast__body {\n    color: #c8e6c9; }\n\n.snotify-info {\n  background-color: #1e88e5; }\n  .snotify-info .snotifyToast__progressBar {\n    background-color: #1565c0; }\n  .snotify-info .snotifyToast__progressBar__percentage {\n    background-color: #64b5f6; }\n  .snotify-info .snotifyToast__body {\n    color: #e3f2fd; }\n\n.snotify-warning {\n  background-color: #ff9800; }\n  .snotify-warning .snotifyToast__progressBar {\n    background-color: #ef6c00; }\n  .snotify-warning .snotifyToast__progressBar__percentage {\n    background-color: #ffcc80; }\n  .snotify-warning .snotifyToast__body {\n    color: #fff3e0; }\n\n.snotify-error {\n  background-color: #f44336; }\n  .snotify-error .snotifyToast__progressBar {\n    background-color: #c62828; }\n  .snotify-error .snotifyToast__progressBar__percentage {\n    background-color: #ef9a9a; }\n  .snotify-error .snotifyToast__body {\n    color: #ffebee; }\n\n.snotify-async {\n  background-color: #1e88e5; }\n  .snotify-async .snotifyToast__progressBar {\n    background-color: #1565c0; }\n  .snotify-async .snotifyToast__progressBar__percentage {\n    background-color: #64b5f6; }\n  .snotify-async .snotifyToast__body {\n    color: #e3f2fd; }\n\n.snotify-confirm {\n  background-color: #009688; }\n  .snotify-confirm .snotifyToast__progressBar {\n    background-color: #4db6ac; }\n  .snotify-confirm .snotifyToast__progressBar__percentage {\n    background-color: #80cbc4; }\n  .snotify-confirm .snotifyToast__body {\n    color: #e0f2f1; }\n\n.snotify-prompt {\n  background-color: #009688; }\n  .snotify-prompt .snotifyToast__title {\n    margin-bottom: 0; }\n  .snotify-prompt .snotifyToast__body {\n    color: #e0f2f1; }\n\n.snotify-confirm .snotifyToast__inner,\n.snotify-prompt .snotifyToast__inner {\n  padding: 10px 15px; }\n\n.snotifyToast__input {\n  position: relative;\n  z-index: 1;\n  display: inline-block;\n  margin: 0;\n  width: 100%;\n  vertical-align: top;\n  -webkit-transition: all .5s;\n  transition: all .5s;\n  -webkit-transition-delay: .3s;\n  transition-delay: .3s;\n  -webkit-transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1);\n  transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1); }\n  .snotifyToast__input__field {\n    position: relative;\n    display: block;\n    float: right;\n    padding: .85em .5em;\n    width: 100%;\n    border: none;\n    border-radius: 0;\n    background: transparent;\n    color: #333;\n    font-weight: bold;\n    -webkit-appearance: none;\n    /* for box shadows to show on iOS */\n    opacity: 0;\n    -webkit-transition: opacity .3s;\n    transition: opacity .3s; }\n    .snotifyToast__input__field:focus {\n      outline: none; }\n  .snotifyToast__input__label {\n    display: inline-block;\n    float: right;\n    padding: 0 .85em;\n    width: 100%;\n    color: #e0f2f1;\n    font-weight: bold;\n    font-size: 70.25%;\n    -webkit-font-smoothing: antialiased;\n    -moz-osx-font-smoothing: grayscale;\n    -webkit-touch-callout: none;\n    -webkit-user-select: none;\n    -moz-user-select: none;\n    -ms-user-select: none;\n    user-select: none;\n    position: absolute;\n    left: 0;\n    height: 100%;\n    text-align: left;\n    pointer-events: none; }\n    .snotifyToast__input__label::before, .snotifyToast__input__label::after {\n      content: '';\n      position: absolute;\n      top: 0;\n      left: 0;\n      width: 100%;\n      height: 100%;\n      -webkit-transition: -webkit-transform .3s;\n      transition: -webkit-transform .3s;\n      transition: transform .3s;\n      transition: transform .3s, -webkit-transform .3s; }\n    .snotifyToast__input__label::before {\n      border-top: 2px solid #fff;\n      -webkit-transform: translate3d(0, 100%, 0) translate3d(0, -2px, 0);\n      transform: translate3d(0, 100%, 0) translate3d(0, -2px, 0);\n      -webkit-transition-delay: .3s;\n      transition-delay: .3s; }\n    .snotifyToast__input__label::after {\n      z-index: -1;\n      background: #b2dfdb;\n      -webkit-transform: scale3d(1, 0, 1);\n      transform: scale3d(1, 0, 1);\n      -webkit-transform-origin: 50% 0;\n      transform-origin: 50% 0; }\n  .snotifyToast__input__labelContent {\n    position: relative;\n    display: block;\n    padding: 1em 0;\n    width: 100%;\n    -webkit-transition: -webkit-transform .3s .3s;\n    transition: -webkit-transform .3s .3s;\n    transition: transform .3s .3s;\n    transition: transform .3s .3s, -webkit-transform .3s .3s; }\n\n.snotifyToast__input--filled {\n  margin-top: 2.5em; }\n  .snotifyToast__input--filled:focus,\n  .snotifyToast__input--filled .snotifyToast__input__field {\n    opacity: 1;\n    -webkit-transition-delay: .3s;\n    transition-delay: .3s; }\n\n.snotifyToast__input__field:focus + .snotifyToast__input__label .snotifyToast__input__labelContent,\n.snotifyToast__input--filled .snotifyToast__input__labelContent {\n  -webkit-transform: translate(0, -80%);\n  transform: translate(0, -80%);\n  -webkit-transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1);\n  transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1); }\n\n.snotifyToast__input__field:focus + .snotifyToast__input__label::before,\n.snotifyToast__input--filled .snotifyToast__input__label::before {\n  -webkit-transition-delay: 0s;\n  transition-delay: 0s; }\n\n.snotifyToast__input__field:focus + .snotifyToast__input__label::before,\n.snotifyToast__input--filled .snotifyToast__input__label::before {\n  -webkit-transform: translate(0, 0);\n  transform: translate(0, 0); }\n\n.snotifyToast__input__field:focus + .snotifyToast__input__label::after,\n.snotifyToast__input--filled .snotifyToast__input__label::after {\n  -webkit-transform: scale(1, 1);\n  transform: scale(1, 1);\n  -webkit-transition-delay: .3s;\n  transition-delay: .3s;\n  -webkit-transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1);\n  transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1); }\n\n.snotifyToast--invalid .snotifyToast__input__label::before {\n  border-color: #f44336; }\n\n.snotifyToast--valid .snotifyToast__input__label::before {\n  border-color: #4caf50; }\n\n.snotifyToast__buttons {\n  display: -webkit-box;\n  display: -webkit-flex;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: horizontal;\n  -webkit-box-direction: normal;\n  -webkit-flex-flow: row nowrap;\n  -ms-flex-flow: row nowrap;\n  flex-flow: row nowrap;\n  -webkit-box-pack: justify;\n  -webkit-justify-content: space-between;\n  -ms-flex-pack: justify;\n  justify-content: space-between;\n  border-top: 1px solid rgba(0, 0, 0, 0.1); }\n  .snotifyToast__buttons button {\n    position: relative;\n    width: 100%;\n    border-right: 1px solid rgba(0, 0, 0, 0.1);\n    border-left: 1px solid rgba(0, 0, 0, 0.1);\n    border-top: none;\n    border-bottom: none;\n    background: transparent;\n    padding: 8px;\n    text-transform: capitalize;\n    color: #fff;\n    -webkit-box-sizing: border-box;\n    box-sizing: border-box;\n    overflow: hidden; }\n    .snotifyToast__buttons button::after {\n      content: '';\n      position: absolute;\n      top: 50%;\n      left: 50%;\n      width: 5px;\n      height: 5px;\n      background: rgba(255, 255, 255, 0.3);\n      opacity: 0;\n      border-radius: 100%;\n      -webkit-transform: scale(1, 1) translate(-50%);\n      transform: scale(1, 1) translate(-50%);\n      -webkit-transform-origin: 50% 50%;\n      transform-origin: 50% 50%; }\n    .snotifyToast__buttons button:focus:not(:active)::after {\n      -webkit-animation: ripple 1s ease-out;\n      animation: ripple 1s ease-out; }\n    .snotifyToast__buttons button:hover, .snotifyToast__buttons button:focus {\n      background: rgba(0, 0, 0, 0.1);\n      outline: none; }\n    .snotifyToast__buttons button:active {\n      background: rgba(0, 0, 0, 0.15); }\n    .snotifyToast__buttons button:last-child {\n      border-right: none; }\n    .snotifyToast__buttons button:first-child {\n      border-left: none; }\n  .snotifyToast__buttons--bold {\n    font-weight: 700; }\n\n@-webkit-keyframes ripple {\n  0% {\n    -webkit-transform: scale(0, 0);\n    transform: scale(0, 0);\n    opacity: 1; }\n  20% {\n    -webkit-transform: scale(25, 25);\n    transform: scale(25, 25);\n    opacity: 1; }\n  100% {\n    opacity: 0;\n    -webkit-transform: scale(40, 40);\n    transform: scale(40, 40); } }\n\n@keyframes ripple {\n  0% {\n    -webkit-transform: scale(0, 0);\n    transform: scale(0, 0);\n    opacity: 1; }\n  20% {\n    -webkit-transform: scale(25, 25);\n    transform: scale(25, 25);\n    opacity: 1; }\n  100% {\n    opacity: 0;\n    -webkit-transform: scale(40, 40);\n    transform: scale(40, 40); } }\n\n.snotify-icon {\n  position: absolute;\n  right: 10px;\n  top: 50%;\n  line-height: 0;\n  -webkit-transform: translate(0, -50%);\n  transform: translate(0, -50%);\n  max-height: 48px;\n  max-width: 48px;\n  width: 100%;\n  height: 100%; }\n\n.snotify-icon--error {\n  background-image: url(\"data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20version=%221.1%22%20x=%220px%22%20y=%220px%22%20viewBox=%220%200%20512%20512%22%20fill=%22%23ffcdd2%22%3E%3Cg%3E%3Cpath%20d=%22M437,75A256,256,0,1,0,75,437,256,256,0,1,0,437,75ZM416.43,416.43a226.82,226.82,0,0,1-320.86,0C7.11,328,7.11,184,95.57,95.57a226.82,226.82,0,0,1,320.86,0C504.89,184,504.89,328,416.43,416.43Z%22/%3E%3Cpath%20d=%22M368.81,143.19a14.5,14.5,0,0,0-20.58,0L256,235.42l-92.23-92.23a14.55,14.55,0,0,0-20.58,20.58L235.42,256l-92.23,92.23a14.6,14.6,0,0,0,10.24,24.89,14.19,14.19,0,0,0,10.24-4.31l92.23-92.23,92.23,92.23a14.64,14.64,0,0,0,10.24,4.31,14,14,0,0,0,10.24-4.31,14.5,14.5,0,0,0,0-20.58l-92-92.23,92.23-92.23A14.5,14.5,0,0,0,368.81,143.19Z%22/%3E%3C/g%3E%3C/svg%3E\"); }\n\n.snotify-icon--warning {\n  background-image: url(\"data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20version=%221.1%22%20x=%220px%22%20y=%220px%22%20viewBox=%220%200%20512%20512%22%20fill=%22%23ffccbc%22%3E%3Cg%3E%3Cpath%20d=%22M256,512c141.15,0,256-114.84,256-256S397.15,0,256,0,0,114.84,0,256,114.85,512,256,512Zm0-480.49c123.79,0,224.49,100.71,224.49,224.49S379.79,480.49,256,480.49,31.51,379.79,31.51,256,132.21,31.51,256,31.51Z%22/%3E%3Ccircle%20cx=%22260.08%22%20cy=%22343.87%22%20r=%2226.35%22/%3E%3Cpath%20d=%22M254.68,278.39a15.76,15.76,0,0,0,15.75-15.75V128.72a15.75,15.75,0,1,0-31.51,0V262.63A15.76,15.76,0,0,0,254.68,278.39Z%22/%3E%3C/g%3E%3C/svg%3E\"); }\n\n.snotify-icon--info {\n  background-image: url(\"data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20version=%221.1%22%20x=%220px%22%20y=%220px%22%20viewBox=%220%200%20512%20512%22%20fill=%22%23bbdefb%22%3E%3Cg%3E%3Cpath%20d=%22M256,0C114.84,0,0,114.84,0,256S114.84,512,256,512,512,397.16,512,256,397.15,0,256,0Zm0,478.43C133.35,478.43,33.57,378.64,33.57,256S133.35,33.58,256,33.58,478.42,133.36,478.42,256,378.64,478.43,256,478.43Z%22/%3E%3Cpath%20d=%22M251.26,161.24a22.39,22.39,0,1,0-22.38-22.39A22.39,22.39,0,0,0,251.26,161.24Z%22/%3E%3Cpath%20d=%22M286.84,357.87h-14v-160A16.79,16.79,0,0,0,256,181.05H225.17a16.79,16.79,0,0,0,0,33.58h14.05V357.87H225.17a16.79,16.79,0,0,0,0,33.57h61.67a16.79,16.79,0,1,0,0-33.57Z%22/%3E%3C/g%3E%3C/svg%3E\"); }\n\n.snotify-icon--success {\n  background-image: url(\"data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20version=%221.1%22%20x=%220px%22%20y=%220px%22%20viewBox=%220%200%20512%20512%22%20fill=%22%23c8e6c9%22%3E%3Cg%3E%3Cpath%20d=%22M256,0C114.85,0,0,114.84,0,256S114.85,512,256,512,512,397.16,512,256,397.15,0,256,0Zm0,492.31c-130.29,0-236.31-106-236.31-236.31S125.71,19.69,256,19.69,492.31,125.71,492.31,256,386.29,492.31,256,492.31Z%22/%3E%3Cpath%20class=%22cls-1%22%20d=%22M376.64,151,225.31,321.24l-91.17-72.93a9.85,9.85,0,0,0-12.3,15.38l98.46,78.77a9.86,9.86,0,0,0,13.52-1.15L391.36,164.08A9.85,9.85,0,0,0,376.64,151Z%22/%3E%3C/g%3E%3C/svg%3E\"); }\n\n.snotify-icon--async {\n  background-image: url(\"data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20version=%221.1%22%20x=%220px%22%20y=%220px%22%20viewBox=%220%200%20512%20512%22%20fill=%22%23bbdefb%22%3E%3Cg%3E%3Cpath%20d=%22M256,0a32,32,0,0,0-32,32V96a32,32,0,0,0,64,0V32A32,32,0,0,0,256,0Zm0,384a32,32,0,0,0-32,32v64a32,32,0,0,0,64,0V416A32,32,0,0,0,256,384ZM391.74,165.5,437,120.22A32,32,0,0,0,391.74,75L346.5,120.22a32,32,0,0,0,45.25,45.28Zm-271.52,181L75,391.74A32,32,0,0,0,120.22,437l45.25-45.25a32,32,0,0,0-45.25-45.25Zm0-271.52A32,32,0,1,0,75,120.22l45.25,45.28a32,32,0,1,0,45.25-45.28ZM391.74,346.5a32,32,0,0,0-45.25,45.25L391.74,437A32,32,0,0,0,437,391.74ZM480,224H416a32,32,0,0,0,0,64h64a32,32,0,0,0,0-64ZM128,256a32,32,0,0,0-32-32H32a32,32,0,0,0,0,64H96A32,32,0,0,0,128,256Z%22/%3E%3C/g%3E%3C/svg%3E\");\n  -webkit-animation: async 3s infinite linear;\n  animation: async 3s infinite linear;\n  -webkit-transform-origin: 50% 50%;\n  transform-origin: 50% 50%; }\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 55 */
+/***/ (function(module, exports) {
+
+
+/**
+ * When source maps are enabled, `style-loader` uses a link element with a data-uri to
+ * embed the css on the page. This breaks all relative urls because now they are relative to a
+ * bundle instead of the current page.
+ *
+ * One solution is to only use full urls, but that may be impossible.
+ *
+ * Instead, this function "fixes" the relative urls to be absolute according to the current page location.
+ *
+ * A rudimentary test suite is located at `test/fixUrls.js` and can be run via the `npm test` command.
+ *
+ */
+
+module.exports = function (css) {
+  // get current location
+  var location = typeof window !== "undefined" && window.location;
+
+  if (!location) {
+    throw new Error("fixUrls requires window.location");
+  }
+
+	// blank or null?
+	if (!css || typeof css !== "string") {
+	  return css;
+  }
+
+  var baseUrl = location.protocol + "//" + location.host;
+  var currentDir = baseUrl + location.pathname.replace(/\/[^\/]*$/, "/");
+
+	// convert each url(...)
+	/*
+	This regular expression is just a way to recursively match brackets within
+	a string.
+
+	 /url\s*\(  = Match on the word "url" with any whitespace after it and then a parens
+	   (  = Start a capturing group
+	     (?:  = Start a non-capturing group
+	         [^)(]  = Match anything that isn't a parentheses
+	         |  = OR
+	         \(  = Match a start parentheses
+	             (?:  = Start another non-capturing groups
+	                 [^)(]+  = Match anything that isn't a parentheses
+	                 |  = OR
+	                 \(  = Match a start parentheses
+	                     [^)(]*  = Match anything that isn't a parentheses
+	                 \)  = Match a end parentheses
+	             )  = End Group
+              *\) = Match anything and then a close parens
+          )  = Close non-capturing group
+          *  = Match anything
+       )  = Close capturing group
+	 \)  = Match a close parens
+
+	 /gi  = Get all matches, not the first.  Be case insensitive.
+	 */
+	var fixedCss = css.replace(/url\s*\(((?:[^)(]|\((?:[^)(]+|\([^)(]*\))*\))*)\)/gi, function(fullMatch, origUrl) {
+		// strip quotes (if they exist)
+		var unquotedOrigUrl = origUrl
+			.trim()
+			.replace(/^"(.*)"$/, function(o, $1){ return $1; })
+			.replace(/^'(.*)'$/, function(o, $1){ return $1; });
+
+		// already a full url? no change
+		if (/^(#|data:|http:\/\/|https:\/\/|file:\/\/\/)/i.test(unquotedOrigUrl)) {
+		  return fullMatch;
+		}
+
+		// convert the url to a full url
+		var newUrl;
+
+		if (unquotedOrigUrl.indexOf("//") === 0) {
+		  	//TODO: should we add protocol?
+			newUrl = unquotedOrigUrl;
+		} else if (unquotedOrigUrl.indexOf("/") === 0) {
+			// path should be relative to the base url
+			newUrl = baseUrl + unquotedOrigUrl; // already starts with '/'
+		} else {
+			// path should be relative to current directory
+			newUrl = currentDir + unquotedOrigUrl.replace(/^\.\//, ""); // Strip leading './'
+		}
+
+		// send back the fixed url(...)
+		return "url(" + JSON.stringify(newUrl) + ")";
+	});
+
+	// send back the fixed css
+	return fixedCss;
+};
+
+
+/***/ }),
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(3)
 /* script */
-var __vue_script__ = __webpack_require__(52)
+var __vue_script__ = __webpack_require__(57)
 /* template */
-var __vue_template__ = __webpack_require__(53)
+var __vue_template__ = __webpack_require__(58)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -45548,7 +47481,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 52 */
+/* 57 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -45577,7 +47510,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 53 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -45620,19 +47553,19 @@ if (false) {
 }
 
 /***/ }),
-/* 54 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(55)
+  __webpack_require__(60)
 }
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(3)
 /* script */
-var __vue_script__ = __webpack_require__(58)
+var __vue_script__ = __webpack_require__(63)
 /* template */
-var __vue_template__ = __webpack_require__(70)
+var __vue_template__ = __webpack_require__(75)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -45671,13 +47604,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 55 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(56);
+var content = __webpack_require__(61);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -45697,10 +47630,10 @@ if(false) {
 }
 
 /***/ }),
-/* 56 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(4)(false);
+exports = module.exports = __webpack_require__(2)(false);
 // imports
 
 
@@ -45711,7 +47644,7 @@ exports.push([module.i, "\n.panel {\n    border-top-color: #4CAF50;\n}\n.datepic
 
 
 /***/ }),
-/* 57 */
+/* 62 */
 /***/ (function(module, exports) {
 
 /**
@@ -45744,14 +47677,14 @@ module.exports = function listToStyles (parentId, list) {
 
 
 /***/ }),
-/* 58 */
+/* 63 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_hub_js__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_hub_js__ = __webpack_require__(15);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_hub_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_hub_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_datepicker_local__ = __webpack_require__(59);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_datepicker_local__ = __webpack_require__(64);
 //
 //
 //
@@ -45838,11 +47771,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 59 */
+/* 64 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__VueDatepickerLocal_vue__ = __webpack_require__(60);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__VueDatepickerLocal_vue__ = __webpack_require__(65);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__VueDatepickerLocal_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__VueDatepickerLocal_vue__);
 
 function install (Vue) {
@@ -45856,19 +47789,19 @@ if (typeof window !== 'undefined' && window.Vue) {
 
 
 /***/ }),
-/* 60 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(61)
+  __webpack_require__(66)
 }
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(3)
 /* script */
-var __vue_script__ = __webpack_require__(63)
+var __vue_script__ = __webpack_require__(68)
 /* template */
-var __vue_template__ = __webpack_require__(69)
+var __vue_template__ = __webpack_require__(74)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -45907,13 +47840,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 61 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(62);
+var content = __webpack_require__(67);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -45933,10 +47866,10 @@ if(false) {
 }
 
 /***/ }),
-/* 62 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(4)(false);
+exports = module.exports = __webpack_require__(2)(false);
 // imports
 
 
@@ -45947,12 +47880,12 @@ exports.push([module.i, "\n.datepicker {\r\n  display: inline-block;\r\n  positi
 
 
 /***/ }),
-/* 63 */
+/* 68 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__VueDatepickerLocalCalendar_vue__ = __webpack_require__(64);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__VueDatepickerLocalCalendar_vue__ = __webpack_require__(69);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__VueDatepickerLocalCalendar_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__VueDatepickerLocalCalendar_vue__);
 //
 //
@@ -46142,19 +48075,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 64 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(65)
+  __webpack_require__(70)
 }
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(3)
 /* script */
-var __vue_script__ = __webpack_require__(67)
+var __vue_script__ = __webpack_require__(72)
 /* template */
-var __vue_template__ = __webpack_require__(68)
+var __vue_template__ = __webpack_require__(73)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -46193,13 +48126,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 65 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(66);
+var content = __webpack_require__(71);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -46219,10 +48152,10 @@ if(false) {
 }
 
 /***/ }),
-/* 66 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(4)(false);
+exports = module.exports = __webpack_require__(2)(false);
 // imports
 
 
@@ -46233,7 +48166,7 @@ exports.push([module.i, "\n.calendar {\r\n  float: left;\r\n  -webkit-user-selec
 
 
 /***/ }),
-/* 67 */
+/* 72 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -46501,7 +48434,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 68 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -47078,7 +49011,7 @@ if (false) {
 }
 
 /***/ }),
-/* 69 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -47220,7 +49153,7 @@ if (false) {
 }
 
 /***/ }),
-/* 70 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -47390,15 +49323,15 @@ if (false) {
 }
 
 /***/ }),
-/* 71 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(3)
 /* script */
-var __vue_script__ = __webpack_require__(72)
+var __vue_script__ = __webpack_require__(77)
 /* template */
-var __vue_template__ = __webpack_require__(117)
+var __vue_template__ = __webpack_require__(120)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -47437,22 +49370,22 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 72 */
+/* 77 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_js_toggle_button__ = __webpack_require__(73);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_js_toggle_button__ = __webpack_require__(78);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_js_toggle_button___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vue_js_toggle_button__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__riophae_vue_treeselect__ = __webpack_require__(74);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__riophae_vue_treeselect__ = __webpack_require__(79);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__riophae_vue_treeselect___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__riophae_vue_treeselect__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__riophae_vue_treeselect_dist_vue_treeselect_css__ = __webpack_require__(105);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__riophae_vue_treeselect_dist_vue_treeselect_css__ = __webpack_require__(110);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__riophae_vue_treeselect_dist_vue_treeselect_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__riophae_vue_treeselect_dist_vue_treeselect_css__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_hub_js__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_hub_js__ = __webpack_require__(15);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_hub_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_hub_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__Modal_form_vertical_vue__ = __webpack_require__(109);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__Modal_form_vertical_vue__ = __webpack_require__(112);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__Modal_form_vertical_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__Modal_form_vertical_vue__);
 //
 //
@@ -47658,6 +49591,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
                 };
             },
 
+            selectedRow: {}, //当前选中的行
             isEditDepartmentName: '',
             newDepartment: {
                 name: '',
@@ -47731,20 +49665,15 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
                 var table = $('.datatable-button-html5-columns').DataTable();
                 var tr = $(e.target.closest('tr'));
                 var row = table.row(tr.get(0));
+                this.selectedRow = row;
                 var data = row.data();
                 this.newDepartment.name = data['2'];
                 this.newDepartment.manager = data['4'];
                 this.newDepartment.phone = data['5'];
-                this.newDepartment.remarks = data['6'];
-                this.newDepartment.order = data['7'];
-                if (data['8'] === '<span class="label label-success">已启用</span>') {
-                    this.newDepartment.status = 'T';
-                } else {
-                    this.newDepartment.status = 'F';
-                }
-                if (data['1']) {
-                    this.newDepartment.pid = data['1'];
-                }
+                this.newDepartment.remarks = data['6'] !== '/' ? data['6'] : '';
+                this.newDepartment.order = data['7'] === 0 ? '' : data['7'];
+                this.newDepartment.status = data['8'] === '<span class="label label-success">已启用</span>' ? 'T' : 'F';
+                this.newDepartment.pid = data['1'] ? data['1'] : null;
                 //记录打开编辑窗口时的科室名称
                 this.isEditDepartmentName = this.newDepartment.name;
                 console.log(this.isEditDepartmentName);
@@ -47767,7 +49696,27 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
             //模态框关闭的时候启用body滚动
             $('body').css('overflow', 'auto');
         },
-        editDepartment: function editDepartment() {},
+        editDepartment: function editDepartment() {
+            var _this2 = this;
+
+            this.$validator.validateAll().then(function (result) {
+                //验证是否符合表单规则
+                if (result) {
+                    //如果符合才提交
+                    console.log(_this2.newDepartment);
+                    console.log(_this2.isEditDepartmentName);
+                    axios.post('/departments/edit', { department: _this2.newDepartment, isEdit: _this2.isEditDepartmentName }).then(function (res) {
+                        var table = $('.datatable-button-html5-columns').DataTable();
+                        var data = [_this2.newDepartment.order ? _this2.newDepartment.order : 0, _this2.newDepartment.pid, _this2.newDepartment.name, _this2.newDepartment.pid ? res.data : '/', _this2.newDepartment.manager, _this2.newDepartment.phone, _this2.newDepartment.remarks ? _this2.newDepartment.remarks : '/', _this2.newDepartment.order ? _this2.newDepartment.order : '0', _this2.newDepartment.status === 'T' ? '<span class="label label-success">已启用</span>' : '<span class="label label-danger">未启用</span>', '<button class="edit btn btn-xxs btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 修改</button>'];
+                        table.row(_this2.selectedRow).data(data).draw();
+                        _this2.closeEditModal();
+                        _this2.$snotify.success('编辑成功！');
+                    }).catch(function (error) {
+                        throw error;
+                    });
+                }
+            });
+        },
         changeStatus: function changeStatus() {
             if (this.newDepartment.status === 'T') {
                 this.newDepartment.status = 'F';
@@ -47796,18 +49745,18 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
             });
         },
         addDepartment: function addDepartment() {
-            var _this2 = this;
+            var _this3 = this;
 
             this.$validator.validateAll().then(function (result) {
                 //验证是否符合表单规则
                 if (result) {
                     //如果符合才提交
-                    axios.post('/departments/add', { department: _this2.newDepartment }).then(function (res) {
+                    axios.post('/departments/add', { department: _this3.newDepartment }).then(function (res) {
                         var table = $('.datatable-button-html5-columns').DataTable();
-                        table.row.add([_this2.newDepartment.order ? _this2.newDepartment.order : 0, res.data[0], _this2.newDepartment.name, _this2.newDepartment.pid ? res.data[1] : '/', _this2.newDepartment.manager, _this2.newDepartment.phone, _this2.newDepartment.remarks ? _this2.newDepartment.remarks : '/', _this2.newDepartment.order ? _this2.newDepartment.order : '0', _this2.newDepartment.status === 'T' ? '<span class="label label-success">已启用</span>' : '<span class="label label-danger">未启用</span>', '<button class="edit btn btn-xxs btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 修改</button>']).draw(false);
-                        _this2.closeAddModal();
+                        table.row.add([_this3.newDepartment.order ? _this3.newDepartment.order : 0, res.data[0], _this3.newDepartment.name, _this3.newDepartment.pid ? res.data[1] : '/', _this3.newDepartment.manager, _this3.newDepartment.phone, _this3.newDepartment.remarks ? _this3.newDepartment.remarks : '/', _this3.newDepartment.order ? _this3.newDepartment.order : '0', _this3.newDepartment.status === 'T' ? '<span class="label label-success">已启用</span>' : '<span class="label label-danger">未启用</span>', '<button class="edit btn btn-xxs btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 修改</button>']).draw(false);
+                        _this3.closeAddModal();
                         console.log(res.data);
-                        _this2.$snotify.success('添加成功！');
+                        _this3.$snotify.success('添加成功！');
                     }).catch(function (error) {
                         throw error;
                     });
@@ -47815,11 +49764,11 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
             });
         },
         reloadOptions: function reloadOptions() {
-            var _this3 = this;
+            var _this4 = this;
 
             axios.get('/departments/get/used').then(function (res) {
                 //console.log(res.data);
-                _this3.treeselectLists = res.data;
+                _this4.treeselectLists = res.data;
             });
         },
         tableSetup: function tableSetup() {
@@ -47908,12 +49857,12 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
 });
 
 /***/ }),
-/* 73 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(true)
-		module.exports = factory(__webpack_require__(3));
+		module.exports = factory(__webpack_require__(1));
 	else if(typeof define === 'function' && define.amd)
 		define(["vue"], factory);
 	else if(typeof exports === 'object')
@@ -48709,7 +50658,7 @@ module.exports = function listToStyles (parentId, list) {
 //# sourceMappingURL=index.js.map
 
 /***/ }),
-/* 74 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -48808,97 +50757,97 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports) {
 
-module.exports = __webpack_require__(75);
+module.exports = __webpack_require__(80);
 
 /***/ }),
 /* 1 */
 /***/ (function(module, exports) {
 
-module.exports = __webpack_require__(15);
+module.exports = __webpack_require__(16);
 
 /***/ }),
 /* 2 */
 /***/ (function(module, exports) {
 
-module.exports = __webpack_require__(79);
+module.exports = __webpack_require__(84);
 
 /***/ }),
 /* 3 */
 /***/ (function(module, exports) {
 
-module.exports = __webpack_require__(83);
+module.exports = __webpack_require__(88);
 
 /***/ }),
 /* 4 */
 /***/ (function(module, exports) {
 
-module.exports = __webpack_require__(84);
+module.exports = __webpack_require__(89);
 
 /***/ }),
 /* 5 */
 /***/ (function(module, exports) {
 
-module.exports = __webpack_require__(85);
+module.exports = __webpack_require__(90);
 
 /***/ }),
 /* 6 */
 /***/ (function(module, exports) {
 
-module.exports = __webpack_require__(86);
+module.exports = __webpack_require__(91);
 
 /***/ }),
 /* 7 */
 /***/ (function(module, exports) {
 
-module.exports = __webpack_require__(94);
+module.exports = __webpack_require__(99);
 
 /***/ }),
 /* 8 */
 /***/ (function(module, exports) {
 
-module.exports = __webpack_require__(95);
+module.exports = __webpack_require__(100);
 
 /***/ }),
 /* 9 */
 /***/ (function(module, exports) {
 
-module.exports = __webpack_require__(96);
+module.exports = __webpack_require__(101);
 
 /***/ }),
 /* 10 */
 /***/ (function(module, exports) {
 
-module.exports = __webpack_require__(100);
+module.exports = __webpack_require__(105);
 
 /***/ }),
 /* 11 */
 /***/ (function(module, exports) {
 
-module.exports = __webpack_require__(101);
+module.exports = __webpack_require__(106);
 
 /***/ }),
 /* 12 */
 /***/ (function(module, exports) {
 
-module.exports = __webpack_require__(102);
+module.exports = __webpack_require__(107);
 
 /***/ }),
 /* 13 */
 /***/ (function(module, exports) {
 
-module.exports = __webpack_require__(103);
+module.exports = __webpack_require__(108);
 
 /***/ }),
 /* 14 */
 /***/ (function(module, exports) {
 
-module.exports = __webpack_require__(104);
+module.exports = __webpack_require__(109);
 
 /***/ }),
 /* 15 */
 /***/ (function(module, exports) {
 
-module.exports = __webpack_require__(3);
+module.exports = __webpack_require__(1);
 
 /***/ }),
 /* 16 */
@@ -52534,14 +54483,14 @@ var VERSION = "0.0.37";
 //# sourceMappingURL=vue-treeselect.js.map
 
 /***/ }),
-/* 75 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var arrayWithHoles = __webpack_require__(76);
+var arrayWithHoles = __webpack_require__(81);
 
-var iterableToArrayLimit = __webpack_require__(77);
+var iterableToArrayLimit = __webpack_require__(82);
 
-var nonIterableRest = __webpack_require__(78);
+var nonIterableRest = __webpack_require__(83);
 
 function _slicedToArray(arr, i) {
   return arrayWithHoles(arr) || iterableToArrayLimit(arr, i) || nonIterableRest();
@@ -52550,7 +54499,7 @@ function _slicedToArray(arr, i) {
 module.exports = _slicedToArray;
 
 /***/ }),
-/* 76 */
+/* 81 */
 /***/ (function(module, exports) {
 
 function _arrayWithHoles(arr) {
@@ -52560,7 +54509,7 @@ function _arrayWithHoles(arr) {
 module.exports = _arrayWithHoles;
 
 /***/ }),
-/* 77 */
+/* 82 */
 /***/ (function(module, exports) {
 
 function _iterableToArrayLimit(arr, i) {
@@ -52592,7 +54541,7 @@ function _iterableToArrayLimit(arr, i) {
 module.exports = _iterableToArrayLimit;
 
 /***/ }),
-/* 78 */
+/* 83 */
 /***/ (function(module, exports) {
 
 function _nonIterableRest() {
@@ -52602,14 +54551,14 @@ function _nonIterableRest() {
 module.exports = _nonIterableRest;
 
 /***/ }),
-/* 79 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var arrayWithoutHoles = __webpack_require__(80);
+var arrayWithoutHoles = __webpack_require__(85);
 
-var iterableToArray = __webpack_require__(81);
+var iterableToArray = __webpack_require__(86);
 
-var nonIterableSpread = __webpack_require__(82);
+var nonIterableSpread = __webpack_require__(87);
 
 function _toConsumableArray(arr) {
   return arrayWithoutHoles(arr) || iterableToArray(arr) || nonIterableSpread();
@@ -52618,7 +54567,7 @@ function _toConsumableArray(arr) {
 module.exports = _toConsumableArray;
 
 /***/ }),
-/* 80 */
+/* 85 */
 /***/ (function(module, exports) {
 
 function _arrayWithoutHoles(arr) {
@@ -52634,7 +54583,7 @@ function _arrayWithoutHoles(arr) {
 module.exports = _arrayWithoutHoles;
 
 /***/ }),
-/* 81 */
+/* 86 */
 /***/ (function(module, exports) {
 
 function _iterableToArray(iter) {
@@ -52644,7 +54593,7 @@ function _iterableToArray(iter) {
 module.exports = _iterableToArray;
 
 /***/ }),
-/* 82 */
+/* 87 */
 /***/ (function(module, exports) {
 
 function _nonIterableSpread() {
@@ -52654,10 +54603,10 @@ function _nonIterableSpread() {
 module.exports = _nonIterableSpread;
 
 /***/ }),
-/* 83 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var defineProperty = __webpack_require__(15);
+var defineProperty = __webpack_require__(16);
 
 function _objectSpread(target) {
   for (var i = 1; i < arguments.length; i++) {
@@ -52681,7 +54630,7 @@ function _objectSpread(target) {
 module.exports = _objectSpread;
 
 /***/ }),
-/* 84 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -52712,7 +54661,7 @@ module.exports = fuzzysearch;
 
 
 /***/ }),
-/* 85 */
+/* 90 */
 /***/ (function(module, exports) {
 
 /**
@@ -52735,12 +54684,12 @@ module.exports = noop;
 
 
 /***/ }),
-/* 86 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isObject = __webpack_require__(16),
-    now = __webpack_require__(87),
-    toNumber = __webpack_require__(18);
+var isObject = __webpack_require__(17),
+    now = __webpack_require__(92),
+    toNumber = __webpack_require__(19);
 
 /** Error message constants. */
 var FUNC_ERROR_TEXT = 'Expected a function';
@@ -52931,10 +54880,10 @@ module.exports = debounce;
 
 
 /***/ }),
-/* 87 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var root = __webpack_require__(17);
+var root = __webpack_require__(18);
 
 /**
  * Gets the timestamp of the number of milliseconds that have elapsed since
@@ -52960,7 +54909,7 @@ module.exports = now;
 
 
 /***/ }),
-/* 88 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {/** Detect free variable `global` from Node.js. */
@@ -52968,14 +54917,14 @@ var freeGlobal = typeof global == 'object' && global && global.Object === Object
 
 module.exports = freeGlobal;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ }),
-/* 89 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseGetTag = __webpack_require__(90),
-    isObjectLike = __webpack_require__(93);
+var baseGetTag = __webpack_require__(95),
+    isObjectLike = __webpack_require__(98);
 
 /** `Object#toString` result references. */
 var symbolTag = '[object Symbol]';
@@ -53006,12 +54955,12 @@ module.exports = isSymbol;
 
 
 /***/ }),
-/* 90 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Symbol = __webpack_require__(19),
-    getRawTag = __webpack_require__(91),
-    objectToString = __webpack_require__(92);
+var Symbol = __webpack_require__(20),
+    getRawTag = __webpack_require__(96),
+    objectToString = __webpack_require__(97);
 
 /** `Object#toString` result references. */
 var nullTag = '[object Null]',
@@ -53040,10 +54989,10 @@ module.exports = baseGetTag;
 
 
 /***/ }),
-/* 91 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Symbol = __webpack_require__(19);
+var Symbol = __webpack_require__(20);
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -53092,7 +55041,7 @@ module.exports = getRawTag;
 
 
 /***/ }),
-/* 92 */
+/* 97 */
 /***/ (function(module, exports) {
 
 /** Used for built-in method references. */
@@ -53120,7 +55069,7 @@ module.exports = objectToString;
 
 
 /***/ }),
-/* 93 */
+/* 98 */
 /***/ (function(module, exports) {
 
 /**
@@ -53155,7 +55104,7 @@ module.exports = isObjectLike;
 
 
 /***/ }),
-/* 94 */
+/* 99 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -53220,7 +55169,7 @@ var index = (function (element, listener) {
 
 
 /***/ }),
-/* 95 */
+/* 100 */
 /***/ (function(module, exports) {
 
 module.exports = isPromise;
@@ -53231,10 +55180,10 @@ function isPromise(obj) {
 
 
 /***/ }),
-/* 96 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var before = __webpack_require__(97);
+var before = __webpack_require__(102);
 
 /**
  * Creates a function that is restricted to invoking `func` once. Repeat calls
@@ -53262,10 +55211,10 @@ module.exports = once;
 
 
 /***/ }),
-/* 97 */
+/* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var toInteger = __webpack_require__(98);
+var toInteger = __webpack_require__(103);
 
 /** Error message constants. */
 var FUNC_ERROR_TEXT = 'Expected a function';
@@ -53308,10 +55257,10 @@ module.exports = before;
 
 
 /***/ }),
-/* 98 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var toFinite = __webpack_require__(99);
+var toFinite = __webpack_require__(104);
 
 /**
  * Converts `value` to an integer.
@@ -53350,10 +55299,10 @@ module.exports = toInteger;
 
 
 /***/ }),
-/* 99 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var toNumber = __webpack_require__(18);
+var toNumber = __webpack_require__(19);
 
 /** Used as references for various `Number` constants. */
 var INFINITY = 1 / 0,
@@ -53398,7 +55347,7 @@ module.exports = toFinite;
 
 
 /***/ }),
-/* 100 */
+/* 105 */
 /***/ (function(module, exports) {
 
 /**
@@ -53425,7 +55374,7 @@ module.exports = identity;
 
 
 /***/ }),
-/* 101 */
+/* 106 */
 /***/ (function(module, exports) {
 
 /**
@@ -53457,7 +55406,7 @@ module.exports = constant;
 
 
 /***/ }),
-/* 102 */
+/* 107 */
 /***/ (function(module, exports) {
 
 function _typeof2(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof2 = function _typeof2(obj) { return typeof obj; }; } else { _typeof2 = function _typeof2(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof2(obj); }
@@ -53479,7 +55428,7 @@ function _typeof(obj) {
 module.exports = _typeof;
 
 /***/ }),
-/* 103 */
+/* 108 */
 /***/ (function(module, exports) {
 
 /**
@@ -53505,7 +55454,7 @@ module.exports = last;
 
 
 /***/ }),
-/* 104 */
+/* 109 */
 /***/ (function(module, exports) {
 
 var nestRE = /^(attrs|props|on|nativeOn|class|style|hook)$/
@@ -53561,13 +55510,13 @@ function mergeFn (a, b) {
 
 
 /***/ }),
-/* 105 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(106);
+var content = __webpack_require__(111);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -53575,7 +55524,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(107)(content, options);
+var update = __webpack_require__(14)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -53592,10 +55541,10 @@ if(false) {
 }
 
 /***/ }),
-/* 106 */
+/* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(4)(false);
+exports = module.exports = __webpack_require__(2)(false);
 // imports
 
 
@@ -53606,473 +55555,19 @@ exports.push([module.i, "/*!\n * vue-treeselect v0.0.37 | (c) 2017-2018 Riophae 
 
 
 /***/ }),
-/* 107 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-
-var stylesInDom = {};
-
-var	memoize = function (fn) {
-	var memo;
-
-	return function () {
-		if (typeof memo === "undefined") memo = fn.apply(this, arguments);
-		return memo;
-	};
-};
-
-var isOldIE = memoize(function () {
-	// Test for IE <= 9 as proposed by Browserhacks
-	// @see http://browserhacks.com/#hack-e71d8692f65334173fee715c222cb805
-	// Tests for existence of standard globals is to allow style-loader
-	// to operate correctly into non-standard environments
-	// @see https://github.com/webpack-contrib/style-loader/issues/177
-	return window && document && document.all && !window.atob;
-});
-
-var getElement = (function (fn) {
-	var memo = {};
-
-	return function(selector) {
-		if (typeof memo[selector] === "undefined") {
-			memo[selector] = fn.call(this, selector);
-		}
-
-		return memo[selector]
-	};
-})(function (target) {
-	return document.querySelector(target)
-});
-
-var singleton = null;
-var	singletonCounter = 0;
-var	stylesInsertedAtTop = [];
-
-var	fixUrls = __webpack_require__(108);
-
-module.exports = function(list, options) {
-	if (typeof DEBUG !== "undefined" && DEBUG) {
-		if (typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
-	}
-
-	options = options || {};
-
-	options.attrs = typeof options.attrs === "object" ? options.attrs : {};
-
-	// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
-	// tags it will allow on a page
-	if (!options.singleton) options.singleton = isOldIE();
-
-	// By default, add <style> tags to the <head> element
-	if (!options.insertInto) options.insertInto = "head";
-
-	// By default, add <style> tags to the bottom of the target
-	if (!options.insertAt) options.insertAt = "bottom";
-
-	var styles = listToStyles(list, options);
-
-	addStylesToDom(styles, options);
-
-	return function update (newList) {
-		var mayRemove = [];
-
-		for (var i = 0; i < styles.length; i++) {
-			var item = styles[i];
-			var domStyle = stylesInDom[item.id];
-
-			domStyle.refs--;
-			mayRemove.push(domStyle);
-		}
-
-		if(newList) {
-			var newStyles = listToStyles(newList, options);
-			addStylesToDom(newStyles, options);
-		}
-
-		for (var i = 0; i < mayRemove.length; i++) {
-			var domStyle = mayRemove[i];
-
-			if(domStyle.refs === 0) {
-				for (var j = 0; j < domStyle.parts.length; j++) domStyle.parts[j]();
-
-				delete stylesInDom[domStyle.id];
-			}
-		}
-	};
-};
-
-function addStylesToDom (styles, options) {
-	for (var i = 0; i < styles.length; i++) {
-		var item = styles[i];
-		var domStyle = stylesInDom[item.id];
-
-		if(domStyle) {
-			domStyle.refs++;
-
-			for(var j = 0; j < domStyle.parts.length; j++) {
-				domStyle.parts[j](item.parts[j]);
-			}
-
-			for(; j < item.parts.length; j++) {
-				domStyle.parts.push(addStyle(item.parts[j], options));
-			}
-		} else {
-			var parts = [];
-
-			for(var j = 0; j < item.parts.length; j++) {
-				parts.push(addStyle(item.parts[j], options));
-			}
-
-			stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
-		}
-	}
-}
-
-function listToStyles (list, options) {
-	var styles = [];
-	var newStyles = {};
-
-	for (var i = 0; i < list.length; i++) {
-		var item = list[i];
-		var id = options.base ? item[0] + options.base : item[0];
-		var css = item[1];
-		var media = item[2];
-		var sourceMap = item[3];
-		var part = {css: css, media: media, sourceMap: sourceMap};
-
-		if(!newStyles[id]) styles.push(newStyles[id] = {id: id, parts: [part]});
-		else newStyles[id].parts.push(part);
-	}
-
-	return styles;
-}
-
-function insertStyleElement (options, style) {
-	var target = getElement(options.insertInto)
-
-	if (!target) {
-		throw new Error("Couldn't find a style target. This probably means that the value for the 'insertInto' parameter is invalid.");
-	}
-
-	var lastStyleElementInsertedAtTop = stylesInsertedAtTop[stylesInsertedAtTop.length - 1];
-
-	if (options.insertAt === "top") {
-		if (!lastStyleElementInsertedAtTop) {
-			target.insertBefore(style, target.firstChild);
-		} else if (lastStyleElementInsertedAtTop.nextSibling) {
-			target.insertBefore(style, lastStyleElementInsertedAtTop.nextSibling);
-		} else {
-			target.appendChild(style);
-		}
-		stylesInsertedAtTop.push(style);
-	} else if (options.insertAt === "bottom") {
-		target.appendChild(style);
-	} else {
-		throw new Error("Invalid value for parameter 'insertAt'. Must be 'top' or 'bottom'.");
-	}
-}
-
-function removeStyleElement (style) {
-	if (style.parentNode === null) return false;
-	style.parentNode.removeChild(style);
-
-	var idx = stylesInsertedAtTop.indexOf(style);
-	if(idx >= 0) {
-		stylesInsertedAtTop.splice(idx, 1);
-	}
-}
-
-function createStyleElement (options) {
-	var style = document.createElement("style");
-
-	options.attrs.type = "text/css";
-
-	addAttrs(style, options.attrs);
-	insertStyleElement(options, style);
-
-	return style;
-}
-
-function createLinkElement (options) {
-	var link = document.createElement("link");
-
-	options.attrs.type = "text/css";
-	options.attrs.rel = "stylesheet";
-
-	addAttrs(link, options.attrs);
-	insertStyleElement(options, link);
-
-	return link;
-}
-
-function addAttrs (el, attrs) {
-	Object.keys(attrs).forEach(function (key) {
-		el.setAttribute(key, attrs[key]);
-	});
-}
-
-function addStyle (obj, options) {
-	var style, update, remove, result;
-
-	// If a transform function was defined, run it on the css
-	if (options.transform && obj.css) {
-	    result = options.transform(obj.css);
-
-	    if (result) {
-	    	// If transform returns a value, use that instead of the original css.
-	    	// This allows running runtime transformations on the css.
-	    	obj.css = result;
-	    } else {
-	    	// If the transform function returns a falsy value, don't add this css.
-	    	// This allows conditional loading of css
-	    	return function() {
-	    		// noop
-	    	};
-	    }
-	}
-
-	if (options.singleton) {
-		var styleIndex = singletonCounter++;
-
-		style = singleton || (singleton = createStyleElement(options));
-
-		update = applyToSingletonTag.bind(null, style, styleIndex, false);
-		remove = applyToSingletonTag.bind(null, style, styleIndex, true);
-
-	} else if (
-		obj.sourceMap &&
-		typeof URL === "function" &&
-		typeof URL.createObjectURL === "function" &&
-		typeof URL.revokeObjectURL === "function" &&
-		typeof Blob === "function" &&
-		typeof btoa === "function"
-	) {
-		style = createLinkElement(options);
-		update = updateLink.bind(null, style, options);
-		remove = function () {
-			removeStyleElement(style);
-
-			if(style.href) URL.revokeObjectURL(style.href);
-		};
-	} else {
-		style = createStyleElement(options);
-		update = applyToTag.bind(null, style);
-		remove = function () {
-			removeStyleElement(style);
-		};
-	}
-
-	update(obj);
-
-	return function updateStyle (newObj) {
-		if (newObj) {
-			if (
-				newObj.css === obj.css &&
-				newObj.media === obj.media &&
-				newObj.sourceMap === obj.sourceMap
-			) {
-				return;
-			}
-
-			update(obj = newObj);
-		} else {
-			remove();
-		}
-	};
-}
-
-var replaceText = (function () {
-	var textStore = [];
-
-	return function (index, replacement) {
-		textStore[index] = replacement;
-
-		return textStore.filter(Boolean).join('\n');
-	};
-})();
-
-function applyToSingletonTag (style, index, remove, obj) {
-	var css = remove ? "" : obj.css;
-
-	if (style.styleSheet) {
-		style.styleSheet.cssText = replaceText(index, css);
-	} else {
-		var cssNode = document.createTextNode(css);
-		var childNodes = style.childNodes;
-
-		if (childNodes[index]) style.removeChild(childNodes[index]);
-
-		if (childNodes.length) {
-			style.insertBefore(cssNode, childNodes[index]);
-		} else {
-			style.appendChild(cssNode);
-		}
-	}
-}
-
-function applyToTag (style, obj) {
-	var css = obj.css;
-	var media = obj.media;
-
-	if(media) {
-		style.setAttribute("media", media)
-	}
-
-	if(style.styleSheet) {
-		style.styleSheet.cssText = css;
-	} else {
-		while(style.firstChild) {
-			style.removeChild(style.firstChild);
-		}
-
-		style.appendChild(document.createTextNode(css));
-	}
-}
-
-function updateLink (link, options, obj) {
-	var css = obj.css;
-	var sourceMap = obj.sourceMap;
-
-	/*
-		If convertToAbsoluteUrls isn't defined, but sourcemaps are enabled
-		and there is no publicPath defined then lets turn convertToAbsoluteUrls
-		on by default.  Otherwise default to the convertToAbsoluteUrls option
-		directly
-	*/
-	var autoFixUrls = options.convertToAbsoluteUrls === undefined && sourceMap;
-
-	if (options.convertToAbsoluteUrls || autoFixUrls) {
-		css = fixUrls(css);
-	}
-
-	if (sourceMap) {
-		// http://stackoverflow.com/a/26603875
-		css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
-	}
-
-	var blob = new Blob([css], { type: "text/css" });
-
-	var oldSrc = link.href;
-
-	link.href = URL.createObjectURL(blob);
-
-	if(oldSrc) URL.revokeObjectURL(oldSrc);
-}
-
-
-/***/ }),
-/* 108 */
-/***/ (function(module, exports) {
-
-
-/**
- * When source maps are enabled, `style-loader` uses a link element with a data-uri to
- * embed the css on the page. This breaks all relative urls because now they are relative to a
- * bundle instead of the current page.
- *
- * One solution is to only use full urls, but that may be impossible.
- *
- * Instead, this function "fixes" the relative urls to be absolute according to the current page location.
- *
- * A rudimentary test suite is located at `test/fixUrls.js` and can be run via the `npm test` command.
- *
- */
-
-module.exports = function (css) {
-  // get current location
-  var location = typeof window !== "undefined" && window.location;
-
-  if (!location) {
-    throw new Error("fixUrls requires window.location");
-  }
-
-	// blank or null?
-	if (!css || typeof css !== "string") {
-	  return css;
-  }
-
-  var baseUrl = location.protocol + "//" + location.host;
-  var currentDir = baseUrl + location.pathname.replace(/\/[^\/]*$/, "/");
-
-	// convert each url(...)
-	/*
-	This regular expression is just a way to recursively match brackets within
-	a string.
-
-	 /url\s*\(  = Match on the word "url" with any whitespace after it and then a parens
-	   (  = Start a capturing group
-	     (?:  = Start a non-capturing group
-	         [^)(]  = Match anything that isn't a parentheses
-	         |  = OR
-	         \(  = Match a start parentheses
-	             (?:  = Start another non-capturing groups
-	                 [^)(]+  = Match anything that isn't a parentheses
-	                 |  = OR
-	                 \(  = Match a start parentheses
-	                     [^)(]*  = Match anything that isn't a parentheses
-	                 \)  = Match a end parentheses
-	             )  = End Group
-              *\) = Match anything and then a close parens
-          )  = Close non-capturing group
-          *  = Match anything
-       )  = Close capturing group
-	 \)  = Match a close parens
-
-	 /gi  = Get all matches, not the first.  Be case insensitive.
-	 */
-	var fixedCss = css.replace(/url\s*\(((?:[^)(]|\((?:[^)(]+|\([^)(]*\))*\))*)\)/gi, function(fullMatch, origUrl) {
-		// strip quotes (if they exist)
-		var unquotedOrigUrl = origUrl
-			.trim()
-			.replace(/^"(.*)"$/, function(o, $1){ return $1; })
-			.replace(/^'(.*)'$/, function(o, $1){ return $1; });
-
-		// already a full url? no change
-		if (/^(#|data:|http:\/\/|https:\/\/|file:\/\/\/)/i.test(unquotedOrigUrl)) {
-		  return fullMatch;
-		}
-
-		// convert the url to a full url
-		var newUrl;
-
-		if (unquotedOrigUrl.indexOf("//") === 0) {
-		  	//TODO: should we add protocol?
-			newUrl = unquotedOrigUrl;
-		} else if (unquotedOrigUrl.indexOf("/") === 0) {
-			// path should be relative to the base url
-			newUrl = baseUrl + unquotedOrigUrl; // already starts with '/'
-		} else {
-			// path should be relative to current directory
-			newUrl = currentDir + unquotedOrigUrl.replace(/^\.\//, ""); // Strip leading './'
-		}
-
-		// send back the fixed url(...)
-		return "url(" + JSON.stringify(newUrl) + ")";
-	});
-
-	// send back the fixed css
-	return fixedCss;
-};
-
-
-/***/ }),
-/* 109 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(110)
+  __webpack_require__(113)
 }
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(3)
 /* script */
-var __vue_script__ = __webpack_require__(112)
+var __vue_script__ = __webpack_require__(115)
 /* template */
-var __vue_template__ = __webpack_require__(116)
+var __vue_template__ = __webpack_require__(119)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -54111,13 +55606,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 110 */
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(111);
+var content = __webpack_require__(114);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -54137,10 +55632,10 @@ if(false) {
 }
 
 /***/ }),
-/* 111 */
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(4)(false);
+exports = module.exports = __webpack_require__(2)(false);
 // imports
 
 
@@ -54151,17 +55646,17 @@ exports.push([module.i, "\n.modal-backdrop[data-v-519f64d0] {\r\n    background-
 
 
 /***/ }),
-/* 112 */
+/* 115 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vee_validate__ = __webpack_require__(113);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vee_validate_dist_locale_zh_CN__ = __webpack_require__(114);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vee_validate__ = __webpack_require__(116);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vee_validate_dist_locale_zh_CN__ = __webpack_require__(117);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vee_validate_dist_locale_zh_CN___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_vee_validate_dist_locale_zh_CN__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vue_i18n__ = __webpack_require__(115);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vue_i18n__ = __webpack_require__(118);
 //
 //
 //
@@ -54247,7 +55742,7 @@ __WEBPACK_IMPORTED_MODULE_1_vee_validate__["a" /* Validator */].extend('unique',
 });
 
 /***/ }),
-/* 113 */
+/* 116 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -62288,13 +63783,13 @@ VeeValidate$1.use(rulesPlugin);
 
 
 /***/ }),
-/* 114 */
+/* 117 */
 /***/ (function(module, exports, __webpack_require__) {
 
 !function(n,e){ true?module.exports=e():"function"==typeof define&&define.amd?define(e):(n.__vee_validate_locale__zh_CN=n.__vee_validate_locale__zh_CN||{},n.__vee_validate_locale__zh_CN.js=e())}(this,function(){"use strict";var n,e={name:"zh_CN",messages:{_default:function(n){return n+"的值无效"},after:function(n,e){return n+"必须在"+e[0]+"之后"},alpha_dash:function(n){return n+"能够包含字母数字字符、破折号和下划线"},alpha_num:function(n){return n+"只能包含字母数字字符"},alpha_spaces:function(n){return n+"只能包含字母字符和空格"},alpha:function(n){return n+"只能包含字母字符"},before:function(n,e){return n+"必须在"+e[0]+"之前"},between:function(n,e){return n+"必须在"+e[0]+"与"+e[1]+"之间"},confirmed:function(n,e){return n+"不能和"+e[0]+"匹配"},credit_card:function(n){return n+"的格式错误"},date_between:function(n,e){return n+"必须在"+e[0]+"和"+e[1]+"之间"},date_format:function(n,e){return n+"必须符合"+e[0]+"格式"},decimal:function(n,e){void 0===e&&(e=[]);var t=e[0];return void 0===t&&(t="*"),n+"必须是数字，且能够保留"+("*"===t?"":t)+"位小数"},digits:function(n,e){return n+"必须是数字，且精确到"+e[0]+"位数"},dimensions:function(n,e){return n+"必须在"+e[0]+"像素与"+e[1]+"像素之间"},email:function(n){return n+"不是一个有效的邮箱"},ext:function(n){return n+"不是一个有效的文件"},image:function(n){return n+"不是一张有效的图片"},included:function(n){return n+"不是一个有效值"},integer:function(n){return n+"必须是整数"},ip:function(n){return n+"不是一个有效的地址"},length:function(n,e){var t=e[0],r=e[1];return r?n+"长度必须在"+t+"到"+r+"之间":n+"长度必须为"+t},max:function(n,e){return n+"不能超过"+e[0]+"个字符"},max_value:function(n,e){return n+"必须小于或等于"+e[0]},mimes:function(n){return n+"不是一个有效的文件类型"},min:function(n,e){return n+"必须至少有"+e[0]+"个字符"},min_value:function(n,e){return n+"必须大于或等于"+e[0]},excluded:function(n){return n+"不是一个有效值"},numeric:function(n){return n+"只能包含数字字符"},regex:function(n){return n+"格式无效"},required:function(n){return n+"是必须的"},size:function(n,e){var t,r,u,i=e[0];return n+"必须小于"+(t=i,r=1024,u=0==(t=Number(t)*r)?0:Math.floor(Math.log(t)/Math.log(r)),1*(t/Math.pow(r,u)).toFixed(2)+" "+["Byte","KB","MB","GB","TB","PB","EB","ZB","YB"][u])},url:function(n){return n+"不是一个有效的url"}},attributes:{}};return"undefined"!=typeof VeeValidate&&VeeValidate.Validator.localize(((n={})[e.name]=e,n)),e});
 
 /***/ }),
-/* 115 */
+/* 118 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -63897,7 +65392,7 @@ VueI18n.version = '8.2.0';
 
 
 /***/ }),
-/* 116 */
+/* 119 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -63991,7 +65486,7 @@ if (false) {
 }
 
 /***/ }),
-/* 117 */
+/* 120 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -64786,7 +66281,7 @@ var render = function() {
               attrs: { slot: "footer-commit-text" },
               slot: "footer-commit-text"
             },
-            [_vm._v("添 加")]
+            [_vm._v("修 改")]
           )
         ]
       ),
@@ -64866,1525 +66361,10 @@ if (false) {
 }
 
 /***/ }),
-/* 118 */
+/* 121 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 119 */,
-/* 120 */,
-/* 121 */,
-/* 122 */,
-/* 123 */,
-/* 124 */,
-/* 125 */,
-/* 126 */,
-/* 127 */,
-/* 128 */,
-/* 129 */,
-/* 130 */,
-/* 131 */,
-/* 132 */,
-/* 133 */,
-/* 134 */,
-/* 135 */,
-/* 136 */,
-/* 137 */,
-/* 138 */,
-/* 139 */,
-/* 140 */,
-/* 141 */,
-/* 142 */,
-/* 143 */,
-/* 144 */,
-/* 145 */,
-/* 146 */,
-/* 147 */,
-/* 148 */,
-/* 149 */,
-/* 150 */,
-/* 151 */,
-/* 152 */,
-/* 153 */,
-/* 154 */,
-/* 155 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SnotifyPosition; });
-/* unused harmony export SnotifyStyle */
-/* unused harmony export SnotifyToast */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
-/**
- * vue-snotify v3.2.0
- * (c) 2018 artemsky <mr.artemsky@gmail.com>
- * @license MIT
- */
-
-
-/**
- * Toast position
- */
-var SnotifyPosition;
-(function (SnotifyPosition) {
-    SnotifyPosition["leftTop"] = "leftTop";
-    SnotifyPosition["leftCenter"] = "leftCenter";
-    SnotifyPosition["leftBottom"] = "leftBottom";
-    SnotifyPosition["rightTop"] = "rightTop";
-    SnotifyPosition["rightCenter"] = "rightCenter";
-    SnotifyPosition["rightBottom"] = "rightBottom";
-    SnotifyPosition["centerTop"] = "centerTop";
-    SnotifyPosition["centerCenter"] = "centerCenter";
-    SnotifyPosition["centerBottom"] = "centerBottom";
-})(SnotifyPosition || (SnotifyPosition = {}));
-
-/**
- * Toast style.
- */
-var SnotifyStyle = {
-    simple: 'simple',
-    success: 'success',
-    error: 'error',
-    warning: 'warning',
-    info: 'info',
-    async: 'async',
-    confirm: 'confirm',
-    prompt: 'prompt'
-};
-
-var script = __WEBPACK_IMPORTED_MODULE_0_vue___default.a.extend({
-    props: ['toast'],
-    data: function () {
-        return {
-            isPromptFocused: false,
-        };
-    },
-    methods: {
-        valueChanged: function (e) {
-            this.toast.value = e.target.value;
-            this.toast.eventEmitter.$emit('input');
-        }
-    }
-});
-
-/* script */
-
-            const __vue_script__ = script;
-            
-/* template */
-var __vue_render__ = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('span',{staticClass:"snotifyToast__input",class:{'snotifyToast__input--filled': _vm.isPromptFocused}},[_c('input',{staticClass:"snotifyToast__input__field",attrs:{"type":"text","id":_vm.toast.id},on:{"input":_vm.valueChanged,"focus":function($event){_vm.isPromptFocused = true;},"blur":function($event){_vm.isPromptFocused = !!_vm.toast.value.length;}}}),_vm._v(" "),_c('label',{staticClass:"snotifyToast__input__label",attrs:{"for":_vm.toast.id}},[_c('span',{staticClass:"snotifyToast__input__labelContent"},[_vm._v(_vm._s(_vm._f("truncate")(_vm.toast.config.placeholder)))])])])};
-var __vue_staticRenderFns__ = [];
-
-  /* style */
-  const __vue_inject_styles__ = undefined;
-  /* scoped */
-  const __vue_scope_id__ = undefined;
-  /* module identifier */
-  const __vue_module_identifier__ = undefined;
-  /* functional template */
-  const __vue_is_functional_template__ = false;
-  /* component normalizer */
-  function __vue_normalize__(
-    template, style, script$$1,
-    scope, functional, moduleIdentifier,
-    createInjector, createInjectorSSR
-  ) {
-    const component = (typeof script$$1 === 'function' ? script$$1.options : script$$1) || {};
-
-    if (!component.render) {
-      component.render = template.render;
-      component.staticRenderFns = template.staticRenderFns;
-      component._compiled = true;
-
-      if (functional) component.functional = true;
-    }
-
-    component._scopeId = scope;
-
-    return component
-  }
-  /* style inject */
-  function __vue_create_injector__() {
-    const head = document.head || document.getElementsByTagName('head')[0];
-    const styles = __vue_create_injector__.styles || (__vue_create_injector__.styles = {});
-    const isOldIE =
-      typeof navigator !== 'undefined' &&
-      /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
-
-    return function addStyle(id, css) {
-      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return // SSR styles are present.
-
-      const group = isOldIE ? css.media || 'default' : id;
-      const style = styles[group] || (styles[group] = { ids: [], parts: [], element: undefined });
-
-      if (!style.ids.includes(id)) {
-        let code = css.source;
-        let index = style.ids.length;
-
-        style.ids.push(id);
-
-        if (true && css.map) {
-          // https://developer.chrome.com/devtools/docs/javascript-debugging
-          // this makes source maps inside style tags work properly in Chrome
-          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */';
-          // http://stackoverflow.com/a/26603875
-          code +=
-            '\n/*# sourceMappingURL=data:application/json;base64,' +
-            btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) +
-            ' */';
-        }
-
-        if (isOldIE) {
-          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
-        }
-
-        if (!style.element) {
-          const el = style.element = document.createElement('style');
-          el.type = 'text/css';
-
-          if (css.media) el.setAttribute('media', css.media);
-          if (isOldIE) {
-            el.setAttribute('data-group', group);
-            el.setAttribute('data-next-index', '0');
-          }
-
-          head.appendChild(el);
-        }
-
-        if (isOldIE) {
-          index = parseInt(style.element.getAttribute('data-next-index'));
-          style.element.setAttribute('data-next-index', index + 1);
-        }
-
-        if (style.element.styleSheet) {
-          style.parts.push(code);
-          style.element.styleSheet.cssText = style.parts
-            .filter(Boolean)
-            .join('\n');
-        } else {
-          const textNode = document.createTextNode(code);
-          const nodes = style.element.childNodes;
-          if (nodes[index]) style.element.removeChild(nodes[index]);
-          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);
-          else style.element.appendChild(textNode);
-        }
-      }
-    }
-  }
-  /* style inject SSR */
-  
-
-  
-  var SnotifyPrompt = __vue_normalize__(
-    { render: __vue_render__, staticRenderFns: __vue_staticRenderFns__ },
-    __vue_inject_styles__,
-    __vue_script__,
-    __vue_scope_id__,
-    __vue_is_functional_template__,
-    __vue_module_identifier__,
-    __vue_create_injector__,
-    undefined
-  )
-
-var script$1 = __WEBPACK_IMPORTED_MODULE_0_vue___default.a.extend({
-    props: ['toast'],
-    methods: {
-        remove: function () {
-            this.$snotify.remove(this.toast.id);
-        }
-    }
-});
-
-/* script */
-
-            const __vue_script__$1 = script$1;
-            
-/* template */
-var __vue_render__$1 = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"snotifyToast__buttons"},_vm._l((_vm.toast.config.buttons),function(button){return _c('button',{class:[{'snotifyToast__buttons--bold': button.bold}, button.className],attrs:{"type":"button"},on:{"click":function($event){$event.preventDefault();$event.stopPropagation();button.action ? button.action(_vm.toast) : _vm.remove();}}},[_vm._v("\n    "+_vm._s(button.text)+"\n  ")])}))};
-var __vue_staticRenderFns__$1 = [];
-
-  /* style */
-  const __vue_inject_styles__$1 = undefined;
-  /* scoped */
-  const __vue_scope_id__$1 = undefined;
-  /* module identifier */
-  const __vue_module_identifier__$1 = undefined;
-  /* functional template */
-  const __vue_is_functional_template__$1 = false;
-  /* component normalizer */
-  function __vue_normalize__$1(
-    template, style, script,
-    scope, functional, moduleIdentifier,
-    createInjector, createInjectorSSR
-  ) {
-    const component = (typeof script === 'function' ? script.options : script) || {};
-
-    if (!component.render) {
-      component.render = template.render;
-      component.staticRenderFns = template.staticRenderFns;
-      component._compiled = true;
-
-      if (functional) component.functional = true;
-    }
-
-    component._scopeId = scope;
-
-    return component
-  }
-  /* style inject */
-  function __vue_create_injector__$1() {
-    const head = document.head || document.getElementsByTagName('head')[0];
-    const styles = __vue_create_injector__$1.styles || (__vue_create_injector__$1.styles = {});
-    const isOldIE =
-      typeof navigator !== 'undefined' &&
-      /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
-
-    return function addStyle(id, css) {
-      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return // SSR styles are present.
-
-      const group = isOldIE ? css.media || 'default' : id;
-      const style = styles[group] || (styles[group] = { ids: [], parts: [], element: undefined });
-
-      if (!style.ids.includes(id)) {
-        let code = css.source;
-        let index = style.ids.length;
-
-        style.ids.push(id);
-
-        if (true && css.map) {
-          // https://developer.chrome.com/devtools/docs/javascript-debugging
-          // this makes source maps inside style tags work properly in Chrome
-          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */';
-          // http://stackoverflow.com/a/26603875
-          code +=
-            '\n/*# sourceMappingURL=data:application/json;base64,' +
-            btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) +
-            ' */';
-        }
-
-        if (isOldIE) {
-          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
-        }
-
-        if (!style.element) {
-          const el = style.element = document.createElement('style');
-          el.type = 'text/css';
-
-          if (css.media) el.setAttribute('media', css.media);
-          if (isOldIE) {
-            el.setAttribute('data-group', group);
-            el.setAttribute('data-next-index', '0');
-          }
-
-          head.appendChild(el);
-        }
-
-        if (isOldIE) {
-          index = parseInt(style.element.getAttribute('data-next-index'));
-          style.element.setAttribute('data-next-index', index + 1);
-        }
-
-        if (style.element.styleSheet) {
-          style.parts.push(code);
-          style.element.styleSheet.cssText = style.parts
-            .filter(Boolean)
-            .join('\n');
-        } else {
-          const textNode = document.createTextNode(code);
-          const nodes = style.element.childNodes;
-          if (nodes[index]) style.element.removeChild(nodes[index]);
-          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);
-          else style.element.appendChild(textNode);
-        }
-      }
-    }
-  }
-  /* style inject SSR */
-  
-
-  
-  var SnotifyButton = __vue_normalize__$1(
-    { render: __vue_render__$1, staticRenderFns: __vue_staticRenderFns__$1 },
-    __vue_inject_styles__$1,
-    __vue_script__$1,
-    __vue_scope_id__$1,
-    __vue_is_functional_template__$1,
-    __vue_module_identifier__$1,
-    __vue_create_injector__$1,
-    undefined
-  )
-
-var script$2 = __WEBPACK_IMPORTED_MODULE_0_vue___default.a.extend({
-    props: ['toastData'],
-    components: {
-        SnotifyPrompt: SnotifyPrompt,
-        SnotifyButton: SnotifyButton
-    },
-    data: function () {
-        return {
-            toast: this.toastData,
-            animationFrame: null,
-            state: {
-                paused: false,
-                progress: 0,
-                animation: '',
-                isDestroying: false,
-                promptType: SnotifyStyle.prompt
-            }
-        };
-    },
-    methods: {
-        /**
-         * Initialize base toast config
-         */
-        initToast: function () {
-            if (this.toast.config.timeout > 0) {
-                this.startTimeout(0);
-            }
-        },
-        onClick: function () {
-            this.toast.eventEmitter.$emit('click');
-            if (this.toast.config.closeOnClick) {
-                this.$snotify.remove(this.toast.id);
-            }
-        },
-        onMouseEnter: function () {
-            this.toast.eventEmitter.$emit('mouseenter');
-            if (this.toast.config.pauseOnHover) {
-                this.state.paused = true;
-            }
-        },
-        onMouseLeave: function () {
-            if (this.toast.config.pauseOnHover && this.toast.config.timeout) {
-                this.state.paused = false;
-                this.startTimeout(this.toast.config.timeout * this.state.progress);
-            }
-            this.toast.eventEmitter.$emit('mouseleave');
-        },
-        /**
-         * Remove toast completely after animation
-         */
-        onExitTransitionEnd: function () {
-            if (this.state.isDestroying) {
-                return;
-            }
-            this.initToast();
-            this.toast.eventEmitter.$emit('shown');
-        },
-        /**
-         * Start progress bar
-         * @param startTime {number}
-         * @default 0
-         */
-        startTimeout: function (startTime) {
-            var _this = this;
-            if (startTime === void 0) { startTime = 0; }
-            var start = performance.now();
-            var calculate = function () {
-                _this.animationFrame = requestAnimationFrame(function (timestamp) {
-                    var runtime = timestamp + startTime - start;
-                    var progress = Math.min(runtime / _this.toast.config.timeout, 1);
-                    if (_this.state.paused) {
-                        cancelAnimationFrame(_this.animationFrame);
-                    }
-                    else if (runtime < _this.toast.config.timeout) {
-                        _this.state.progress = progress;
-                        calculate();
-                    }
-                    else {
-                        _this.state.progress = 1;
-                        cancelAnimationFrame(_this.animationFrame);
-                        _this.$snotify.emitter.$emit('remove', _this.toast.id);
-                    }
-                });
-            };
-            calculate();
-        },
-        /**
-         * Trigger beforeDestroy lifecycle. Removes toast
-         */
-        onRemove: function () {
-            var _this = this;
-            this.state.isDestroying = true;
-            this.$emit('stateChanged', 'beforeHide');
-            this.toast.eventEmitter.$emit('beforeHide');
-            this.state.animation = this.toast.config.animation.exit;
-            setTimeout(function () {
-                _this.$emit('stateChanged', 'hidden');
-                _this.state.animation = 'snotifyToast--out';
-                _this.toast.eventEmitter.$emit('hidden');
-                setTimeout(function () { return _this.$snotify.remove(_this.toast.id, true); }, _this.toast.config.animation.time / 2);
-            }, this.toast.config.animation.time / 2);
-        },
-    },
-    created: function () {
-        var _this = this;
-        this.$snotify.emitter.$on('toastChanged', function (toast) {
-            if (_this.toast.id === toast.id) {
-                _this.initToast();
-            }
-        });
-        this.$snotify.emitter.$on('remove', function (id) {
-            if (_this.toast.id === id) {
-                _this.onRemove();
-            }
-        });
-    },
-    mounted: function () {
-        var _this = this;
-        this.$nextTick(function () {
-            _this.toast.eventEmitter.$emit('mounted');
-            _this.state.animation = 'snotifyToast--in';
-            _this.$nextTick(function () {
-                setTimeout(function () {
-                    _this.$emit('stateChanged', 'beforeShow');
-                    _this.toast.eventEmitter.$emit('beforeShow');
-                    _this.state.animation = _this.toast.config.animation.enter;
-                }, _this.toast.config.animation.time / 5); // time to show toast push animation (snotifyToast--in)
-            });
-        });
-    },
-    destroyed: function () {
-        cancelAnimationFrame(this.animationFrame);
-        this.toast.eventEmitter.$emit('destroyed');
-    }
-});
-
-/* script */
-
-            const __vue_script__$2 = script$2;
-            
-/* template */
-var __vue_render__$2 = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"snotifyToast animated",class:['snotify-' + _vm.toast.config.type,
-          _vm.state.animation,
-          _vm.toast.valid === undefined ? '' : (_vm.toast.valid ? 'snotifyToast--valid' : 'snotifyToast--invalid')
-        ],style:({
-          '-webkit-animation-duration': _vm.toast.config.animation.time + 'ms',
-          'animation-duration': _vm.toast.config.animation.time + 'ms',
-          '-webkit-transition': _vm.toast.config.animation.time + 'ms',
-          transition: _vm.toast.config.animation.time + 'ms'
-        }),on:{"click":_vm.onClick,"mouseenter":_vm.onMouseEnter,"mouseleave":_vm.onMouseLeave,"animationend":_vm.onExitTransitionEnd}},[(_vm.toast.config.showProgressBar && _vm.toast.config.timeout > 0)?_c('div',{staticClass:"snotifyToast__progressBar"},[_c('span',{staticClass:"snotifyToast__progressBar__percentage",style:({'width': (_vm.state.progress * 100) + '%'})})]):_vm._e(),_vm._v(" "),(!_vm.toast.config.html)?_c('div',{staticClass:"snotifyToast__inner",class:{'snotifyToast__noIcon': _vm.toast.config.icon === false}},[(_vm.toast.title)?_c('div',{staticClass:"snotifyToast__title"},[_vm._v(_vm._s(_vm._f("truncate")(_vm.toast.title,_vm.toast.config.titleMaxLength)))]):_vm._e(),_vm._v(" "),(_vm.toast.body)?_c('div',{staticClass:"snotifyToast__body"},[_vm._v(_vm._s(_vm._f("truncate")(_vm.toast.body,_vm.toast.config.bodyMaxLength)))]):_vm._e(),_vm._v(" "),(_vm.toast.config.type === _vm.state.promptType)?_c('snotify-prompt',{attrs:{"toast":_vm.toast}}):_vm._e(),_vm._v(" "),(typeof _vm.toast.config.icon === 'undefined')?_c('div',{class:['snotify-icon', 'snotify-icon--' + _vm.toast.config.type]}):(_vm.toast.config.icon !== false)?_c('div',[_c('img',{staticClass:"snotify-icon",attrs:{"src":_vm.toast.config.icon}})]):_vm._e()],1):_c('div',{staticClass:"snotifyToast__inner",domProps:{"innerHTML":_vm._s(_vm.toast.config.html)}}),_vm._v(" "),(_vm.toast.config.buttons)?_c('snotify-button',{attrs:{"toast":_vm.toast}}):_vm._e()],1)};
-var __vue_staticRenderFns__$2 = [];
-
-  /* style */
-  const __vue_inject_styles__$2 = undefined;
-  /* scoped */
-  const __vue_scope_id__$2 = undefined;
-  /* module identifier */
-  const __vue_module_identifier__$2 = undefined;
-  /* functional template */
-  const __vue_is_functional_template__$2 = false;
-  /* component normalizer */
-  function __vue_normalize__$2(
-    template, style, script,
-    scope, functional, moduleIdentifier,
-    createInjector, createInjectorSSR
-  ) {
-    const component = (typeof script === 'function' ? script.options : script) || {};
-
-    if (!component.render) {
-      component.render = template.render;
-      component.staticRenderFns = template.staticRenderFns;
-      component._compiled = true;
-
-      if (functional) component.functional = true;
-    }
-
-    component._scopeId = scope;
-
-    return component
-  }
-  /* style inject */
-  function __vue_create_injector__$2() {
-    const head = document.head || document.getElementsByTagName('head')[0];
-    const styles = __vue_create_injector__$2.styles || (__vue_create_injector__$2.styles = {});
-    const isOldIE =
-      typeof navigator !== 'undefined' &&
-      /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
-
-    return function addStyle(id, css) {
-      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return // SSR styles are present.
-
-      const group = isOldIE ? css.media || 'default' : id;
-      const style = styles[group] || (styles[group] = { ids: [], parts: [], element: undefined });
-
-      if (!style.ids.includes(id)) {
-        let code = css.source;
-        let index = style.ids.length;
-
-        style.ids.push(id);
-
-        if (true && css.map) {
-          // https://developer.chrome.com/devtools/docs/javascript-debugging
-          // this makes source maps inside style tags work properly in Chrome
-          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */';
-          // http://stackoverflow.com/a/26603875
-          code +=
-            '\n/*# sourceMappingURL=data:application/json;base64,' +
-            btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) +
-            ' */';
-        }
-
-        if (isOldIE) {
-          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
-        }
-
-        if (!style.element) {
-          const el = style.element = document.createElement('style');
-          el.type = 'text/css';
-
-          if (css.media) el.setAttribute('media', css.media);
-          if (isOldIE) {
-            el.setAttribute('data-group', group);
-            el.setAttribute('data-next-index', '0');
-          }
-
-          head.appendChild(el);
-        }
-
-        if (isOldIE) {
-          index = parseInt(style.element.getAttribute('data-next-index'));
-          style.element.setAttribute('data-next-index', index + 1);
-        }
-
-        if (style.element.styleSheet) {
-          style.parts.push(code);
-          style.element.styleSheet.cssText = style.parts
-            .filter(Boolean)
-            .join('\n');
-        } else {
-          const textNode = document.createTextNode(code);
-          const nodes = style.element.childNodes;
-          if (nodes[index]) style.element.removeChild(nodes[index]);
-          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);
-          else style.element.appendChild(textNode);
-        }
-      }
-    }
-  }
-  /* style inject SSR */
-  
-
-  
-  var Toast = __vue_normalize__$2(
-    { render: __vue_render__$2, staticRenderFns: __vue_staticRenderFns__$2 },
-    __vue_inject_styles__$2,
-    __vue_script__$2,
-    __vue_scope_id__$2,
-    __vue_is_functional_template__$2,
-    __vue_module_identifier__$2,
-    __vue_create_injector__$2,
-    undefined
-  )
-
-var script$3 = __WEBPACK_IMPORTED_MODULE_0_vue___default.a.extend({
-    components: {
-        Toast: Toast
-    },
-    data: function () {
-        return {
-            /**
-             * Toasts array
-             */
-            notifications: {
-                left_top: [],
-                left_center: [],
-                left_bottom: [],
-                right_top: [],
-                right_center: [],
-                right_bottom: [],
-                center_top: [],
-                center_center: [],
-                center_bottom: []
-            },
-            /**
-             * Helper for slice pipe (maxOnScreen)
-             */
-            dockSize_a: 0,
-            /**
-             * Helper for slice pipe (maxOnScreen)
-             */
-            dockSize_b: 0,
-            /**
-             * Helper for slice pipe (maxAtPosition)
-             */
-            blockSize_a: 0,
-            /**
-             * Helper for slice pipe (maxAtPosition)
-             */
-            blockSize_b: 0,
-            /**
-             * Backdrop Opacity
-             */
-            backdrop: -1,
-            /**
-             * How many toasts with backdrop in current queue
-             */
-            withBackdrop: [],
-        };
-    },
-    methods: {
-        setOptions: function (toasts) {
-            if (this.$snotify.config.global.newOnTop) {
-                this.dockSize_a = -this.$snotify.config.global.maxOnScreen;
-                this.dockSize_b = undefined;
-                this.blockSize_a = -this.$snotify.config.global.maxAtPosition;
-                this.blockSize_b = undefined;
-                this.withBackdrop = toasts.filter(function (toast) { return toast.config.backdrop >= 0; });
-            }
-            else {
-                this.dockSize_a = 0;
-                this.dockSize_b = this.$snotify.config.global.maxOnScreen;
-                this.blockSize_a = 0;
-                this.blockSize_b = this.$snotify.config.global.maxAtPosition;
-                this.withBackdrop = toasts.filter(function (toast) { return toast.config.backdrop >= 0; }).reverse();
-            }
-            this.notifications = this.splitToasts(toasts.slice(this.dockSize_a, this.dockSize_b));
-            this.stateChanged('mounted');
-        },
-        // TODO: fix backdrop if more than one toast called in a row
-        /**
-         * Changes the backdrop opacity
-         * @param {SnotifyEvent} event
-         */
-        stateChanged: function (event) {
-            if (!this.withBackdrop.length) {
-                return;
-            }
-            switch (event) {
-                case 'mounted':
-                    if (this.backdrop < 0) {
-                        this.backdrop = 0;
-                    }
-                    break;
-                case 'beforeShow':
-                    this.backdrop = this.withBackdrop[this.withBackdrop.length - 1].config.backdrop;
-                    break;
-                case 'beforeHide':
-                    if (this.withBackdrop.length === 1) {
-                        this.backdrop = 0;
-                    }
-                    break;
-                case 'hidden':
-                    if (this.withBackdrop.length === 1) {
-                        this.backdrop = -1;
-                    }
-                    break;
-            }
-        },
-        /**
-         * Split toasts toasts into different objects
-         * @param {SnotifyToast[]} toasts
-         * @returns {SnotifyNotifications}
-         */
-        splitToasts: function (toasts) {
-            var result = {};
-            for (var property in SnotifyPosition) {
-                if (SnotifyPosition.hasOwnProperty(property)) {
-                    result[SnotifyPosition[property]] = [];
-                }
-            }
-            toasts.forEach(function (toast) {
-                result[toast.config.position].push(toast);
-            });
-            return result;
-        },
-    },
-    created: function () {
-        var _this = this;
-        this.$snotify.emitter.$on('snotify', function (toasts) {
-            _this.setOptions(toasts);
-        });
-    }
-});
-
-/* script */
-
-            const __vue_script__$3 = script$3;
-            
-/* template */
-var __vue_render__$3 = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[(_vm.backdrop >= 0)?_c('div',{staticClass:"snotify-backdrop",style:({opacity: _vm.backdrop})}):_vm._e(),_vm._v(" "),_vm._l((_vm.notifications),function(position,index){return _c('div',{staticClass:"snotify",class:'snotify-' + index},_vm._l((_vm.notifications[index].slice(_vm.blockSize_a, _vm.blockSize_b)),function(toast){return _c('toast',{key:toast.id,attrs:{"toastData":toast},on:{"stateChanged":_vm.stateChanged}})}))})],2)};
-var __vue_staticRenderFns__$3 = [];
-
-  /* style */
-  const __vue_inject_styles__$3 = undefined;
-  /* scoped */
-  const __vue_scope_id__$3 = undefined;
-  /* module identifier */
-  const __vue_module_identifier__$3 = undefined;
-  /* functional template */
-  const __vue_is_functional_template__$3 = false;
-  /* component normalizer */
-  function __vue_normalize__$3(
-    template, style, script,
-    scope, functional, moduleIdentifier,
-    createInjector, createInjectorSSR
-  ) {
-    const component = (typeof script === 'function' ? script.options : script) || {};
-
-    if (!component.render) {
-      component.render = template.render;
-      component.staticRenderFns = template.staticRenderFns;
-      component._compiled = true;
-
-      if (functional) component.functional = true;
-    }
-
-    component._scopeId = scope;
-
-    return component
-  }
-  /* style inject */
-  function __vue_create_injector__$3() {
-    const head = document.head || document.getElementsByTagName('head')[0];
-    const styles = __vue_create_injector__$3.styles || (__vue_create_injector__$3.styles = {});
-    const isOldIE =
-      typeof navigator !== 'undefined' &&
-      /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
-
-    return function addStyle(id, css) {
-      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) return // SSR styles are present.
-
-      const group = isOldIE ? css.media || 'default' : id;
-      const style = styles[group] || (styles[group] = { ids: [], parts: [], element: undefined });
-
-      if (!style.ids.includes(id)) {
-        let code = css.source;
-        let index = style.ids.length;
-
-        style.ids.push(id);
-
-        if (true && css.map) {
-          // https://developer.chrome.com/devtools/docs/javascript-debugging
-          // this makes source maps inside style tags work properly in Chrome
-          code += '\n/*# sourceURL=' + css.map.sources[0] + ' */';
-          // http://stackoverflow.com/a/26603875
-          code +=
-            '\n/*# sourceMappingURL=data:application/json;base64,' +
-            btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) +
-            ' */';
-        }
-
-        if (isOldIE) {
-          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
-        }
-
-        if (!style.element) {
-          const el = style.element = document.createElement('style');
-          el.type = 'text/css';
-
-          if (css.media) el.setAttribute('media', css.media);
-          if (isOldIE) {
-            el.setAttribute('data-group', group);
-            el.setAttribute('data-next-index', '0');
-          }
-
-          head.appendChild(el);
-        }
-
-        if (isOldIE) {
-          index = parseInt(style.element.getAttribute('data-next-index'));
-          style.element.setAttribute('data-next-index', index + 1);
-        }
-
-        if (style.element.styleSheet) {
-          style.parts.push(code);
-          style.element.styleSheet.cssText = style.parts
-            .filter(Boolean)
-            .join('\n');
-        } else {
-          const textNode = document.createTextNode(code);
-          const nodes = style.element.childNodes;
-          if (nodes[index]) style.element.removeChild(nodes[index]);
-          if (nodes.length) style.element.insertBefore(textNode, nodes[index]);
-          else style.element.appendChild(textNode);
-        }
-      }
-    }
-  }
-  /* style inject SSR */
-  
-
-  
-  var Snotify = __vue_normalize__$3(
-    { render: __vue_render__$3, staticRenderFns: __vue_staticRenderFns__$3 },
-    __vue_inject_styles__$3,
-    __vue_script__$3,
-    __vue_scope_id__$3,
-    __vue_is_functional_template__$3,
-    __vue_module_identifier__$3,
-    __vue_create_injector__$3,
-    undefined
-  )
-
-/*! *****************************************************************************
-Copyright (c) Microsoft Corporation. All rights reserved.
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use
-this file except in compliance with the License. You may obtain a copy of the
-License at http://www.apache.org/licenses/LICENSE-2.0
-
-THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
-WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
-MERCHANTABLITY OR NON-INFRINGEMENT.
-
-See the Apache Version 2.0 License for specific language governing permissions
-and limitations under the License.
-***************************************************************************** */
-/* global Reflect, Promise */
-
-
-
-var __assign = Object.assign || function __assign(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-    }
-    return t;
-};
-
-
-
-function __decorate(decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-}
-
-
-
-function __metadata(metadataKey, metadataValue) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(metadataKey, metadataValue);
-}
-
-/**
- * Toast model
- */
-var SnotifyToast = /** @class */ (function () {
-    /**
-     *
-     * @param {number|string} id
-     * @param {string} title
-     * @param {string} body
-     * @param {SnotifyToastConfig} [config]
-     */
-    function SnotifyToast(id, title, body, config) {
-        var _this = this;
-        this.id = id;
-        this.title = title;
-        this.body = body;
-        this.config = config;
-        /**
-         * Emits {SnotifyEvent}
-         * @type {Vue}
-         */
-        this.eventEmitter = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a();
-        /**
-         * Holds all subscribers because we need to unsubscribe from all before toast get destroyed
-         * @type {Vue[]}
-         * @private
-         */
-        this._eventsHolder = [];
-        /**
-         * Toast validator
-         */
-        this.valid = undefined;
-        if (this.config.type === SnotifyStyle.prompt) {
-            this.value = '';
-        }
-        this.on('hidden', function () {
-            _this._eventsHolder.forEach(function (o) {
-                _this.eventEmitter.$off(o.event, o.action);
-            });
-        });
-    }
-    /**
-     * This callback is displayed as a global member.
-     * @callback action
-     * @param {toast} responseCode
-     * @returns {void}
-     */
-    /**
-     * Subscribe to toast events
-     * @param {String<SnotifyEvent>} event
-     * @param  {SnotifyToast~action} action
-     * @returns {SnotifyToast}
-     */
-    SnotifyToast.prototype.on = function (event, action) {
-        var _this = this;
-        this._eventsHolder.push({ event: event, action: action });
-        this.eventEmitter.$on(event, function () { return action(_this); });
-        return this;
-    };
-    return SnotifyToast;
-}());
-
-/**
- * Snotify default configuration object
- * @type {SnotifyDefaults}
- */
-var ToastDefaults = {
-    global: {
-        newOnTop: true,
-        maxOnScreen: 8,
-        maxAtPosition: 8,
-        oneAtTime: false,
-        preventDuplicates: false
-    },
-    toast: {
-        type: SnotifyStyle.simple,
-        showProgressBar: true,
-        timeout: 2000,
-        closeOnClick: true,
-        pauseOnHover: true,
-        bodyMaxLength: 150,
-        titleMaxLength: 16,
-        backdrop: -1,
-        icon: undefined,
-        html: null,
-        position: SnotifyPosition.rightBottom,
-        animation: { enter: 'fadeIn', exit: 'fadeOut', time: 400 }
-    },
-    type: (_a = {}, _a[SnotifyStyle.prompt] = {
-            timeout: 0,
-            closeOnClick: false,
-            buttons: [
-                { text: 'Ok', action: null, bold: true },
-                { text: 'Cancel', action: null, bold: false },
-            ],
-            placeholder: 'Enter answer here...',
-            type: SnotifyStyle.prompt,
-        }, _a[SnotifyStyle.confirm] = {
-            timeout: 0,
-            closeOnClick: false,
-            buttons: [
-                { text: 'Ok', action: null, bold: true },
-                { text: 'Cancel', action: null, bold: false },
-            ],
-            type: SnotifyStyle.confirm,
-        }, _a[SnotifyStyle.simple] = {
-            type: SnotifyStyle.simple
-        }, _a[SnotifyStyle.success] = {
-            type: SnotifyStyle.success
-        }, _a[SnotifyStyle.error] = {
-            type: SnotifyStyle.error
-        }, _a[SnotifyStyle.warning] = {
-            type: SnotifyStyle.warning
-        }, _a[SnotifyStyle.info] = {
-            type: SnotifyStyle.info
-        }, _a[SnotifyStyle.async] = {
-            pauseOnHover: false,
-            closeOnClick: false,
-            timeout: 0,
-            showProgressBar: false,
-            type: SnotifyStyle.async
-        }, _a)
-};
-var _a;
-
-/**
- * Transform arguments to Snotify object
- * @param target
- * @param {SnotifyType} propertyKey
- * @param {PropertyDescriptor} descriptor
- * @returns {Snotify}
- * @constructor
- */
-function TransformArgument(target, propertyKey, descriptor) {
-    if (propertyKey === SnotifyStyle.async) {
-        return {
-            value: function () {
-                var args = [];
-                for (var _i = 0; _i < arguments.length; _i++) {
-                    args[_i] = arguments[_i];
-                }
-                var result;
-                if (args.length === 2) {
-                    result = {
-                        title: null,
-                        body: args[0],
-                        config: null,
-                        action: args[1]
-                    };
-                }
-                else if (args.length === 3) {
-                    if (typeof args[1] === 'string') {
-                        result = {
-                            title: args[1],
-                            body: args[0],
-                            config: null,
-                            action: args[2]
-                        };
-                    }
-                    else {
-                        result = {
-                            title: null,
-                            body: args[0],
-                            config: args[2],
-                            action: args[1]
-                        };
-                    }
-                }
-                else {
-                    result = {
-                        title: args[1],
-                        body: args[0],
-                        config: args[3],
-                        action: args[2]
-                    };
-                }
-                return descriptor.value.apply(this, [result]);
-            }
-        };
-    }
-    else {
-        return {
-            value: function () {
-                var args = [];
-                for (var _i = 0; _i < arguments.length; _i++) {
-                    args[_i] = arguments[_i];
-                }
-                var result;
-                if (args.length === 1) {
-                    result = {
-                        title: null,
-                        body: args[0],
-                        config: null
-                    };
-                }
-                else if (args.length === 3) {
-                    result = {
-                        title: args[1],
-                        body: args[0],
-                        config: args[2]
-                    };
-                }
-                else {
-                    result = (_a = {
-                            title: null,
-                            config: null,
-                            body: args[0]
-                        }, _a[typeof args[1] === 'string' ? 'title' : 'config'] = args[1], _a);
-                }
-                return descriptor.value.apply(this, [result]);
-                var _a;
-            }
-        };
-    }
-}
-
-/**
- * Generates random id
- * @return {number}
- */
-function uuid() {
-    return Math.floor(Math.random() * (Date.now() - 1)) + 1;
-}
-/**
- * Simple is object check.
- * @param item {Object<any>}
- * @returns {boolean}
- */
-function isObject(item) {
-    return (item && typeof item === 'object' && !Array.isArray(item) && item !== null);
-}
-/**
- * Deep merge objects.
- * @param sources {Array<Object<any>>}
- * @returns {Object<any>}
- */
-function mergeDeep() {
-    var sources = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        sources[_i] = arguments[_i];
-    }
-    var target = {};
-    if (!sources.length) {
-        return target;
-    }
-    while (sources.length > 0) {
-        var source = sources.shift();
-        if (isObject(source)) {
-            for (var key in source) {
-                if (isObject(source[key])) {
-                    target[key] = mergeDeep(target[key], source[key]);
-                }
-                else {
-                    Object.assign(target, (_a = {}, _a[key] = source[key], _a));
-                }
-            }
-        }
-    }
-    return target;
-    var _a;
-}
-
-/**
- * Defines toast style depending on method name
- * @param target
- * @param {SnotifyType} propertyKey
- * @param {PropertyDescriptor} descriptor
- * @returns {{value: ((...args: any[]) => any)}}
- * @constructor
- */
-function SetToastType(target, propertyKey, descriptor) {
-    return {
-        value: function () {
-            var args = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i] = arguments[_i];
-            }
-            args[0].config = __assign({}, args[0].config, { type: propertyKey });
-            return descriptor.value.apply(this, args);
-        }
-    };
-}
-
-/**
- * this - create, remove, config toasts
- */
-// tslint:disable:unified-signatures
-var SnotifyService = /** @class */ (function () {
-    function SnotifyService() {
-        this.emitter = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a();
-        this.notifications = [];
-        this.config = ToastDefaults;
-    }
-    /**
-     * emit changes in notifications array
-     */
-    SnotifyService.prototype.emit = function () {
-        this.emitter.$emit('snotify', this.notifications.slice());
-    };
-    /**
-     * returns SnotifyToast object
-     * @param id {Number}
-     * @return {SnotifyToast|undefined}
-     */
-    SnotifyService.prototype.get = function (id) {
-        return this.notifications.find(function (toast) { return toast.id === id; });
-    };
-    /**
-     * add SnotifyToast to notifications array
-     * @param toast {SnotifyToast}
-     */
-    SnotifyService.prototype.add = function (toast) {
-        if (this.config.global.newOnTop) {
-            this.notifications.unshift(toast);
-        }
-        else {
-            this.notifications.push(toast);
-        }
-        this.emit();
-    };
-    /**
-     * If ID passed, emits toast animation remove, if ID & REMOVE passed, removes toast from notifications array
-     * @param id {number}
-     * @param remove {boolean}
-     */
-    SnotifyService.prototype.remove = function (id, remove) {
-        if (!id) {
-            return this.clear();
-        }
-        else if (remove) {
-            this.notifications = this.notifications.filter(function (toast) { return toast.id !== id; });
-            return this.emit();
-        }
-        this.emitter.$emit('remove', id);
-    };
-    /**
-     * Clear notifications array
-     */
-    SnotifyService.prototype.clear = function () {
-        this.notifications = [];
-        this.emit();
-    };
-    SnotifyService.prototype.button = function (text, closeOnClick, action, bold) {
-        var _this = this;
-        if (closeOnClick === void 0) { closeOnClick = true; }
-        if (action === void 0) { action = null; }
-        if (bold === void 0) { bold = false; }
-        return {
-            text: text,
-            action: closeOnClick ? function (toast) {
-                action(toast);
-                _this.remove(toast.id);
-            } : action,
-            bold: bold
-        };
-    };
-    /**
-     * Creates toast and add it to array, returns toast id
-     * @param snotify {Snotify}
-     * @return {number}
-     */
-    SnotifyService.prototype.create = function (snotify) {
-        if (this.config.global.oneAtTime && this.notifications.length !== 0)
-            return;
-        if (this.config.global.preventDuplicates
-            && this.notifications.filter(function (t) { return t.config.type === snotify.config.type; }).length === 1)
-            return;
-        var config = mergeDeep(this.config.toast, this.config.type[snotify.config.type], snotify.config);
-        var toast = new SnotifyToast(config.id ? config.id : uuid(), snotify.title, snotify.body, config);
-        this.add(toast);
-        return toast;
-    };
-    SnotifyService.prototype.setDefaults = function (defaults) {
-        return this.config = mergeDeep(this.config, defaults);
-    };
-    /**
-     * Transform toast arguments into {Snotify} object
-     */
-    SnotifyService.prototype.simple = function (args) {
-        return this.create(args);
-    };
-    /**
-     * Transform toast arguments into {Snotify} object
-     */
-    SnotifyService.prototype.success = function (args) {
-        return this.create(args);
-    };
-    /**
-     * Transform toast arguments into {Snotify} object
-     */
-    SnotifyService.prototype.error = function (args) {
-        return this.create(args);
-    };
-    /**
-     * Transform toast arguments into {Snotify} object
-     */
-    SnotifyService.prototype.info = function (args) {
-        return this.create(args);
-    };
-    /**
-     * Transform toast arguments into {Snotify} object
-     */
-    SnotifyService.prototype.warning = function (args) {
-        return this.create(args);
-    };
-    /**
-     * Transform toast arguments into {Snotify} object
-     */
-    SnotifyService.prototype.confirm = function (args) {
-        return this.create(args);
-    };
-    /**
-     * Transform toast arguments into {Snotify} object
-     */
-    SnotifyService.prototype.prompt = function (args) {
-        return this.create(args);
-    };
-    /**
-     * Transform toast arguments into {Snotify} object
-     */
-    SnotifyService.prototype.async = function (args) {
-        var _this = this;
-        var async = args.action;
-        var toast = this.create(args);
-        toast.on('mounted', function () {
-            async()
-                .then(function (next) { return _this.mergeToast(toast, next, SnotifyStyle.success); })
-                .catch(function (error) { return _this.mergeToast(toast, error, SnotifyStyle.error); });
-        });
-        return toast;
-    };
-    SnotifyService.prototype.mergeToast = function (toast, next, type) {
-        if (next.body) {
-            toast.body = next.body;
-        }
-        if (next.title) {
-            toast.title = next.title;
-        }
-        if (type) {
-            toast.config = mergeDeep(toast.config, this.config.global, this.config.toast[type], { type: type }, next.config);
-        }
-        else {
-            toast.config = mergeDeep(toast.config, next.config);
-        }
-        if (next.html) {
-            toast.config.html = next.html;
-        }
-        this.emit();
-        this.emitter.$emit('toastChanged', toast);
-    };
-    /**
-     * Creates empty toast with html string inside
-     * @param {string} html
-     * @param {SnotifyToastConfig} config
-     * @returns {number}
-     */
-    SnotifyService.prototype.html = function (html, config) {
-        return this.create({
-            title: null,
-            body: null,
-            config: __assign({}, config, { html: html })
-        });
-    };
-    __decorate([
-        TransformArgument
-        /**
-         * Determines current toast type and collects default configuration
-         */
-        ,
-        SetToastType,
-        __metadata("design:type", Function),
-        __metadata("design:paramtypes", [Object]),
-        __metadata("design:returntype", SnotifyToast)
-    ], SnotifyService.prototype, "simple", null);
-    __decorate([
-        TransformArgument
-        /**
-         * Determines current toast type and collects default configuration
-         */
-        ,
-        SetToastType,
-        __metadata("design:type", Function),
-        __metadata("design:paramtypes", [Object]),
-        __metadata("design:returntype", SnotifyToast)
-    ], SnotifyService.prototype, "success", null);
-    __decorate([
-        TransformArgument
-        /**
-         * Determines current toast type and collects default configuration
-         */
-        ,
-        SetToastType,
-        __metadata("design:type", Function),
-        __metadata("design:paramtypes", [Object]),
-        __metadata("design:returntype", SnotifyToast)
-    ], SnotifyService.prototype, "error", null);
-    __decorate([
-        TransformArgument
-        /**
-         * Determines current toast type and collects default configuration
-         */
-        ,
-        SetToastType,
-        __metadata("design:type", Function),
-        __metadata("design:paramtypes", [Object]),
-        __metadata("design:returntype", SnotifyToast)
-    ], SnotifyService.prototype, "info", null);
-    __decorate([
-        TransformArgument
-        /**
-         * Determines current toast type and collects default configuration
-         */
-        ,
-        SetToastType,
-        __metadata("design:type", Function),
-        __metadata("design:paramtypes", [Object]),
-        __metadata("design:returntype", SnotifyToast)
-    ], SnotifyService.prototype, "warning", null);
-    __decorate([
-        TransformArgument
-        /**
-         * Determines current toast type and collects default configuration
-         */
-        ,
-        SetToastType,
-        __metadata("design:type", Function),
-        __metadata("design:paramtypes", [Object]),
-        __metadata("design:returntype", SnotifyToast)
-    ], SnotifyService.prototype, "confirm", null);
-    __decorate([
-        TransformArgument
-        /**
-         * Determines current toast type and collects default configuration
-         */
-        ,
-        SetToastType,
-        __metadata("design:type", Function),
-        __metadata("design:paramtypes", [Object]),
-        __metadata("design:returntype", SnotifyToast)
-    ], SnotifyService.prototype, "prompt", null);
-    __decorate([
-        TransformArgument
-        /**
-         * Determines current toast type and collects default configuration
-         */
-        ,
-        SetToastType,
-        __metadata("design:type", Function),
-        __metadata("design:paramtypes", [Object]),
-        __metadata("design:returntype", SnotifyToast)
-    ], SnotifyService.prototype, "async", null);
-    return SnotifyService;
-}());
-
-var Plugin = {
-    install: function (Vue$$1, options) {
-        if (options === void 0) { options = {}; }
-        Vue$$1.filter('truncate', function (value, limit, trail) {
-            if (limit === void 0) { limit = 40; }
-            if (trail === void 0) { trail = '...'; }
-            return value.length > limit ? value.substring(0, limit) + trail : value;
-        });
-        var service = new SnotifyService();
-        service.setDefaults(options);
-        Vue$$1.prototype.$snotify = service;
-        Vue$$1.component('vue-snotify', Snotify);
-        // auto install
-        if (typeof window !== 'undefined' && window.hasOwnProperty('Vue')) {
-            window.Snotify = service;
-        }
-    }
-};
-// auto install
-if (typeof window !== 'undefined' && window.hasOwnProperty('Vue')) {
-    window.Vue.use(Plugin.install);
-}
-
-
-/* harmony default export */ __webpack_exports__["b"] = (Plugin);
-
-
-/***/ }),
-/* 156 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(157);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
-var transform;
-
-var options = {}
-options.transform = transform
-// add the styles to the DOM
-var update = __webpack_require__(107)(content, options);
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../css-loader/index.js!./material.css", function() {
-			var newContent = require("!!../../css-loader/index.js!./material.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 157 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(4)(false);
-// imports
-
-
-// module
-exports.push([module.i, ".snotifyToast {\n  -webkit-animation-fill-mode: both;\n  animation-fill-mode: both; }\n\n.snotify-leftTop .fadeIn,\n.snotify-leftCenter .fadeIn,\n.snotify-leftBottom .fadeIn {\n  -webkit-animation-name: fadeInLeft;\n  animation-name: fadeInLeft; }\n\n.snotify-leftTop .fadeOut,\n.snotify-leftCenter .fadeOut,\n.snotify-leftBottom .fadeOut {\n  -webkit-animation-name: fadeOutLeft;\n  animation-name: fadeOutLeft; }\n\n.snotify-rightTop .fadeIn,\n.snotify-rightCenter .fadeIn,\n.snotify-rightBottom .fadeIn {\n  -webkit-animation-name: fadeInRight;\n  animation-name: fadeInRight; }\n\n.snotify-rightTop .fadeOut,\n.snotify-rightCenter .fadeOut,\n.snotify-rightBottom .fadeOut {\n  -webkit-animation-name: fadeOutRight;\n  animation-name: fadeOutRight; }\n\n.snotify-centerTop .fadeIn {\n  -webkit-animation-name: fadeInDown;\n  animation-name: fadeInDown; }\n\n.snotify-centerTop .fadeOut {\n  -webkit-animation-name: fadeOutUp;\n  animation-name: fadeOutUp; }\n\n.snotify-centerCenter .fadeIn {\n  -webkit-animation-name: fadeIn;\n  animation-name: fadeIn; }\n\n.snotify-centerCenter .fadeOut {\n  -webkit-animation-name: fadeOut;\n  animation-name: fadeOut; }\n\n.snotify-centerBottom .fadeIn {\n  -webkit-animation-name: fadeInUp;\n  animation-name: fadeInUp; }\n\n.snotify-centerBottom .fadeOut {\n  -webkit-animation-name: fadeOutDown;\n  animation-name: fadeOutDown; }\n\n@-webkit-keyframes fadeInLeft {\n  0% {\n    opacity: 0;\n    -webkit-transform: translate3d(-100%, 0, 0) scaleX(1.2);\n    transform: translate3d(-100%, 0, 0) scaleX(1.2); }\n  100% {\n    opacity: 1;\n    -webkit-transform: none;\n    transform: none; } }\n\n@keyframes fadeInLeft {\n  0% {\n    opacity: 0;\n    -webkit-transform: translate3d(-100%, 0, 0) scaleX(1.2);\n    transform: translate3d(-100%, 0, 0) scaleX(1.2); }\n  100% {\n    opacity: 1;\n    -webkit-transform: none;\n    transform: none; } }\n\n@-webkit-keyframes fadeInRight {\n  0% {\n    opacity: 0;\n    -webkit-transform: translate3d(100%, 0, 0) scaleX(1.2);\n    transform: translate3d(100%, 0, 0) scaleX(1.2); }\n  100% {\n    opacity: 1;\n    -webkit-transform: none;\n    transform: none; } }\n\n@keyframes fadeInRight {\n  0% {\n    opacity: 0;\n    -webkit-transform: translate3d(100%, 0, 0) scaleX(1.2);\n    transform: translate3d(100%, 0, 0) scaleX(1.2); }\n  100% {\n    opacity: 1;\n    -webkit-transform: none;\n    transform: none; } }\n\n@-webkit-keyframes fadeInUp {\n  0% {\n    opacity: 0;\n    -webkit-transform: translate3d(0, 100%, 0) scaleY(1.2);\n    transform: translate3d(0, 100%, 0) scaleY(1.2); }\n  100% {\n    opacity: 1;\n    -webkit-transform: none;\n    transform: none; } }\n\n@keyframes fadeInUp {\n  0% {\n    opacity: 0;\n    -webkit-transform: translate3d(0, 100%, 0) scaleY(1.2);\n    transform: translate3d(0, 100%, 0) scaleY(1.2); }\n  100% {\n    opacity: 1;\n    -webkit-transform: none;\n    transform: none; } }\n\n@-webkit-keyframes fadeInDown {\n  0% {\n    opacity: 0;\n    -webkit-transform: translate3d(0, -100%, 0) scaleY(1.2);\n    transform: translate3d(0, -100%, 0) scaleY(1.2); }\n  100% {\n    opacity: 1;\n    -webkit-transform: none;\n    transform: none; } }\n\n@keyframes fadeInDown {\n  0% {\n    opacity: 0;\n    -webkit-transform: translate3d(0, -100%, 0) scaleY(1.2);\n    transform: translate3d(0, -100%, 0) scaleY(1.2); }\n  100% {\n    opacity: 1;\n    -webkit-transform: none;\n    transform: none; } }\n\n@-webkit-keyframes fadeIn {\n  0% {\n    opacity: 0; }\n  100% {\n    opacity: 1; } }\n\n@keyframes fadeIn {\n  0% {\n    opacity: 0; }\n  100% {\n    opacity: 1; } }\n\n@-webkit-keyframes fadeOut {\n  0% {\n    opacity: 1; }\n  100% {\n    opacity: 0; } }\n\n@keyframes fadeOut {\n  0% {\n    opacity: 1; }\n  100% {\n    opacity: 0; } }\n\n@-webkit-keyframes fadeOutDown {\n  0% {\n    opacity: 1; }\n  100% {\n    opacity: 0;\n    -webkit-transform: translate3d(0, 100%, 0);\n    transform: translate3d(0, 100%, 0); } }\n\n@keyframes fadeOutDown {\n  0% {\n    opacity: 1; }\n  100% {\n    opacity: 0;\n    -webkit-transform: translate3d(0, 100%, 0);\n    transform: translate3d(0, 100%, 0); } }\n\n@-webkit-keyframes fadeOutLeft {\n  0% {\n    opacity: 1; }\n  100% {\n    opacity: 0;\n    -webkit-transform: translate3d(-100%, 0, 0);\n    transform: translate3d(-100%, 0, 0); } }\n\n@keyframes fadeOutLeft {\n  0% {\n    opacity: 1; }\n  100% {\n    opacity: 0;\n    -webkit-transform: translate3d(-100%, 0, 0);\n    transform: translate3d(-100%, 0, 0); } }\n\n@-webkit-keyframes fadeOutRight {\n  0% {\n    opacity: 1; }\n  100% {\n    opacity: 0;\n    -webkit-transform: translate3d(100%, 0, 0);\n    transform: translate3d(100%, 0, 0); } }\n\n@keyframes fadeOutRight {\n  0% {\n    opacity: 1; }\n  100% {\n    opacity: 0;\n    -webkit-transform: translate3d(100%, 0, 0);\n    transform: translate3d(100%, 0, 0); } }\n\n@-webkit-keyframes fadeOutUp {\n  0% {\n    opacity: 1; }\n  100% {\n    opacity: 0;\n    -webkit-transform: translate3d(0, -100%, 0);\n    transform: translate3d(0, -100%, 0); } }\n\n@keyframes fadeOutUp {\n  0% {\n    opacity: 1; }\n  100% {\n    opacity: 0;\n    -webkit-transform: translate3d(0, -100%, 0);\n    transform: translate3d(0, -100%, 0); } }\n\n@-webkit-keyframes appear {\n  0% {\n    max-height: 0; }\n  100% {\n    max-height: 50vh; } }\n\n@keyframes appear {\n  0% {\n    max-height: 0; }\n  100% {\n    max-height: 50vh; } }\n\n@-webkit-keyframes disappear {\n  0% {\n    opacity: 0;\n    max-height: 50vh; }\n  100% {\n    opacity: 0;\n    max-height: 0; } }\n\n@keyframes disappear {\n  0% {\n    opacity: 0;\n    max-height: 50vh; }\n  100% {\n    opacity: 0;\n    max-height: 0; } }\n\n@-webkit-keyframes async {\n  0% {\n    -webkit-transform: translate(0, -50%) rotate(0deg);\n    transform: translate(0, -50%) rotate(0deg); }\n  100% {\n    -webkit-transform: translate(0, -50%) rotate(360deg);\n    transform: translate(0, -50%) rotate(360deg); } }\n\n@keyframes async {\n  0% {\n    -webkit-transform: translate(0, -50%) rotate(0deg);\n    transform: translate(0, -50%) rotate(0deg); }\n  100% {\n    -webkit-transform: translate(0, -50%) rotate(360deg);\n    transform: translate(0, -50%) rotate(360deg); } }\n\n.snotify {\n  display: block;\n  position: fixed;\n  width: 300px;\n  z-index: 9999;\n  -webkit-box-sizing: border-box;\n  box-sizing: border-box;\n  pointer-events: none; }\n  .snotify * {\n    -webkit-box-sizing: border-box;\n    box-sizing: border-box; }\n\n.snotify-leftTop,\n.snotify-leftCenter,\n.snotify-leftBottom {\n  left: 10px; }\n\n.snotify-rightTop,\n.snotify-rightCenter,\n.snotify-rightBottom {\n  right: 10px; }\n\n.snotify-centerTop,\n.snotify-centerCenter,\n.snotify-centerBottom {\n  left: calc(50% - 300px / 2); }\n\n.snotify-leftTop,\n.snotify-centerTop,\n.snotify-rightTop {\n  top: 10px; }\n\n.snotify-leftCenter,\n.snotify-rightCenter,\n.snotify-centerCenter {\n  top: 50%;\n  -webkit-transform: translateY(-50%);\n  transform: translateY(-50%); }\n\n.snotify-leftBottom,\n.snotify-rightBottom,\n.snotify-centerBottom {\n  bottom: 10px; }\n\n.snotify-backdrop {\n  position: fixed;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  left: 0;\n  background-color: #000;\n  opacity: 0;\n  z-index: 9998;\n  -webkit-transition: opacity .3s;\n  transition: opacity .3s; }\n\n.snotifyToast {\n  display: block;\n  cursor: pointer;\n  background-color: #fff;\n  height: 100%;\n  margin: 5px;\n  opacity: 0;\n  border-radius: 5px;\n  overflow: hidden;\n  pointer-events: auto; }\n  .snotifyToast--in {\n    -webkit-animation-name: appear;\n    animation-name: appear; }\n  .snotifyToast--out {\n    -webkit-animation-name: disappear;\n    animation-name: disappear; }\n  .snotifyToast__inner {\n    display: -webkit-box;\n    display: -webkit-flex;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n    -webkit-flex-flow: column nowrap;\n    -ms-flex-flow: column nowrap;\n    flex-flow: column nowrap;\n    -webkit-box-align: start;\n    -webkit-align-items: flex-start;\n    -ms-flex-align: start;\n    align-items: flex-start;\n    -webkit-box-pack: center;\n    -webkit-justify-content: center;\n    -ms-flex-pack: center;\n    justify-content: center;\n    position: relative;\n    padding: 5px 65px 5px 15px;\n    min-height: 78px;\n    font-size: 16px;\n    color: #000; }\n  .snotifyToast__noIcon {\n    padding: 5px 15px 5px 15px; }\n  .snotifyToast__progressBar {\n    position: relative;\n    width: 100%;\n    height: 10px;\n    background-color: #c7c7c7; }\n    .snotifyToast__progressBar__percentage {\n      position: absolute;\n      top: 0;\n      left: 0;\n      height: 10px;\n      background-color: #4c4c4c;\n      max-width: 100%; }\n  .snotifyToast__title {\n    font-size: 1.8em;\n    line-height: 1.2em;\n    margin-bottom: 5px;\n    color: #fff; }\n  .snotifyToast__body {\n    font-size: 1em; }\n\n.snotifyToast-show {\n  -webkit-transform: translate(0, 0);\n  transform: translate(0, 0);\n  opacity: 1; }\n\n.snotifyToast-remove {\n  max-height: 0;\n  overflow: hidden;\n  -webkit-transform: translate(0, 50%);\n  transform: translate(0, 50%);\n  opacity: 0; }\n\n.fadeOutRight {\n  -webkit-animation-name: fadeOutRight;\n  animation-name: fadeOutRight; }\n\n/***************\r\n ** Modifiers **\r\n **************/\n.snotify-simple .snotifyToast__title,\n.snotify-simple .snotifyToast__body {\n  color: #000; }\n\n.snotify-success {\n  background-color: #4caf50; }\n  .snotify-success .snotifyToast__progressBar {\n    background-color: #388e3c; }\n  .snotify-success .snotifyToast__progressBar__percentage {\n    background-color: #81c784; }\n  .snotify-success .snotifyToast__body {\n    color: #c8e6c9; }\n\n.snotify-info {\n  background-color: #1e88e5; }\n  .snotify-info .snotifyToast__progressBar {\n    background-color: #1565c0; }\n  .snotify-info .snotifyToast__progressBar__percentage {\n    background-color: #64b5f6; }\n  .snotify-info .snotifyToast__body {\n    color: #e3f2fd; }\n\n.snotify-warning {\n  background-color: #ff9800; }\n  .snotify-warning .snotifyToast__progressBar {\n    background-color: #ef6c00; }\n  .snotify-warning .snotifyToast__progressBar__percentage {\n    background-color: #ffcc80; }\n  .snotify-warning .snotifyToast__body {\n    color: #fff3e0; }\n\n.snotify-error {\n  background-color: #f44336; }\n  .snotify-error .snotifyToast__progressBar {\n    background-color: #c62828; }\n  .snotify-error .snotifyToast__progressBar__percentage {\n    background-color: #ef9a9a; }\n  .snotify-error .snotifyToast__body {\n    color: #ffebee; }\n\n.snotify-async {\n  background-color: #1e88e5; }\n  .snotify-async .snotifyToast__progressBar {\n    background-color: #1565c0; }\n  .snotify-async .snotifyToast__progressBar__percentage {\n    background-color: #64b5f6; }\n  .snotify-async .snotifyToast__body {\n    color: #e3f2fd; }\n\n.snotify-confirm {\n  background-color: #009688; }\n  .snotify-confirm .snotifyToast__progressBar {\n    background-color: #4db6ac; }\n  .snotify-confirm .snotifyToast__progressBar__percentage {\n    background-color: #80cbc4; }\n  .snotify-confirm .snotifyToast__body {\n    color: #e0f2f1; }\n\n.snotify-prompt {\n  background-color: #009688; }\n  .snotify-prompt .snotifyToast__title {\n    margin-bottom: 0; }\n  .snotify-prompt .snotifyToast__body {\n    color: #e0f2f1; }\n\n.snotify-confirm .snotifyToast__inner,\n.snotify-prompt .snotifyToast__inner {\n  padding: 10px 15px; }\n\n.snotifyToast__input {\n  position: relative;\n  z-index: 1;\n  display: inline-block;\n  margin: 0;\n  width: 100%;\n  vertical-align: top;\n  -webkit-transition: all .5s;\n  transition: all .5s;\n  -webkit-transition-delay: .3s;\n  transition-delay: .3s;\n  -webkit-transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1);\n  transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1); }\n  .snotifyToast__input__field {\n    position: relative;\n    display: block;\n    float: right;\n    padding: .85em .5em;\n    width: 100%;\n    border: none;\n    border-radius: 0;\n    background: transparent;\n    color: #333;\n    font-weight: bold;\n    -webkit-appearance: none;\n    /* for box shadows to show on iOS */\n    opacity: 0;\n    -webkit-transition: opacity .3s;\n    transition: opacity .3s; }\n    .snotifyToast__input__field:focus {\n      outline: none; }\n  .snotifyToast__input__label {\n    display: inline-block;\n    float: right;\n    padding: 0 .85em;\n    width: 100%;\n    color: #e0f2f1;\n    font-weight: bold;\n    font-size: 70.25%;\n    -webkit-font-smoothing: antialiased;\n    -moz-osx-font-smoothing: grayscale;\n    -webkit-touch-callout: none;\n    -webkit-user-select: none;\n    -moz-user-select: none;\n    -ms-user-select: none;\n    user-select: none;\n    position: absolute;\n    left: 0;\n    height: 100%;\n    text-align: left;\n    pointer-events: none; }\n    .snotifyToast__input__label::before, .snotifyToast__input__label::after {\n      content: '';\n      position: absolute;\n      top: 0;\n      left: 0;\n      width: 100%;\n      height: 100%;\n      -webkit-transition: -webkit-transform .3s;\n      transition: -webkit-transform .3s;\n      transition: transform .3s;\n      transition: transform .3s, -webkit-transform .3s; }\n    .snotifyToast__input__label::before {\n      border-top: 2px solid #fff;\n      -webkit-transform: translate3d(0, 100%, 0) translate3d(0, -2px, 0);\n      transform: translate3d(0, 100%, 0) translate3d(0, -2px, 0);\n      -webkit-transition-delay: .3s;\n      transition-delay: .3s; }\n    .snotifyToast__input__label::after {\n      z-index: -1;\n      background: #b2dfdb;\n      -webkit-transform: scale3d(1, 0, 1);\n      transform: scale3d(1, 0, 1);\n      -webkit-transform-origin: 50% 0;\n      transform-origin: 50% 0; }\n  .snotifyToast__input__labelContent {\n    position: relative;\n    display: block;\n    padding: 1em 0;\n    width: 100%;\n    -webkit-transition: -webkit-transform .3s .3s;\n    transition: -webkit-transform .3s .3s;\n    transition: transform .3s .3s;\n    transition: transform .3s .3s, -webkit-transform .3s .3s; }\n\n.snotifyToast__input--filled {\n  margin-top: 2.5em; }\n  .snotifyToast__input--filled:focus,\n  .snotifyToast__input--filled .snotifyToast__input__field {\n    opacity: 1;\n    -webkit-transition-delay: .3s;\n    transition-delay: .3s; }\n\n.snotifyToast__input__field:focus + .snotifyToast__input__label .snotifyToast__input__labelContent,\n.snotifyToast__input--filled .snotifyToast__input__labelContent {\n  -webkit-transform: translate(0, -80%);\n  transform: translate(0, -80%);\n  -webkit-transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1);\n  transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1); }\n\n.snotifyToast__input__field:focus + .snotifyToast__input__label::before,\n.snotifyToast__input--filled .snotifyToast__input__label::before {\n  -webkit-transition-delay: 0s;\n  transition-delay: 0s; }\n\n.snotifyToast__input__field:focus + .snotifyToast__input__label::before,\n.snotifyToast__input--filled .snotifyToast__input__label::before {\n  -webkit-transform: translate(0, 0);\n  transform: translate(0, 0); }\n\n.snotifyToast__input__field:focus + .snotifyToast__input__label::after,\n.snotifyToast__input--filled .snotifyToast__input__label::after {\n  -webkit-transform: scale(1, 1);\n  transform: scale(1, 1);\n  -webkit-transition-delay: .3s;\n  transition-delay: .3s;\n  -webkit-transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1);\n  transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1); }\n\n.snotifyToast--invalid .snotifyToast__input__label::before {\n  border-color: #f44336; }\n\n.snotifyToast--valid .snotifyToast__input__label::before {\n  border-color: #4caf50; }\n\n.snotifyToast__buttons {\n  display: -webkit-box;\n  display: -webkit-flex;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: horizontal;\n  -webkit-box-direction: normal;\n  -webkit-flex-flow: row nowrap;\n  -ms-flex-flow: row nowrap;\n  flex-flow: row nowrap;\n  -webkit-box-pack: justify;\n  -webkit-justify-content: space-between;\n  -ms-flex-pack: justify;\n  justify-content: space-between;\n  border-top: 1px solid rgba(0, 0, 0, 0.1); }\n  .snotifyToast__buttons button {\n    position: relative;\n    width: 100%;\n    border-right: 1px solid rgba(0, 0, 0, 0.1);\n    border-left: 1px solid rgba(0, 0, 0, 0.1);\n    border-top: none;\n    border-bottom: none;\n    background: transparent;\n    padding: 8px;\n    text-transform: capitalize;\n    color: #fff;\n    -webkit-box-sizing: border-box;\n    box-sizing: border-box;\n    overflow: hidden; }\n    .snotifyToast__buttons button::after {\n      content: '';\n      position: absolute;\n      top: 50%;\n      left: 50%;\n      width: 5px;\n      height: 5px;\n      background: rgba(255, 255, 255, 0.3);\n      opacity: 0;\n      border-radius: 100%;\n      -webkit-transform: scale(1, 1) translate(-50%);\n      transform: scale(1, 1) translate(-50%);\n      -webkit-transform-origin: 50% 50%;\n      transform-origin: 50% 50%; }\n    .snotifyToast__buttons button:focus:not(:active)::after {\n      -webkit-animation: ripple 1s ease-out;\n      animation: ripple 1s ease-out; }\n    .snotifyToast__buttons button:hover, .snotifyToast__buttons button:focus {\n      background: rgba(0, 0, 0, 0.1);\n      outline: none; }\n    .snotifyToast__buttons button:active {\n      background: rgba(0, 0, 0, 0.15); }\n    .snotifyToast__buttons button:last-child {\n      border-right: none; }\n    .snotifyToast__buttons button:first-child {\n      border-left: none; }\n  .snotifyToast__buttons--bold {\n    font-weight: 700; }\n\n@-webkit-keyframes ripple {\n  0% {\n    -webkit-transform: scale(0, 0);\n    transform: scale(0, 0);\n    opacity: 1; }\n  20% {\n    -webkit-transform: scale(25, 25);\n    transform: scale(25, 25);\n    opacity: 1; }\n  100% {\n    opacity: 0;\n    -webkit-transform: scale(40, 40);\n    transform: scale(40, 40); } }\n\n@keyframes ripple {\n  0% {\n    -webkit-transform: scale(0, 0);\n    transform: scale(0, 0);\n    opacity: 1; }\n  20% {\n    -webkit-transform: scale(25, 25);\n    transform: scale(25, 25);\n    opacity: 1; }\n  100% {\n    opacity: 0;\n    -webkit-transform: scale(40, 40);\n    transform: scale(40, 40); } }\n\n.snotify-icon {\n  position: absolute;\n  right: 10px;\n  top: 50%;\n  line-height: 0;\n  -webkit-transform: translate(0, -50%);\n  transform: translate(0, -50%);\n  max-height: 48px;\n  max-width: 48px;\n  width: 100%;\n  height: 100%; }\n\n.snotify-icon--error {\n  background-image: url(\"data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20version=%221.1%22%20x=%220px%22%20y=%220px%22%20viewBox=%220%200%20512%20512%22%20fill=%22%23ffcdd2%22%3E%3Cg%3E%3Cpath%20d=%22M437,75A256,256,0,1,0,75,437,256,256,0,1,0,437,75ZM416.43,416.43a226.82,226.82,0,0,1-320.86,0C7.11,328,7.11,184,95.57,95.57a226.82,226.82,0,0,1,320.86,0C504.89,184,504.89,328,416.43,416.43Z%22/%3E%3Cpath%20d=%22M368.81,143.19a14.5,14.5,0,0,0-20.58,0L256,235.42l-92.23-92.23a14.55,14.55,0,0,0-20.58,20.58L235.42,256l-92.23,92.23a14.6,14.6,0,0,0,10.24,24.89,14.19,14.19,0,0,0,10.24-4.31l92.23-92.23,92.23,92.23a14.64,14.64,0,0,0,10.24,4.31,14,14,0,0,0,10.24-4.31,14.5,14.5,0,0,0,0-20.58l-92-92.23,92.23-92.23A14.5,14.5,0,0,0,368.81,143.19Z%22/%3E%3C/g%3E%3C/svg%3E\"); }\n\n.snotify-icon--warning {\n  background-image: url(\"data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20version=%221.1%22%20x=%220px%22%20y=%220px%22%20viewBox=%220%200%20512%20512%22%20fill=%22%23ffccbc%22%3E%3Cg%3E%3Cpath%20d=%22M256,512c141.15,0,256-114.84,256-256S397.15,0,256,0,0,114.84,0,256,114.85,512,256,512Zm0-480.49c123.79,0,224.49,100.71,224.49,224.49S379.79,480.49,256,480.49,31.51,379.79,31.51,256,132.21,31.51,256,31.51Z%22/%3E%3Ccircle%20cx=%22260.08%22%20cy=%22343.87%22%20r=%2226.35%22/%3E%3Cpath%20d=%22M254.68,278.39a15.76,15.76,0,0,0,15.75-15.75V128.72a15.75,15.75,0,1,0-31.51,0V262.63A15.76,15.76,0,0,0,254.68,278.39Z%22/%3E%3C/g%3E%3C/svg%3E\"); }\n\n.snotify-icon--info {\n  background-image: url(\"data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20version=%221.1%22%20x=%220px%22%20y=%220px%22%20viewBox=%220%200%20512%20512%22%20fill=%22%23bbdefb%22%3E%3Cg%3E%3Cpath%20d=%22M256,0C114.84,0,0,114.84,0,256S114.84,512,256,512,512,397.16,512,256,397.15,0,256,0Zm0,478.43C133.35,478.43,33.57,378.64,33.57,256S133.35,33.58,256,33.58,478.42,133.36,478.42,256,378.64,478.43,256,478.43Z%22/%3E%3Cpath%20d=%22M251.26,161.24a22.39,22.39,0,1,0-22.38-22.39A22.39,22.39,0,0,0,251.26,161.24Z%22/%3E%3Cpath%20d=%22M286.84,357.87h-14v-160A16.79,16.79,0,0,0,256,181.05H225.17a16.79,16.79,0,0,0,0,33.58h14.05V357.87H225.17a16.79,16.79,0,0,0,0,33.57h61.67a16.79,16.79,0,1,0,0-33.57Z%22/%3E%3C/g%3E%3C/svg%3E\"); }\n\n.snotify-icon--success {\n  background-image: url(\"data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20version=%221.1%22%20x=%220px%22%20y=%220px%22%20viewBox=%220%200%20512%20512%22%20fill=%22%23c8e6c9%22%3E%3Cg%3E%3Cpath%20d=%22M256,0C114.85,0,0,114.84,0,256S114.85,512,256,512,512,397.16,512,256,397.15,0,256,0Zm0,492.31c-130.29,0-236.31-106-236.31-236.31S125.71,19.69,256,19.69,492.31,125.71,492.31,256,386.29,492.31,256,492.31Z%22/%3E%3Cpath%20class=%22cls-1%22%20d=%22M376.64,151,225.31,321.24l-91.17-72.93a9.85,9.85,0,0,0-12.3,15.38l98.46,78.77a9.86,9.86,0,0,0,13.52-1.15L391.36,164.08A9.85,9.85,0,0,0,376.64,151Z%22/%3E%3C/g%3E%3C/svg%3E\"); }\n\n.snotify-icon--async {\n  background-image: url(\"data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20version=%221.1%22%20x=%220px%22%20y=%220px%22%20viewBox=%220%200%20512%20512%22%20fill=%22%23bbdefb%22%3E%3Cg%3E%3Cpath%20d=%22M256,0a32,32,0,0,0-32,32V96a32,32,0,0,0,64,0V32A32,32,0,0,0,256,0Zm0,384a32,32,0,0,0-32,32v64a32,32,0,0,0,64,0V416A32,32,0,0,0,256,384ZM391.74,165.5,437,120.22A32,32,0,0,0,391.74,75L346.5,120.22a32,32,0,0,0,45.25,45.28Zm-271.52,181L75,391.74A32,32,0,0,0,120.22,437l45.25-45.25a32,32,0,0,0-45.25-45.25Zm0-271.52A32,32,0,1,0,75,120.22l45.25,45.28a32,32,0,1,0,45.25-45.28ZM391.74,346.5a32,32,0,0,0-45.25,45.25L391.74,437A32,32,0,0,0,437,391.74ZM480,224H416a32,32,0,0,0,0,64h64a32,32,0,0,0,0-64ZM128,256a32,32,0,0,0-32-32H32a32,32,0,0,0,0,64H96A32,32,0,0,0,128,256Z%22/%3E%3C/g%3E%3C/svg%3E\");\n  -webkit-animation: async 3s infinite linear;\n  animation: async 3s infinite linear;\n  -webkit-transform-origin: 50% 50%;\n  transform-origin: 50% 50%; }\n", ""]);
-
-// exports
-
 
 /***/ })
 /******/ ]);

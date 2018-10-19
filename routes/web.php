@@ -22,6 +22,7 @@ Route::get('/departments', 'DepartmentsController@show_departments')->name('depa
 Route::get('/departments/get', 'DepartmentsController@get_departments')->name('get_departments');
 Route::get('/departments/get/used', 'DepartmentsController@get_used_departments')->name('get_used_departments');
 Route::post('/departments/add', 'DepartmentsController@add_department')->name('add_department');
+Route::post('/departments/edit', 'DepartmentsController@edit_department')->name('edit_department');
 Route::post('/departments/validate/name', 'DepartmentsController@validate_name')->name('validate_name');
 
 

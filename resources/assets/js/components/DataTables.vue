@@ -169,7 +169,7 @@
                     </div>
                 </div>
             </div>
-            <div slot="footer-commit-text">添 加</div>
+            <div slot="footer-commit-text">修 改</div>
         </department_modal>
         <!--引入‘vue-snotify’插件，用于显示提示消息，比如成功添加，删除确认等提示-->
         <vue-snotify></vue-snotify>
@@ -201,6 +201,7 @@
                         label: node.name,//指定label是用的什么字段，即显示什么字段出来
                     }
                 },
+                selectedRow:{},//当前选中的行
                 isEditDepartmentName:'',
                 newDepartment: {
                     name:'',
@@ -270,20 +271,15 @@
                     let table = $('.datatable-button-html5-columns').DataTable();
                     let tr = $(e.target.closest('tr'));
                     let row = table.row(tr.get(0));
+                    this.selectedRow = row;
                     let data = row.data();
                     this.newDepartment.name = data['2'];
                     this.newDepartment.manager = data['4'];
                     this.newDepartment.phone = data['5'];
-                    this.newDepartment.remarks = data['6'];
-                    this.newDepartment.order = data['7'];
-                    if(data['8'] === '<span class="label label-success">已启用</span>') {
-                        this.newDepartment.status = 'T'
-                    }else {
-                        this.newDepartment.status = 'F'
-                    }
-                    if (data['1']) {
-                        this.newDepartment.pid = data['1'];
-                    }
+                    this.newDepartment.remarks = data['6']!=='/'?data['6']:'';
+                    this.newDepartment.order = data['7']===0?'':data['7'];
+                    this.newDepartment.status = data['8'] === '<span class="label label-success">已启用</span>'?'T':'F';
+                    this.newDepartment.pid = data['1']?data['1']:null;
                     //记录打开编辑窗口时的科室名称
                     this.isEditDepartmentName = this.newDepartment.name;
                     console.log(this.isEditDepartmentName)
@@ -308,7 +304,32 @@
                 $('body').css('overflow','auto');
             },
             editDepartment() {
-
+                this.$validator.validateAll().then((result)=> {//验证是否符合表单规则
+                    if(result) {//如果符合才提交
+                        console.log(this.newDepartment);
+                        console.log(this.isEditDepartmentName);
+                        axios.post('/departments/edit',{department:this.newDepartment,isEdit:this.isEditDepartmentName}).then(res=> {
+                            let table = $('.datatable-button-html5-columns').DataTable();
+                            let data = [
+                                this.newDepartment.order?this.newDepartment.order:0,
+                                this.newDepartment.pid,
+                                this.newDepartment.name,
+                                this.newDepartment.pid?res.data:'/',
+                                this.newDepartment.manager,
+                                this.newDepartment.phone,
+                                this.newDepartment.remarks?this.newDepartment.remarks:'/',
+                                this.newDepartment.order?this.newDepartment.order:'0',
+                                this.newDepartment.status==='T'?'<span class="label label-success">已启用</span>':'<span class="label label-danger">未启用</span>',
+                                '<button class="edit btn btn-xxs btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 修改</button>',
+                            ];
+                            table.row(this.selectedRow).data(data).draw();
+                            this.closeEditModal();
+                            this.$snotify.success('编辑成功！');
+                        }).catch(error=> {
+                            throw error
+                        });
+                    }
+                })
             },
             changeStatus() {
                 if(this.newDepartment.status==='T') {
