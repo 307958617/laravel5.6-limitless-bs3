@@ -47658,6 +47658,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
                 };
             },
 
+            isEditDepartmentName: '',
             newDepartment: {
                 name: '',
                 pid: null,
@@ -47744,11 +47745,14 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
                 if (data['1']) {
                     this.newDepartment.pid = data['1'];
                 }
-                console.log(this.newDepartment.status);
+                //记录打开编辑窗口时的科室名称
+                this.isEditDepartmentName = this.newDepartment.name;
+                console.log(this.isEditDepartmentName);
             }
         },
         closeEditModal: function closeEditModal() {
             this.showEditDepartmentModel = false;
+            this.isEditDepartmentName = '';
             //模态框关闭的时候清空表中的数据为初始值
             this.newDepartment = {
                 name: '',
@@ -47772,15 +47776,16 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
             }
         },
         checkName: function checkName() {
-            console.log(this.newDepartment.name);
+            //需要判断时新增还是编辑窗口，如果时编辑窗口，那么验证的时候就必须排除当前选中的部门名称isEdit:that.isEditDepartmentName
             var that = this;
             //判断部门名称的唯一性
             this.$validator.extend('unique', {
                 validate: function validate(value) {
                     var promise = new Promise(function (resolve, reject) {
-                        axios.post('/departments/validate/name', { name: that.newDepartment.name }).then(function (res) {
+                        axios.post('/departments/validate/name', { name: that.newDepartment.name, isEdit: that.isEditDepartmentName }).then(function (res) {
                             resolve(res.data.data);
                             console.log(res.data.data);
+                            console.log(that.isEditDepartmentName);
                         });
                     });
                     //必须返回一个promise对象，否则报错

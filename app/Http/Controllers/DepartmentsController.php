@@ -35,7 +35,16 @@ class DepartmentsController extends Controller
     public function validate_name(Request $request)
     {
         $name = $request->get('name');
-        $names = Department::all()->pluck('name');
+        $isEdit = $request->get('isEdit');
+        $collect= Department::all()->pluck('name');
+        $collect2 = $collect->diff([$isEdit]);
+
+        if($isEdit) {
+            $names = $collect2;
+        }else {
+            $names = $collect;
+        }
+
         if ($names->contains($name)) {
             return response()->json(['data'=>true]);
         }
