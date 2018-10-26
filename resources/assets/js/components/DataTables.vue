@@ -27,6 +27,7 @@
                 <th>部门电话</th>
                 <th>备注信息</th>
                 <th>顺序号</th>
+                <th>创建时间</th>
                 <th>当前状态</th>
                 <th>操 作</th>
             </tr>
@@ -42,6 +43,7 @@
                     <td>{{ department.phone ? department.phone:'/'}}</td>
                     <td>{{ department.remarks ? department.remarks:'/'}}</td>
                     <td>{{ department.order ? department.order:'0'}}</td>
+                    <td>{{ department.created_at }}</td>
                     <td><span :class="[department.status==='已启用'? 'label label-success' : 'label label-danger']">{{ department.status }}</span></td>
                     <td>
                         <button class="edit btn btn-xxs btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 修改</button>
@@ -184,6 +186,7 @@
     import Treeselect from '@riophae/vue-treeselect'
     //引入vue-treeselect的样式
     import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+    import moment from 'moment'
     import $hub from 'hub-js'
     import department_modal from './Modal_form_vertical.vue'
     Vue.use(ToggleButton);
@@ -209,6 +212,7 @@
                     manager:'',
                     phone:'',
                     order:null,
+                    created_at:'',
                     status:'T',
                     remarks:''
                 },
@@ -278,7 +282,8 @@
                     this.newDepartment.phone = data['5'];
                     this.newDepartment.remarks = data['6']!=='/'?data['6']:'';
                     this.newDepartment.order = data['7']===0?'':data['7'];
-                    this.newDepartment.status = data['8'] === '<span class="label label-success">已启用</span>'?'T':'F';
+                    this.newDepartment.created_at = data['8'];
+                    this.newDepartment.status = data['9'] === '<span class="label label-success">已启用</span>'?'T':'F';
                     this.newDepartment.pid = data['1']?data['1']:null;
                     //记录打开编辑窗口时的科室名称
                     this.isEditDepartmentName = this.newDepartment.name;
@@ -319,6 +324,7 @@
                                 this.newDepartment.phone,
                                 this.newDepartment.remarks?this.newDepartment.remarks:'/',
                                 this.newDepartment.order?this.newDepartment.order:'0',
+                                this.newDepartment.created_at,
                                 this.newDepartment.status==='T'?'<span class="label label-success">已启用</span>':'<span class="label label-danger">未启用</span>',
                                 '<button class="edit btn btn-xxs btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 修改</button>',
                             ];
@@ -372,6 +378,7 @@
                                 this.newDepartment.phone,
                                 this.newDepartment.remarks?this.newDepartment.remarks:'/',
                                 this.newDepartment.order?this.newDepartment.order:'0',
+                                moment(res.data[2]['date']).format("YYYY-MM-DD HH:mm:ss"),//格式化日期
                                 this.newDepartment.status==='T'?'<span class="label label-success">已启用</span>':'<span class="label label-danger">未启用</span>',
                                 '<button class="edit btn btn-xxs btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 修改</button>',
                             ]).draw(false);
@@ -447,7 +454,7 @@
                         columnDefs: [
                             {
                                 orderable: false,//不允许排序
-                                targets: [0,8]
+                                targets: [0,-1]
                             },
                             //设置隐藏PID列的class名称以便colvis根据它来排除它
                             {

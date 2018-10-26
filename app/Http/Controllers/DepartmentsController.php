@@ -70,7 +70,7 @@ class DepartmentsController extends Controller
 //        }
         $p_name = $this->get_p_name($department['pid']);
 
-        return [$department['pid'],$p_name];
+        return [$department['pid'],$p_name,$new_department->created_at];
     }
 
     public function edit_department(Request $request)
