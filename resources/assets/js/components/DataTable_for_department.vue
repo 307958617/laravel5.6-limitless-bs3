@@ -16,7 +16,7 @@
             <button class="btn btn-primary btn-sm pull-right" @click="showAddModel()"><i class="fa fa-plus" aria-hidden="true"></i> 新增部门 </button>
         </div>
 
-        <table class="table datatable-button-html5-columns">
+        <table class="table datatable-department">
             <thead>
             <tr>
                 <th>NO.</th>
@@ -272,7 +272,7 @@
                     this.showEditDepartmentModel = true;
                     this.reloadOptions();
                     $('body').css('overflow','hidden');
-                    let table = $('.datatable-button-html5-columns').DataTable();
+                    let table = $('.datatable-department').DataTable();
                     let tr = $(e.target.closest('tr'));
                     let row = table.row(tr.get(0));
                     this.selectedRow = row;
@@ -314,7 +314,7 @@
                         console.log(this.newDepartment);
                         console.log(this.isEditDepartmentName);
                         axios.post('/departments/edit',{department:this.newDepartment,isEdit:this.isEditDepartmentName}).then(res=> {
-                            let table = $('.datatable-button-html5-columns').DataTable();
+                            let table = $('.datatable-department').DataTable();
                             let data = [
                                 this.newDepartment.order?this.newDepartment.order:0,
                                 this.newDepartment.pid,
@@ -328,7 +328,7 @@
                                 this.newDepartment.status==='T'?'<span class="label label-success">已启用</span>':'<span class="label label-danger">未启用</span>',
                                 '<button class="edit btn btn-xxs btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 修改</button>',
                             ];
-                            table.row(this.selectedRow).data(data).draw();
+                            table.row(this.selectedRow).data(data).draw(false);
                             this.closeEditModal();
                             this.$snotify.success('编辑成功！');
                         }).catch(error=> {
@@ -354,7 +354,7 @@
                             axios.post('/departments/validate/name',{name:that.newDepartment.name,isEdit:that.isEditDepartmentName}).then(res=> {
                                 resolve(res.data.data);
                                 console.log(res.data.data);
-                                console.log(that.isEditDepartmentName)
+                                console.log(that.newDepartment.name)
                             })
                         });
                         //必须返回一个promise对象，否则报错
@@ -368,7 +368,7 @@
                 this.$validator.validateAll().then((result)=> {//验证是否符合表单规则
                     if(result) {//如果符合才提交
                         axios.post('/departments/add',{department:this.newDepartment}).then(res=> {
-                            let table = $('.datatable-button-html5-columns').DataTable();
+                            let table = $('.datatable-department').DataTable();
                             table.row.add([
                                 this.newDepartment.order?this.newDepartment.order:0,
                                 res.data[0],
@@ -392,7 +392,7 @@
                 })
             },
             reloadOptions() {
-                axios.get('/departments/get/used').then(res=> {
+                axios.post('/departments/get/used',{name:this.newDepartment.name}).then(res=> {
                     //console.log(res.data);
                     this.treeselectLists = res.data;
                 });
@@ -418,7 +418,7 @@
                         }
                     });
                     // Column selectors
-                    let t = $('.datatable-button-html5-columns').DataTable({
+                    let t = $('.datatable-department').DataTable({
                         buttons: {
                             buttons: [
                                 {

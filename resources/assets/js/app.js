@@ -26,7 +26,8 @@ Vue.use(Snotify,options);
 
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
 Vue.component('vue-datepicker', require('./components/VueDatePicker.vue'));
-Vue.component('data-tables', require('./components/DataTables.vue'));
+Vue.component('data-table-for-department', require('./components/DataTable_for_department.vue'));
+Vue.component('data-table-for-user', require('./components/DataTable_for_user.vue'));
 
 const app = new Vue({
     el: '#app'

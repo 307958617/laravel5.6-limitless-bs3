@@ -69,7 +69,7 @@
                                                         <a href="#">部门及人员管理</a>
                                                         <ul>
                                                             <li><a href="{{ route('departments') }}">部门信息</a></li>
-                                                            <li><a href="#">人员信息</a></li>
+                                                            <li><a href="{{ route('users') }}">人员信息</a></li>
                                                             <li><a href="#">组织机构设置</a></li>
                                                         </ul>
                                                     </li>

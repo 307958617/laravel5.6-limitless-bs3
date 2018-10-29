@@ -13,16 +13,16 @@
 @endsection
 
 @section('page-title')
-    <span class="text-semibold">系统管理 - <span class="text-muted">部门信息</span></span>
+    <span class="text-semibold">系统管理 - <span class="text-muted">人员信息</span></span>
 @endsection
 
 @section('breadcrumb')
-    {{ Breadcrumbs::render('departments') }}
+    {{ Breadcrumbs::render('users') }}
 @endsection
 
 @section('content')
 <div class="content">
     <vue-datepicker></vue-datepicker>
-    <data-table-for-department></data-table-for-department>
+    <data-table-for-user></data-table-for-user>
 </div>
 @endsection

@@ -22,3 +22,8 @@ Breadcrumbs::for('departments', function ($trail) {
     $trail->parent('home');
     $trail->push('Departments', route('departments'));
 });
+
+Breadcrumbs::for('users', function ($trail) {
+    $trail->parent('home');
+    $trail->push('Users', route('users'));
+});

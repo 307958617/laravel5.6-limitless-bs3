@@ -25,9 +25,10 @@ class DepartmentsController extends Controller
     }
 
     //获取所有状态为启用的科室
-    public function get_used_departments()
+    public function get_used_departments(Request $request)
     {
-        $used_departments = Department::where('status','T')->get();
+        $name = $request->get('name');
+        $used_departments = Department::where([['status','T'],['name','<>',$name]])->get();
         return $used_departments;
     }
 
