@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -30,5 +31,11 @@ class User extends Authenticatable
     public function departments()
     {
         return $this->belongsToMany('App\Department');
+    }
+
+    public function getBirthdayAttribute($value)
+    {
+        $age = new Carbon($value);
+        return $age->diffInYears();
     }
 }

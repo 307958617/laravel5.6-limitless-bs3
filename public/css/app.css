@@ -39799,3 +39799,8 @@ h6.panel-title,
   border-radius: 3px !important;
 }
 
+.has-padding {
+  padding: 0px;
+  padding-top: 0px !important;
+}
+

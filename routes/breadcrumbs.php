@@ -27,3 +27,8 @@ Breadcrumbs::for('users', function ($trail) {
     $trail->parent('home');
     $trail->push('Users', route('users'));
 });
+
+Breadcrumbs::for('show_system_code', function ($trail) {
+    $trail->parent('home');
+    $trail->push('System_Code', route('show_system_code'));
+});

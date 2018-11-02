@@ -28,6 +28,8 @@ Vue.component('example-component', require('./components/ExampleComponent.vue'))
 Vue.component('vue-datepicker', require('./components/VueDatePicker.vue'));
 Vue.component('data-table-for-department', require('./components/DataTable_for_department.vue'));
 Vue.component('data-table-for-user', require('./components/DataTable_for_user.vue'));
+Vue.component('data-table-for-system-code-gender', require('./components/DataTable_for_system_code_gender.vue'));
+Vue.component('system-code', require('./components/System_code.vue'));
 
 const app = new Vue({
     el: '#app'

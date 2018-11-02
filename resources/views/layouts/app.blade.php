@@ -82,6 +82,17 @@
                                                     </li>
                                                 </ul>
                                             </div>
+                                            <div class="col-md-3">
+                                                <span class="menu-heading underlined">基础数据</span>
+                                                <ul class="menu-list">
+                                                    <li>
+                                                        <a href="#">编码管理</a>
+                                                        <ul>
+                                                            <li><a href="{{ route('show_system_code') }}">系统编码</a></li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

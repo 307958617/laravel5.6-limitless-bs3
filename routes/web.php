@@ -27,5 +27,9 @@ Route::post('/departments/validate/name', 'DepartmentsController@validate_name')
 
 Route::get('/users', 'UsersController@show_users')->name('users');
 Route::get('/users/get', 'UsersController@get_users')->name('get_users');
+
+Route::get('/system_code', 'SystemCodeController@show_system_code')->name('show_system_code');
+Route::get('/system_code/get/gender', 'SystemCodeController@get_gender')->name('get_gender');
+
 //注册时发送邮件验证
 Route::get('email/verify/{token}', 'EmailController@verify')->name('verify.email');

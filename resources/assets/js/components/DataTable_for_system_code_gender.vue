@@ -1,58 +1,29 @@
 <template>
     <!-- Column selectors -->
-    <div class="panel panel-flat">
-        <div class="panel-heading">
-            <h5 class="panel-title">人员信息列表</h5>
-            <div class="heading-elements">
-                <ul class="icons-list">
-                    <!--<li><a data-action="collapse"></a></li>-->
-                    <li><a data-action="reload"></a></li>
-                    <li><a data-action="close"></a></li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="panel-body">
-            <button class="btn btn-primary btn-sm pull-right" @click="showAddModel()"><i class="fa fa-plus" aria-hidden="true"></i> 新增部门 </button>
-        </div>
-
+    <div>
         <table class="table datatable-department">
             <thead>
             <tr>
                 <th>NO.</th>
-                <th>姓 名</th>
-                <th>性 别</th>
-                <th>年 龄</th>
-                <th>学 历</th>
-                <th>职 称</th>
-                <th>职 务</th>
-                <th>电话号码</th>
-                <th>身份证号码</th>
-                <th>Email</th>
-                <th>备注信息</th>
+                <th>描 述</th>
                 <th>顺序号</th>
-                <th>创建时间</th>
+                <th>是否为初值</th>
                 <th>当前状态</th>
+                <th>备注信息</th>
+                <th>创建时间</th>
                 <th>操 作</th>
             </tr>
             </thead>
             <!--这里需要特别注意！！！，@click事件必须放到tbody上面，如果放到tr上，那么新增加的行的点击事件将不会被触发-->
             <tbody @click="showEditModel($event)">
-                <tr v-for="user in users">
-                    <td>{{ user.order?'user.order':'0' }}</td> <!-- 默认排序为order字段，datatable必须将order放到第一列才行 -->
-                    <td>{{ user.name }}</td><!-- 上级部门的id -->
-                    <td>{{ user.gender==='F' ? '男':'女' }}</td>
-                    <td>{{ user.birthday }}</td><!-- 上级部门的名称 -->
-                    <td>{{ user.education }}</td>
-                    <td>{{ user.title }}</td>
-                    <td>{{ user.post }}</td>
-                    <td>{{ user.phone }}</td>
-                    <td>{{ user.sf_id }}</td>
-                    <td>{{ user.email }}</td>
-                    <td>{{ user.remarks }}</td>
-                    <td>{{ user.order?'user.order':'0' }}</td>
-                    <td>{{ user.created_at }}</td>
-                    <td><span :class="[user.status==='T'? 'label label-success' : 'label label-danger']">{{ user.status==='T'?'已启用':'未启用' }}</span></td>
+                <tr v-for="gen in gender">
+                    <td>{{ gen.order?gen.order:'0' }}</td> <!-- 默认排序为order字段，datatable必须将order放到第一列才行 -->
+                    <td>{{ gen.description }}</td><!-- 上级部门的id -->
+                    <td>{{ gen.order }}</td>
+                    <td><span :class="[gen.isFirst==='T'? 'label label-success' : 'label label-danger']">{{ gen.isFirst==='T'?'是':'否' }}</span></td>
+                    <td><span :class="[gen.status==='T'? 'label label-success' : 'label label-danger']">{{ gen.status==='T'?'已启用':'未启用' }}</span></td>
+                    <td>{{ gen.remarks }}</td>
+                    <td>{{ gen.created_at }}</td>
                     <td>
                         <button class="edit btn btn-xxs btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 修改</button>
                     </td>
@@ -203,7 +174,7 @@
             return {
                 showAddDepartmentModel:false,
                 showEditDepartmentModel:false,
-                users:[],
+                gender:[],
                 treeselectLists:[],//所有的节点
                 //注意，这里必须要用自定义，不然显示不出来的
                 normalizer(node) {
@@ -234,9 +205,10 @@
 
         mounted() {
             this.$nextTick(function() {
-                this.getUsers().then((response) => {
+                this.getGender().then((response) => {
                     // do what you need to do
-                    this.users = response.data
+                    this.gender = response.data;
+                    console.log(response.data)
                 }).then(() => {
                     // execute the call to render the table, now that you have the data you need
                     this.tableSetup();
@@ -248,8 +220,8 @@
             } );
         },
         methods: {
-            getUsers() {
-               return axios.get('/users/get')
+            getGender() {
+               return axios.get('/system_code/get/gender')
             },
             showAddModel() {
                 //模态框重新显示之前，清空所有的验证提示消息。
@@ -444,20 +416,15 @@
                                     }
                                 },
                                 {
-                                    extend: 'pdfHtml5',
-                                    className: 'btn btn-default',
-                                    exportOptions: {
-                                        columns: [0, 1, 2, 5]
-                                    }
-                                },
-                                {
                                     extend: 'colvis',
                                     text: '<i class="icon-three-bars"></i> <span class="caret"></span>',
                                     className: 'btn bg-blue btn-icon',
-                                }
-                            ]
+                                },
+                            ],
                         },
-                        select: true,
+                        select: {
+                            style:    'os',
+                        },
                         columnDefs: [
                             {
                                 orderable: false,//不允许排序
