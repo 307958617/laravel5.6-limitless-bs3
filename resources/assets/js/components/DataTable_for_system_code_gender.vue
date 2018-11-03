@@ -20,7 +20,7 @@
                     <td>{{ gen.order?gen.order:'0' }}</td> <!-- 默认排序为order字段，datatable必须将order放到第一列才行 -->
                     <td>{{ gen.description }}</td><!-- 上级部门的id -->
                     <td>{{ gen.order }}</td>
-                    <td><span :class="[gen.isFirst==='T'? 'label label-success' : 'label label-danger']">{{ gen.isFirst==='T'?'是':'否' }}</span></td>
+                    <td><span :class="[gen.isFirst==='T'? 'label label-success' : 'label label-default']">{{ gen.isFirst==='T'?'是':'否' }}</span></td>
                     <td><span :class="[gen.status==='T'? 'label label-success' : 'label label-danger']">{{ gen.status==='T'?'已启用':'未启用' }}</span></td>
                     <td>{{ gen.remarks }}</td>
                     <td>{{ gen.created_at }}</td>
@@ -31,51 +31,38 @@
             </tbody>
         </table>
 
-        <department_modal v-show="showAddDepartmentModel" @close="closeAddModal" @commit="addDepartment">
-            <div slot="head-title">新增部门</div>
+        <department_modal v-show="showAddGenderModel" @close="closeAddModal" @commit="addGender">
+            <div slot="head-title">新增性别类型</div>
             <div slot="body">
                 <div class="form-group">
                     <div class="row">
                         <div class="col-sm-6">
-                            <label>部门名称 <span class="text-danger">*</span></label>
-                            <input type="text" @input="checkName"  v-model="newDepartment.name" placeholder="新部门的名称" :class="{'form-control': true, 'is-invalid': errors.has('部门名称') }" v-validate="'required|min:2|unique'" name="部门名称">
-                            <div v-show="errors.has('部门名称')" class="text-danger">{{ errors.first('部门名称') }}</div>
+                            <label>描 述<span class="text-danger">*</span></label>
+                            <input type="text" @input="checkDescription"  v-model="newGender.description" placeholder="性别类型描述" :class="{'form-control': true, 'is-invalid': errors.has('性别类型') }" v-validate="'required|unique_gender'" name="性别类型">
+                            <div v-show="errors.has('性别类型')" class="text-danger">{{ errors.first('性别类型') }}</div>
                         </div>
 
-                        <div class="col-sm-6">
-                            <label>选择上级部门</label>
-                            <!--这里引入了'@riophae/vue-treeselect'插件，具体用法参加GitHub-->
-                            <treeselect @open="reloadOptions" v-model="newDepartment.pid" placeholder="选择上级科室,不选默认为顶级科室" :normalizer="normalizer" :options="treeselectLists"></treeselect>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <label>部门主管 <span class="text-danger">*</span></label>
-                            <input type="text" v-model="newDepartment.manager" placeholder="部门主管" :class="{'form-control': true, 'is-invalid': errors.has('部门主管') }" v-validate="'required|min:2'" name="部门主管">
-                            <div v-show="errors.has('部门主管')" class="text-danger">{{ errors.first('部门主管') }}</div>
-                        </div>
-
-                        <div class="col-sm-6">
-                            <label>部门电话 <span class="text-danger">*</span></label>
-                            <input type="text" v-model="newDepartment.phone" placeholder="部门电话8位或11位" :class="{'form-control': true, 'is-invalid': errors.has('部门电话') }" v-validate="{required:true,numeric:true,regex: /^(\d{8}|\d{11})$/}" name="部门电话">
-                            <div v-show="errors.has('部门电话')" class="text-danger">{{ errors.first('部门电话') }}</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
                         <div class="col-sm-6">
                             <label>排序NO.</label>
-                            <input type="text" v-model="newDepartment.order" placeholder="数值越大排名越靠前,默认为0" class="form-control">
+                            <input type="text" v-model="newGender.order" placeholder="数值越大排名越靠前,默认为0" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label>是否设为初始值</label>
+                            <!--<input type="text" v-model="newDepartment.status" placeholder="" class="form-control">-->
+                            <div>
+                                <toggle-button @change="changeIsFirst" :sync="true" :v-model="newGender.isFirst" :value="newGender.isFirst==='T'" :width="58" :height="34" :labels="{checked: '是', unchecked: '否'}"/>
+                            </div>
                         </div>
 
                         <div class="col-sm-6">
                             <label>启用标志</label>
                             <!--<input type="text" v-model="newDepartment.status" placeholder="" class="form-control">-->
                             <div>
-                                <toggle-button @change="changeStatus" :sync="true" :v-model="newDepartment.status" :value="newDepartment.status==='T'" :width="140" :height="34" :labels="{checked: '当前处于启用状态', unchecked: '当前处于停用状态'}"/>
+                                <toggle-button @change="changeStatus" :sync="true" :v-model="newGender.status" :value="newGender.status==='T'" :width="140" :height="34" :labels="{checked: '当前处于启用状态', unchecked: '当前处于停用状态'}"/>
                             </div>
                         </div>
                     </div>
@@ -84,7 +71,7 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <label>备注信息</label>
-                            <input type="text" v-model="newDepartment.remarks" placeholder="备注信息" class="form-control">
+                            <input type="text" v-model="newGender.remarks" placeholder="备注信息" class="form-control">
                         </div>
                     </div>
                 </div>
@@ -92,66 +79,66 @@
             <div slot="footer-commit-text">添 加</div>
         </department_modal>
 
-        <department_modal v-show="showEditDepartmentModel" @close="closeEditModal" @commit="editDepartment">
-            <div slot="head-title">编辑部门</div>
-            <div slot="body">
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <label>部门名称 <span class="text-danger">*</span></label>
-                            <input type="text" @input="checkName"  v-model="newDepartment.name" placeholder="新部门的名称" :class="{'form-control': true, 'is-invalid': errors.has('部门名称') }" v-validate="'required|min:2|unique'" name="部门名称">
-                            <div v-show="errors.has('部门名称')" class="text-danger">{{ errors.first('部门名称') }}</div>
-                        </div>
+        <!--<department_modal v-show="showEditDepartmentModel" @close="" @commit="">-->
+            <!--<div slot="head-title">编辑部门</div>-->
+            <!--<div slot="body">-->
+                <!--<div class="form-group">-->
+                    <!--<div class="row">-->
+                        <!--<div class="col-sm-6">-->
+                            <!--<label>部门名称 <span class="text-danger">*</span></label>-->
+                            <!--<input type="text" @input=""  v-model="newDepartment.name" placeholder="新部门的名称" :class="{'form-control': true, 'is-invalid': errors.has('部门名称') }" v-validate="'required|min:2|unique'" name="部门名称">-->
+                            <!--<div v-show="errors.has('部门名称')" class="text-danger">{{ errors.first('部门名称') }}</div>-->
+                        <!--</div>-->
 
-                        <div class="col-sm-6">
-                            <label>选择上级部门</label>
-                            <!--这里引入了'@riophae/vue-treeselect'插件，具体用法参加GitHub-->
-                            <treeselect @open="reloadOptions" v-model="newDepartment.pid" placeholder="选择上级科室,不选默认为顶级科室" :normalizer="normalizer" :options="treeselectLists"></treeselect>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <label>部门主管 <span class="text-danger">*</span></label>
-                            <input type="text" v-model="newDepartment.manager" placeholder="部门主管" :class="{'form-control': true, 'is-invalid': errors.has('部门主管') }" v-validate="'required|min:2'" name="部门主管">
-                            <div v-show="errors.has('部门主管')" class="text-danger">{{ errors.first('部门主管') }}</div>
-                        </div>
+                        <!--<div class="col-sm-6">-->
+                            <!--<label>选择上级部门</label>-->
+                            <!--&lt;!&ndash;这里引入了'@riophae/vue-treeselect'插件，具体用法参加GitHub&ndash;&gt;-->
+                            <!--<treeselect @open="reloadOptions" v-model="newDepartment.pid" placeholder="选择上级科室,不选默认为顶级科室" :normalizer="normalizer" :options="treeselectLists"></treeselect>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="form-group">-->
+                    <!--<div class="row">-->
+                        <!--<div class="col-sm-6">-->
+                            <!--<label>部门主管 <span class="text-danger">*</span></label>-->
+                            <!--<input type="text" v-model="newDepartment.manager" placeholder="部门主管" :class="{'form-control': true, 'is-invalid': errors.has('部门主管') }" v-validate="'required|min:2'" name="部门主管">-->
+                            <!--<div v-show="errors.has('部门主管')" class="text-danger">{{ errors.first('部门主管') }}</div>-->
+                        <!--</div>-->
 
-                        <div class="col-sm-6">
-                            <label>部门电话 <span class="text-danger">*</span></label>
-                            <input type="text" v-model="newDepartment.phone" placeholder="部门电话8位或11位" :class="{'form-control': true, 'is-invalid': errors.has('部门电话') }" v-validate="{required:true,numeric:true,regex: /^(\d{8}|\d{11})$/}" name="部门电话">
-                            <div v-show="errors.has('部门电话')" class="text-danger">{{ errors.first('部门电话') }}</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <label>排序NO.</label>
-                            <input type="text" v-model="newDepartment.order" placeholder="数值越大排名越靠前,默认为0" class="form-control">
-                        </div>
+                        <!--<div class="col-sm-6">-->
+                            <!--<label>部门电话 <span class="text-danger">*</span></label>-->
+                            <!--<input type="text" v-model="newDepartment.phone" placeholder="部门电话8位或11位" :class="{'form-control': true, 'is-invalid': errors.has('部门电话') }" v-validate="{required:true,numeric:true,regex: /^(\d{8}|\d{11})$/}" name="部门电话">-->
+                            <!--<div v-show="errors.has('部门电话')" class="text-danger">{{ errors.first('部门电话') }}</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="form-group">-->
+                    <!--<div class="row">-->
+                        <!--<div class="col-sm-6">-->
+                            <!--<label>排序NO.</label>-->
+                            <!--<input type="text" v-model="newDepartment.order" placeholder="数值越大排名越靠前,默认为0" class="form-control">-->
+                        <!--</div>-->
 
-                        <div class="col-sm-6">
-                            <label>启用标志</label>
-                            <!--<input type="text" v-model="newDepartment.status" placeholder="" class="form-control">-->
-                            <div>
-                                <toggle-button @change="changeStatus" :sync="true" :v-model="newDepartment.status" :value="newDepartment.status==='T'" :width="140" :height="34" :labels="{checked: '当前处于启用状态', unchecked: '当前处于停用状态'}"/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <label>备注信息</label>
-                            <input type="text" v-model="newDepartment.remarks" placeholder="备注信息" class="form-control">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div slot="footer-commit-text">修 改</div>
-        </department_modal>
+                        <!--<div class="col-sm-6">-->
+                            <!--<label>启用标志</label>-->
+                            <!--&lt;!&ndash;<input type="text" v-model="newDepartment.status" placeholder="" class="form-control">&ndash;&gt;-->
+                            <!--<div>-->
+                                <!--<toggle-button @change="changeStatus" :sync="true" :v-model="newDepartment.status" :value="newDepartment.status==='T'" :width="140" :height="34" :labels="{checked: '当前处于启用状态', unchecked: '当前处于停用状态'}"/>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="form-group">-->
+                    <!--<div class="row">-->
+                        <!--<div class="col-sm-12">-->
+                            <!--<label>备注信息</label>-->
+                            <!--<input type="text" v-model="newDepartment.remarks" placeholder="备注信息" class="form-control">-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div slot="footer-commit-text">修 改</div>-->
+        <!--</department_modal>-->
         <!--引入‘vue-snotify’插件，用于显示提示消息，比如成功添加，删除确认等提示-->
         <vue-snotify></vue-snotify>
     </div>
@@ -172,7 +159,7 @@
     export default {
         data() {
             return {
-                showAddDepartmentModel:false,
+                showAddGenderModel:false,
                 showEditDepartmentModel:false,
                 gender:[],
                 treeselectLists:[],//所有的节点
@@ -184,14 +171,12 @@
                     }
                 },
                 selectedRow:{},//当前选中的行
-                isEditDepartmentName:'',
-                newDepartment: {
-                    name:'',
-                    pid:null,
-                    manager:'',
-                    phone:'',
+                isEditNewGenderDescription:'',
+                newGender: {
+                    description:'',
                     order:null,
                     created_at:'',
+                    isFirst:'F',
                     status:'T',
                     remarks:''
                 },
@@ -226,115 +211,121 @@
             showAddModel() {
                 //模态框重新显示之前，清空所有的验证提示消息。
                 this.errors.clear();
-                this.showAddDepartmentModel = true;
+                this.showAddGenderModel = true;
                 //模态框弹出的时候禁止底层body滚动
                 $('body').css('overflow','hidden');
                 console.log('showAddModel')
             },
             closeAddModal() {
-                this.showAddDepartmentModel = false;
+                this.showAddGenderModel = false;
                 //模态框关闭的时候清空表中的数据为初始值
-                this.newDepartment = {
-                    name:'',
-                    pid:null,
-                    manager:'',
-                    phone:'',
+                this.newGender = {
+                    description:'',
                     order:null,
+                    created_at:'',
+                    isFirst:'F',
                     status:'T',
                     remarks:''
                 };
                 //模态框关闭的时候启用body滚动
                 $('body').css('overflow','auto');
             },
-            showEditModel(e) {
-                let buttonClass = $(e.target).get(0).className;
-                if(buttonClass.indexOf('edit') !== -1) {
-                    this.showEditDepartmentModel = true;
-                    this.reloadOptions();
-                    $('body').css('overflow','hidden');
-                    let table = $('.datatable-department').DataTable();
-                    let tr = $(e.target.closest('tr'));
-                    let row = table.row(tr.get(0));
-                    this.selectedRow = row;
-                    let data = row.data();
-                    this.newDepartment.name = data['2'];
-                    this.newDepartment.manager = data['4'];
-                    this.newDepartment.phone = data['5'];
-                    this.newDepartment.remarks = data['6']!=='/'?data['6']:'';
-                    this.newDepartment.order = data['7']===0?'':data['7'];
-                    this.newDepartment.created_at = data['8'];
-                    this.newDepartment.status = data['9'] === '<span class="label label-success">已启用</span>'?'T':'F';
-                    this.newDepartment.pid = data['1']?data['1']:null;
-                    //记录打开编辑窗口时的科室名称
-                    this.isEditDepartmentName = this.newDepartment.name;
-                    console.log(this.isEditDepartmentName)
-                }
-
-            },
-            closeEditModal() {
-                this.showEditDepartmentModel = false;
-                this.isEditDepartmentName = '';
-                //模态框关闭的时候清空表中的数据为初始值
-                this.newDepartment = {
-                    name:'',
-                    pid:null,
-                    manager:'',
-                    phone:'',
-                    order:null,
-                    status:'T',
-                    remarks:''
-                };
-
-                //模态框关闭的时候启用body滚动
-                $('body').css('overflow','auto');
-            },
-            editDepartment() {
-                this.$validator.validateAll().then((result)=> {//验证是否符合表单规则
-                    if(result) {//如果符合才提交
-                        console.log(this.newDepartment);
-                        console.log(this.isEditDepartmentName);
-                        axios.post('/departments/edit',{department:this.newDepartment,isEdit:this.isEditDepartmentName}).then(res=> {
-                            let table = $('.datatable-department').DataTable();
-                            let data = [
-                                this.newDepartment.order?this.newDepartment.order:0,
-                                this.newDepartment.pid,
-                                this.newDepartment.name,
-                                this.newDepartment.pid?res.data:'/',
-                                this.newDepartment.manager,
-                                this.newDepartment.phone,
-                                this.newDepartment.remarks?this.newDepartment.remarks:'/',
-                                this.newDepartment.order?this.newDepartment.order:'0',
-                                this.newDepartment.created_at,
-                                this.newDepartment.status==='T'?'<span class="label label-success">已启用</span>':'<span class="label label-danger">未启用</span>',
-                                '<button class="edit btn btn-xxs btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 修改</button>',
-                            ];
-                            table.row(this.selectedRow).data(data).draw(false);
-                            this.closeEditModal();
-                            this.$snotify.success('编辑成功！');
-                        }).catch(error=> {
-                            throw error
-                        });
-                    }
-                })
-            },
+//            showEditModel(e) {
+//                let buttonClass = $(e.target).get(0).className;
+//                if(buttonClass.indexOf('edit') !== -1) {
+//                    this.showEditDepartmentModel = true;
+//                    this.reloadOptions();
+//                    $('body').css('overflow','hidden');
+//                    let table = $('.datatable-department').DataTable();
+//                    let tr = $(e.target.closest('tr'));
+//                    let row = table.row(tr.get(0));
+//                    this.selectedRow = row;
+//                    let data = row.data();
+//                    this.newDepartment.name = data['2'];
+//                    this.newDepartment.manager = data['4'];
+//                    this.newDepartment.phone = data['5'];
+//                    this.newDepartment.remarks = data['6']!=='/'?data['6']:'';
+//                    this.newDepartment.order = data['7']===0?'':data['7'];
+//                    this.newDepartment.created_at = data['8'];
+//                    this.newDepartment.status = data['9'] === '<span class="label label-success">已启用</span>'?'T':'F';
+//                    this.newDepartment.pid = data['1']?data['1']:null;
+//                    //记录打开编辑窗口时的科室名称
+//                    this.isEditDepartmentName = this.newDepartment.name;
+//                    console.log(this.isEditDepartmentName)
+//                }
+//
+//            },
+//            closeEditModal() {
+//                this.showEditDepartmentModel = false;
+//                this.isEditDepartmentName = '';
+//                //模态框关闭的时候清空表中的数据为初始值
+//                this.newDepartment = {
+//                    name:'',
+//                    pid:null,
+//                    manager:'',
+//                    phone:'',
+//                    order:null,
+//                    status:'T',
+//                    remarks:''
+//                };
+//
+//                //模态框关闭的时候启用body滚动
+//                $('body').css('overflow','auto');
+//            },
+//            editDepartment() {
+//                this.$validator.validateAll().then((result)=> {//验证是否符合表单规则
+//                    if(result) {//如果符合才提交
+//                        console.log(this.newDepartment);
+//                        console.log(this.isEditDepartmentName);
+//                        axios.post('/departments/edit',{department:this.newDepartment,isEdit:this.isEditDepartmentName}).then(res=> {
+//                            let table = $('.datatable-department').DataTable();
+//                            let data = [
+//                                this.newDepartment.order?this.newDepartment.order:0,
+//                                this.newDepartment.pid,
+//                                this.newDepartment.name,
+//                                this.newDepartment.pid?res.data:'/',
+//                                this.newDepartment.manager,
+//                                this.newDepartment.phone,
+//                                this.newDepartment.remarks?this.newDepartment.remarks:'/',
+//                                this.newDepartment.order?this.newDepartment.order:'0',
+//                                this.newDepartment.created_at,
+//                                this.newDepartment.status==='T'?'<span class="label label-success">已启用</span>':'<span class="label label-danger">未启用</span>',
+//                                '<button class="edit btn btn-xxs btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 修改</button>',
+//                            ];
+//                            table.row(this.selectedRow).data(data).draw(false);
+//                            this.closeEditModal();
+//                            this.$snotify.success('编辑成功！');
+//                        }).catch(error=> {
+//                            throw error
+//                        });
+//                    }
+//                })
+//            },
             changeStatus() {
-                if(this.newDepartment.status==='T') {
-                    this.newDepartment.status = 'F'
+                if(this.newGender.status==='T') {
+                    this.newGender.status = 'F'
                 }else {
-                    this.newDepartment.status = 'T'
+                    this.newGender.status = 'T'
                 }
             },
-            checkName() {
+            changeIsFirst() {
+                if(this.newGender.isFirst==='T') {
+                    this.newGender.isFirst = 'F'
+                }else {
+                    this.newGender.isFirst = 'T'
+                }
+            },
+            checkDescription() {
                 //需要判断时新增还是编辑窗口，如果时编辑窗口，那么验证的时候就必须排除当前选中的部门名称isEdit:that.isEditDepartmentName
                 let that = this;
                 //判断部门名称的唯一性
-                this.$validator.extend('unique',{
+                this.$validator.extend('unique_gender',{
                     validate: value => {
                         const promise = new Promise(function(resolve, reject) {
-                            axios.post('/departments/validate/name',{name:that.newDepartment.name,isEdit:that.isEditDepartmentName}).then(res=> {
+                            axios.post('/system_code/validate/gender',{description:that.newGender.description,isEdit:that.isEditNewGenderDescription}).then(res=> {
                                 resolve(res.data.data);
                                 console.log(res.data.data);
-                                console.log(that.isEditDepartmentName)
+                                console.log(that.isEditNewGenderDescription)
                             })
                         });
                         //必须返回一个promise对象，否则报错
@@ -344,26 +335,23 @@
                     }
                 })
             },
-            addDepartment() {
+            addGender() {
                 this.$validator.validateAll().then((result)=> {//验证是否符合表单规则
                     if(result) {//如果符合才提交
-                        axios.post('/departments/add',{department:this.newDepartment}).then(res=> {
-                            let table = $('.datatable-department').DataTable();
-                            table.row.add([
-                                this.newDepartment.order?this.newDepartment.order:0,
-                                res.data[0],
-                                this.newDepartment.name,
-                                this.newDepartment.pid?res.data[1]:'/',
-                                this.newDepartment.manager,
-                                this.newDepartment.phone,
-                                this.newDepartment.remarks?this.newDepartment.remarks:'/',
-                                this.newDepartment.order?this.newDepartment.order:'0',
-                                moment(res.data[2]['date']).format("YYYY-MM-DD HH:mm:ss"),//格式化日期
-                                this.newDepartment.status==='T'?'<span class="label label-success">已启用</span>':'<span class="label label-danger">未启用</span>',
-                                '<button class="edit btn btn-xxs btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 修改</button>',
-                            ]).draw(false);
+                        axios.post('/system_code/add/gender',{gender:this.newGender}).then(res=> {
+//                            let table = $('.datatable-department').DataTable();
+//                            table.row.add([
+//                                this.newGender.order,
+//                                this.newGender.description,
+//                                this.newGender.order?this.newGender.order:'0',
+//                                this.newGender.isFirst==='T'?'<span class="label label-success">是</span>':'<span class="label label-danger">否</span>',
+//                                this.newGender.status==='T'?'<span class="label label-success">已启用</span>':'<span class="label label-danger">未启用</span>',
+//                                this.newGender.remarks?this.newGender.remarks:'/',
+//                                moment(res.data[0]['date']).format("YYYY-MM-DD HH:mm:ss"),//格式化日期
+//                                '<button class="edit btn btn-xxs btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 修改</button>',
+//                            ]).draw(false);
                             this.closeAddModal();
-                            console.log(res.data);
+                            console.log(res.data[0]['date']);
                             this.$snotify.success('添加成功！');
                         }).catch(error=> {
                             throw error
@@ -378,6 +366,7 @@
                 });
             },
             tableSetup() {
+                let that = this;
                 $(function () {
                     // Setting datatable defaults
                     $.extend( $.fn.dataTable.defaults, {
@@ -449,6 +438,14 @@
                         minimumResultsForSearch: Infinity,
                         width: 'auto'
                     });
+
+                    //增加一个按钮在后面用来添加项目用的
+                    $('#DataTables_Table_0_filter').after('<div class="dt-buttons">   <button class="showAddModel dt-button btn btn-primary" tabindex="0" type="button"><span><i aria-hidden="true" class="fa fa-plus"></i> 新 增</span></button>   </div>');
+
+                    //显示添加窗口
+                    $('.showAddModel').click(function () {
+                        that.showAddModel();
+                    })
                 });
             }
         }

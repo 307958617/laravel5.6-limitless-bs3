@@ -62,8 +62,12 @@
         }
     };
     Validator.localize('zh_CN', dict);
-    Validator.extend('unique', {
+    Validator.extend('unique_bm', {
         getMessage: 部门名称 => '该部门名称已经存在，请修改！',
+        validate: value => !! value
+    });
+    Validator.extend('unique_gender', {
+        getMessage: 性别类型 => '该性别类型已经存在，请修改！',
         validate: value => !! value
     });
     //自定义部门电话判断提示--结束

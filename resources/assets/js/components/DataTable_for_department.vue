@@ -59,7 +59,7 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <label>部门名称 <span class="text-danger">*</span></label>
-                            <input type="text" @input="checkName"  v-model="newDepartment.name" placeholder="新部门的名称" :class="{'form-control': true, 'is-invalid': errors.has('部门名称') }" v-validate="'required|min:2|unique'" name="部门名称">
+                            <input type="text" @input="checkName"  v-model="newDepartment.name" placeholder="新部门的名称" :class="{'form-control': true, 'is-invalid': errors.has('部门名称') }" v-validate="'required|min:2|unique_bm'" name="部门名称">
                             <div v-show="errors.has('部门名称')" class="text-danger">{{ errors.first('部门名称') }}</div>
                         </div>
 
@@ -120,7 +120,7 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <label>部门名称 <span class="text-danger">*</span></label>
-                            <input type="text" @input="checkName"  v-model="newDepartment.name" placeholder="新部门的名称" :class="{'form-control': true, 'is-invalid': errors.has('部门名称') }" v-validate="'required|min:2|unique'" name="部门名称">
+                            <input type="text" @input="checkName"  v-model="newDepartment.name" placeholder="新部门的名称" :class="{'form-control': true, 'is-invalid': errors.has('部门名称') }" v-validate="'required|min:2|unique_bm'" name="部门名称">
                             <div v-show="errors.has('部门名称')" class="text-danger">{{ errors.first('部门名称') }}</div>
                         </div>
 
@@ -348,7 +348,7 @@
                 //需要判断时新增还是编辑窗口，如果时编辑窗口，那么验证的时候就必须排除当前选中的部门名称isEdit:that.isEditDepartmentName
                 let that = this;
                 //判断部门名称的唯一性
-                this.$validator.extend('unique',{
+                this.$validator.extend('unique_bm',{
                     validate: value => {
                         const promise = new Promise(function(resolve, reject) {
                             axios.post('/departments/validate/name',{name:that.newDepartment.name,isEdit:that.isEditDepartmentName}).then(res=> {

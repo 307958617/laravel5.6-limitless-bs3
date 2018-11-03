@@ -15,11 +15,11 @@ class CreateGenderTable extends Migration
     {
         Schema::create('gender', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('description')->comment('描述');
-            $table->unsignedInteger('order')->comment('顺序号，用于排序');
+            $table->string('description')->unique()->comment('描述');
+            $table->unsignedInteger('order')->nullable()->comment('顺序号，用于排序');
             $table->string('isFirst')->comment('是否为首选');
             $table->string('status')->comment('当前状态');
-            $table->string('remarks')->comment('备注');
+            $table->string('remarks')->nullable()->comment('备注');
             $table->timestamps();
         });
     }

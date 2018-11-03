@@ -70804,7 +70804,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
             //需要判断时新增还是编辑窗口，如果时编辑窗口，那么验证的时候就必须排除当前选中的部门名称isEdit:that.isEditDepartmentName
             var that = this;
             //判断部门名称的唯一性
-            this.$validator.extend('unique', {
+            this.$validator.extend('unique_bm', {
                 validate: function validate(value) {
                     var promise = new Promise(function (resolve, reject) {
                         axios.post('/departments/validate/name', { name: that.newDepartment.name, isEdit: that.isEditDepartmentName }).then(function (res) {
@@ -72358,9 +72358,17 @@ var dict = {
     }
 };
 __WEBPACK_IMPORTED_MODULE_1_vee_validate__["a" /* Validator */].localize('zh_CN', dict);
-__WEBPACK_IMPORTED_MODULE_1_vee_validate__["a" /* Validator */].extend('unique', {
+__WEBPACK_IMPORTED_MODULE_1_vee_validate__["a" /* Validator */].extend('unique_bm', {
     getMessage: function getMessage(部门名称) {
         return '该部门名称已经存在，请修改！';
+    },
+    validate: function validate(value) {
+        return !!value;
+    }
+});
+__WEBPACK_IMPORTED_MODULE_1_vee_validate__["a" /* Validator */].extend('unique_gender', {
+    getMessage: function getMessage(性别类型) {
+        return '该性别类型已经存在，请修改！';
     },
     validate: function validate(value) {
         return !!value;
@@ -82255,8 +82263,8 @@ var render = function() {
                       {
                         name: "validate",
                         rawName: "v-validate",
-                        value: "required|min:2|unique",
-                        expression: "'required|min:2|unique'"
+                        value: "required|min:2|unique_bm",
+                        expression: "'required|min:2|unique_bm'"
                       }
                     ],
                     class: {
@@ -82609,8 +82617,8 @@ var render = function() {
                       {
                         name: "validate",
                         rawName: "v-validate",
-                        value: "required|min:2|unique",
-                        expression: "'required|min:2|unique'"
+                        value: "required|min:2|unique_bm",
+                        expression: "'required|min:2|unique_bm'"
                       }
                     ],
                     class: {
@@ -83422,7 +83430,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
             //需要判断时新增还是编辑窗口，如果时编辑窗口，那么验证的时候就必须排除当前选中的部门名称isEdit:that.isEditDepartmentName
             var that = this;
             //判断部门名称的唯一性
-            this.$validator.extend('unique', {
+            this.$validator.extend('unique_bm', {
                 validate: function validate(value) {
                     var promise = new Promise(function (resolve, reject) {
                         axios.post('/departments/validate/name', { name: that.newDepartment.name, isEdit: that.isEditDepartmentName }).then(function (res) {
@@ -83673,8 +83681,8 @@ var render = function() {
                       {
                         name: "validate",
                         rawName: "v-validate",
-                        value: "required|min:2|unique",
-                        expression: "'required|min:2|unique'"
+                        value: "required|min:2|unique_bm",
+                        expression: "'required|min:2|unique_bm'"
                       }
                     ],
                     class: {
@@ -84027,8 +84035,8 @@ var render = function() {
                       {
                         name: "validate",
                         rawName: "v-validate",
-                        value: "required|min:2|unique",
-                        expression: "'required|min:2|unique'"
+                        value: "required|min:2|unique_bm",
+                        expression: "'required|min:2|unique_bm'"
                       }
                     ],
                     class: {
@@ -84641,19 +84649,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -84668,7 +84663,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-            showAddDepartmentModel: false,
+            showAddGenderModel: false,
             showEditDepartmentModel: false,
             gender: [],
             treeselectLists: [], //所有的节点
@@ -84681,14 +84676,12 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
             },
 
             selectedRow: {}, //当前选中的行
-            isEditDepartmentName: '',
-            newDepartment: {
-                name: '',
-                pid: null,
-                manager: '',
-                phone: '',
+            isEditNewGenderDescription: '',
+            newGender: {
+                description: '',
                 order: null,
                 created_at: '',
+                isFirst: 'F',
                 status: 'T',
                 remarks: ''
             }
@@ -84727,106 +84720,122 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
         showAddModel: function showAddModel() {
             //模态框重新显示之前，清空所有的验证提示消息。
             this.errors.clear();
-            this.showAddDepartmentModel = true;
+            this.showAddGenderModel = true;
             //模态框弹出的时候禁止底层body滚动
             $('body').css('overflow', 'hidden');
             console.log('showAddModel');
         },
         closeAddModal: function closeAddModal() {
-            this.showAddDepartmentModel = false;
+            this.showAddGenderModel = false;
             //模态框关闭的时候清空表中的数据为初始值
-            this.newDepartment = {
-                name: '',
-                pid: null,
-                manager: '',
-                phone: '',
+            this.newGender = {
+                description: '',
                 order: null,
+                created_at: '',
+                isFirst: 'F',
                 status: 'T',
                 remarks: ''
             };
             //模态框关闭的时候启用body滚动
             $('body').css('overflow', 'auto');
         },
-        showEditModel: function showEditModel(e) {
-            var buttonClass = $(e.target).get(0).className;
-            if (buttonClass.indexOf('edit') !== -1) {
-                this.showEditDepartmentModel = true;
-                this.reloadOptions();
-                $('body').css('overflow', 'hidden');
-                var table = $('.datatable-department').DataTable();
-                var tr = $(e.target.closest('tr'));
-                var row = table.row(tr.get(0));
-                this.selectedRow = row;
-                var data = row.data();
-                this.newDepartment.name = data['2'];
-                this.newDepartment.manager = data['4'];
-                this.newDepartment.phone = data['5'];
-                this.newDepartment.remarks = data['6'] !== '/' ? data['6'] : '';
-                this.newDepartment.order = data['7'] === 0 ? '' : data['7'];
-                this.newDepartment.created_at = data['8'];
-                this.newDepartment.status = data['9'] === '<span class="label label-success">已启用</span>' ? 'T' : 'F';
-                this.newDepartment.pid = data['1'] ? data['1'] : null;
-                //记录打开编辑窗口时的科室名称
-                this.isEditDepartmentName = this.newDepartment.name;
-                console.log(this.isEditDepartmentName);
-            }
-        },
-        closeEditModal: function closeEditModal() {
-            this.showEditDepartmentModel = false;
-            this.isEditDepartmentName = '';
-            //模态框关闭的时候清空表中的数据为初始值
-            this.newDepartment = {
-                name: '',
-                pid: null,
-                manager: '',
-                phone: '',
-                order: null,
-                status: 'T',
-                remarks: ''
-            };
 
-            //模态框关闭的时候启用body滚动
-            $('body').css('overflow', 'auto');
-        },
-        editDepartment: function editDepartment() {
-            var _this2 = this;
-
-            this.$validator.validateAll().then(function (result) {
-                //验证是否符合表单规则
-                if (result) {
-                    //如果符合才提交
-                    console.log(_this2.newDepartment);
-                    console.log(_this2.isEditDepartmentName);
-                    axios.post('/departments/edit', { department: _this2.newDepartment, isEdit: _this2.isEditDepartmentName }).then(function (res) {
-                        var table = $('.datatable-department').DataTable();
-                        var data = [_this2.newDepartment.order ? _this2.newDepartment.order : 0, _this2.newDepartment.pid, _this2.newDepartment.name, _this2.newDepartment.pid ? res.data : '/', _this2.newDepartment.manager, _this2.newDepartment.phone, _this2.newDepartment.remarks ? _this2.newDepartment.remarks : '/', _this2.newDepartment.order ? _this2.newDepartment.order : '0', _this2.newDepartment.created_at, _this2.newDepartment.status === 'T' ? '<span class="label label-success">已启用</span>' : '<span class="label label-danger">未启用</span>', '<button class="edit btn btn-xxs btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 修改</button>'];
-                        table.row(_this2.selectedRow).data(data).draw(false);
-                        _this2.closeEditModal();
-                        _this2.$snotify.success('编辑成功！');
-                    }).catch(function (error) {
-                        throw error;
-                    });
-                }
-            });
-        },
+        //            showEditModel(e) {
+        //                let buttonClass = $(e.target).get(0).className;
+        //                if(buttonClass.indexOf('edit') !== -1) {
+        //                    this.showEditDepartmentModel = true;
+        //                    this.reloadOptions();
+        //                    $('body').css('overflow','hidden');
+        //                    let table = $('.datatable-department').DataTable();
+        //                    let tr = $(e.target.closest('tr'));
+        //                    let row = table.row(tr.get(0));
+        //                    this.selectedRow = row;
+        //                    let data = row.data();
+        //                    this.newDepartment.name = data['2'];
+        //                    this.newDepartment.manager = data['4'];
+        //                    this.newDepartment.phone = data['5'];
+        //                    this.newDepartment.remarks = data['6']!=='/'?data['6']:'';
+        //                    this.newDepartment.order = data['7']===0?'':data['7'];
+        //                    this.newDepartment.created_at = data['8'];
+        //                    this.newDepartment.status = data['9'] === '<span class="label label-success">已启用</span>'?'T':'F';
+        //                    this.newDepartment.pid = data['1']?data['1']:null;
+        //                    //记录打开编辑窗口时的科室名称
+        //                    this.isEditDepartmentName = this.newDepartment.name;
+        //                    console.log(this.isEditDepartmentName)
+        //                }
+        //
+        //            },
+        //            closeEditModal() {
+        //                this.showEditDepartmentModel = false;
+        //                this.isEditDepartmentName = '';
+        //                //模态框关闭的时候清空表中的数据为初始值
+        //                this.newDepartment = {
+        //                    name:'',
+        //                    pid:null,
+        //                    manager:'',
+        //                    phone:'',
+        //                    order:null,
+        //                    status:'T',
+        //                    remarks:''
+        //                };
+        //
+        //                //模态框关闭的时候启用body滚动
+        //                $('body').css('overflow','auto');
+        //            },
+        //            editDepartment() {
+        //                this.$validator.validateAll().then((result)=> {//验证是否符合表单规则
+        //                    if(result) {//如果符合才提交
+        //                        console.log(this.newDepartment);
+        //                        console.log(this.isEditDepartmentName);
+        //                        axios.post('/departments/edit',{department:this.newDepartment,isEdit:this.isEditDepartmentName}).then(res=> {
+        //                            let table = $('.datatable-department').DataTable();
+        //                            let data = [
+        //                                this.newDepartment.order?this.newDepartment.order:0,
+        //                                this.newDepartment.pid,
+        //                                this.newDepartment.name,
+        //                                this.newDepartment.pid?res.data:'/',
+        //                                this.newDepartment.manager,
+        //                                this.newDepartment.phone,
+        //                                this.newDepartment.remarks?this.newDepartment.remarks:'/',
+        //                                this.newDepartment.order?this.newDepartment.order:'0',
+        //                                this.newDepartment.created_at,
+        //                                this.newDepartment.status==='T'?'<span class="label label-success">已启用</span>':'<span class="label label-danger">未启用</span>',
+        //                                '<button class="edit btn btn-xxs btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 修改</button>',
+        //                            ];
+        //                            table.row(this.selectedRow).data(data).draw(false);
+        //                            this.closeEditModal();
+        //                            this.$snotify.success('编辑成功！');
+        //                        }).catch(error=> {
+        //                            throw error
+        //                        });
+        //                    }
+        //                })
+        //            },
         changeStatus: function changeStatus() {
-            if (this.newDepartment.status === 'T') {
-                this.newDepartment.status = 'F';
+            if (this.newGender.status === 'T') {
+                this.newGender.status = 'F';
             } else {
-                this.newDepartment.status = 'T';
+                this.newGender.status = 'T';
             }
         },
-        checkName: function checkName() {
+        changeIsFirst: function changeIsFirst() {
+            if (this.newGender.isFirst === 'T') {
+                this.newGender.isFirst = 'F';
+            } else {
+                this.newGender.isFirst = 'T';
+            }
+        },
+        checkDescription: function checkDescription() {
             //需要判断时新增还是编辑窗口，如果时编辑窗口，那么验证的时候就必须排除当前选中的部门名称isEdit:that.isEditDepartmentName
             var that = this;
             //判断部门名称的唯一性
-            this.$validator.extend('unique', {
+            this.$validator.extend('unique_gender', {
                 validate: function validate(value) {
                     var promise = new Promise(function (resolve, reject) {
-                        axios.post('/departments/validate/name', { name: that.newDepartment.name, isEdit: that.isEditDepartmentName }).then(function (res) {
+                        axios.post('/system_code/validate/gender', { description: that.newGender.description, isEdit: that.isEditNewGenderDescription }).then(function (res) {
                             resolve(res.data.data);
                             console.log(res.data.data);
-                            console.log(that.isEditDepartmentName);
+                            console.log(that.isEditNewGenderDescription);
                         });
                     });
                     //必须返回一个promise对象，否则报错
@@ -84836,20 +84845,28 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
                 }
             });
         },
-        addDepartment: function addDepartment() {
-            var _this3 = this;
+        addGender: function addGender() {
+            var _this2 = this;
 
             this.$validator.validateAll().then(function (result) {
                 //验证是否符合表单规则
                 if (result) {
                     //如果符合才提交
-                    axios.post('/departments/add', { department: _this3.newDepartment }).then(function (res) {
-                        var table = $('.datatable-department').DataTable();
-                        table.row.add([_this3.newDepartment.order ? _this3.newDepartment.order : 0, res.data[0], _this3.newDepartment.name, _this3.newDepartment.pid ? res.data[1] : '/', _this3.newDepartment.manager, _this3.newDepartment.phone, _this3.newDepartment.remarks ? _this3.newDepartment.remarks : '/', _this3.newDepartment.order ? _this3.newDepartment.order : '0', __WEBPACK_IMPORTED_MODULE_4_moment___default()(res.data[2]['date']).format("YYYY-MM-DD HH:mm:ss"), //格式化日期
-                        _this3.newDepartment.status === 'T' ? '<span class="label label-success">已启用</span>' : '<span class="label label-danger">未启用</span>', '<button class="edit btn btn-xxs btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 修改</button>']).draw(false);
-                        _this3.closeAddModal();
-                        console.log(res.data);
-                        _this3.$snotify.success('添加成功！');
+                    axios.post('/system_code/add/gender', { gender: _this2.newGender }).then(function (res) {
+                        //                            let table = $('.datatable-department').DataTable();
+                        //                            table.row.add([
+                        //                                this.newGender.order,
+                        //                                this.newGender.description,
+                        //                                this.newGender.order?this.newGender.order:'0',
+                        //                                this.newGender.isFirst==='T'?'<span class="label label-success">是</span>':'<span class="label label-danger">否</span>',
+                        //                                this.newGender.status==='T'?'<span class="label label-success">已启用</span>':'<span class="label label-danger">未启用</span>',
+                        //                                this.newGender.remarks?this.newGender.remarks:'/',
+                        //                                moment(res.data[0]['date']).format("YYYY-MM-DD HH:mm:ss"),//格式化日期
+                        //                                '<button class="edit btn btn-xxs btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 修改</button>',
+                        //                            ]).draw(false);
+                        _this2.closeAddModal();
+                        console.log(res.data[0]['date']);
+                        _this2.$snotify.success('添加成功！');
                     }).catch(function (error) {
                         throw error;
                     });
@@ -84857,14 +84874,15 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
             });
         },
         reloadOptions: function reloadOptions() {
-            var _this4 = this;
+            var _this3 = this;
 
             axios.get('/departments/get/used').then(function (res) {
                 //console.log(res.data);
-                _this4.treeselectLists = res.data;
+                _this3.treeselectLists = res.data;
             });
         },
         tableSetup: function tableSetup() {
+            var that = this;
             $(function () {
                 // Setting datatable defaults
                 $.extend($.fn.dataTable.defaults, {
@@ -84929,6 +84947,14 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
                     minimumResultsForSearch: Infinity,
                     width: 'auto'
                 });
+
+                //增加一个按钮在后面用来添加项目用的
+                $('#DataTables_Table_0_filter').after('<div class="dt-buttons">   <button class="showAddModel dt-button btn btn-primary" tabindex="0" type="button"><span><i aria-hidden="true" class="fa fa-plus"></i> 新 增</span></button>   </div>');
+
+                //显示添加窗口
+                $('.showAddModel').click(function () {
+                    that.showAddModel();
+                });
             });
         }
     }
@@ -84972,7 +84998,7 @@ var render = function() {
                     class: [
                       gen.isFirst === "T"
                         ? "label label-success"
-                        : "label label-danger"
+                        : "label label-default"
                     ]
                   },
                   [_vm._v(_vm._s(gen.isFirst === "T" ? "是" : "否"))]
@@ -85010,15 +85036,15 @@ var render = function() {
             {
               name: "show",
               rawName: "v-show",
-              value: _vm.showAddDepartmentModel,
-              expression: "showAddDepartmentModel"
+              value: _vm.showAddGenderModel,
+              expression: "showAddGenderModel"
             }
           ],
-          on: { close: _vm.closeAddModal, commit: _vm.addDepartment }
+          on: { close: _vm.closeAddModal, commit: _vm.addGender }
         },
         [
           _c("div", { attrs: { slot: "head-title" }, slot: "head-title" }, [
-            _vm._v("新增部门")
+            _vm._v("新增性别类型")
           ]),
           _vm._v(" "),
           _c("div", { attrs: { slot: "body" }, slot: "body" }, [
@@ -85026,7 +85052,7 @@ var render = function() {
               _c("div", { staticClass: "row" }, [
                 _c("div", { staticClass: "col-sm-6" }, [
                   _c("label", [
-                    _vm._v("部门名称 "),
+                    _vm._v("描 述"),
                     _c("span", { staticClass: "text-danger" }, [_vm._v("*")])
                   ]),
                   _vm._v(" "),
@@ -85035,26 +85061,26 @@ var render = function() {
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.newDepartment.name,
-                        expression: "newDepartment.name"
+                        value: _vm.newGender.description,
+                        expression: "newGender.description"
                       },
                       {
                         name: "validate",
                         rawName: "v-validate",
-                        value: "required|min:2|unique",
-                        expression: "'required|min:2|unique'"
+                        value: "required|unique_gender",
+                        expression: "'required|unique_gender'"
                       }
                     ],
                     class: {
                       "form-control": true,
-                      "is-invalid": _vm.errors.has("部门名称")
+                      "is-invalid": _vm.errors.has("性别类型")
                     },
                     attrs: {
                       type: "text",
-                      placeholder: "新部门的名称",
-                      name: "部门名称"
+                      placeholder: "性别类型描述",
+                      name: "性别类型"
                     },
-                    domProps: { value: _vm.newDepartment.name },
+                    domProps: { value: _vm.newGender.description },
                     on: {
                       input: [
                         function($event) {
@@ -85062,12 +85088,12 @@ var render = function() {
                             return
                           }
                           _vm.$set(
-                            _vm.newDepartment,
-                            "name",
+                            _vm.newGender,
+                            "description",
                             $event.target.value
                           )
                         },
-                        _vm.checkName
+                        _vm.checkDescription
                       ]
                     }
                   }),
@@ -85079,178 +85105,16 @@ var render = function() {
                         {
                           name: "show",
                           rawName: "v-show",
-                          value: _vm.errors.has("部门名称"),
-                          expression: "errors.has('部门名称')"
+                          value: _vm.errors.has("性别类型"),
+                          expression: "errors.has('性别类型')"
                         }
                       ],
                       staticClass: "text-danger"
                     },
-                    [_vm._v(_vm._s(_vm.errors.first("部门名称")))]
+                    [_vm._v(_vm._s(_vm.errors.first("性别类型")))]
                   )
                 ]),
                 _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "col-sm-6" },
-                  [
-                    _c("label", [_vm._v("选择上级部门")]),
-                    _vm._v(" "),
-                    _c("treeselect", {
-                      attrs: {
-                        placeholder: "选择上级科室,不选默认为顶级科室",
-                        normalizer: _vm.normalizer,
-                        options: _vm.treeselectLists
-                      },
-                      on: { open: _vm.reloadOptions },
-                      model: {
-                        value: _vm.newDepartment.pid,
-                        callback: function($$v) {
-                          _vm.$set(_vm.newDepartment, "pid", $$v)
-                        },
-                        expression: "newDepartment.pid"
-                      }
-                    })
-                  ],
-                  1
-                )
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "form-group" }, [
-              _c("div", { staticClass: "row" }, [
-                _c("div", { staticClass: "col-sm-6" }, [
-                  _c("label", [
-                    _vm._v("部门主管 "),
-                    _c("span", { staticClass: "text-danger" }, [_vm._v("*")])
-                  ]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.newDepartment.manager,
-                        expression: "newDepartment.manager"
-                      },
-                      {
-                        name: "validate",
-                        rawName: "v-validate",
-                        value: "required|min:2",
-                        expression: "'required|min:2'"
-                      }
-                    ],
-                    class: {
-                      "form-control": true,
-                      "is-invalid": _vm.errors.has("部门主管")
-                    },
-                    attrs: {
-                      type: "text",
-                      placeholder: "部门主管",
-                      name: "部门主管"
-                    },
-                    domProps: { value: _vm.newDepartment.manager },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(
-                          _vm.newDepartment,
-                          "manager",
-                          $event.target.value
-                        )
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: _vm.errors.has("部门主管"),
-                          expression: "errors.has('部门主管')"
-                        }
-                      ],
-                      staticClass: "text-danger"
-                    },
-                    [_vm._v(_vm._s(_vm.errors.first("部门主管")))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-sm-6" }, [
-                  _c("label", [
-                    _vm._v("部门电话 "),
-                    _c("span", { staticClass: "text-danger" }, [_vm._v("*")])
-                  ]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.newDepartment.phone,
-                        expression: "newDepartment.phone"
-                      },
-                      {
-                        name: "validate",
-                        rawName: "v-validate",
-                        value: {
-                          required: true,
-                          numeric: true,
-                          regex: /^(\d{8}|\d{11})$/
-                        },
-                        expression:
-                          "{required:true,numeric:true,regex: /^(\\d{8}|\\d{11})$/}"
-                      }
-                    ],
-                    class: {
-                      "form-control": true,
-                      "is-invalid": _vm.errors.has("部门电话")
-                    },
-                    attrs: {
-                      type: "text",
-                      placeholder: "部门电话8位或11位",
-                      name: "部门电话"
-                    },
-                    domProps: { value: _vm.newDepartment.phone },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(
-                          _vm.newDepartment,
-                          "phone",
-                          $event.target.value
-                        )
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: _vm.errors.has("部门电话"),
-                          expression: "errors.has('部门电话')"
-                        }
-                      ],
-                      staticClass: "text-danger"
-                    },
-                    [_vm._v(_vm._s(_vm.errors.first("部门电话")))]
-                  )
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "form-group" }, [
-              _c("div", { staticClass: "row" }, [
                 _c("div", { staticClass: "col-sm-6" }, [
                   _c("label", [_vm._v("排序NO.")]),
                   _vm._v(" "),
@@ -85259,8 +85123,8 @@ var render = function() {
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.newDepartment.order,
-                        expression: "newDepartment.order"
+                        value: _vm.newGender.order,
+                        expression: "newGender.order"
                       }
                     ],
                     staticClass: "form-control",
@@ -85268,20 +85132,42 @@ var render = function() {
                       type: "text",
                       placeholder: "数值越大排名越靠前,默认为0"
                     },
-                    domProps: { value: _vm.newDepartment.order },
+                    domProps: { value: _vm.newGender.order },
                     on: {
                       input: function($event) {
                         if ($event.target.composing) {
                           return
                         }
-                        _vm.$set(
-                          _vm.newDepartment,
-                          "order",
-                          $event.target.value
-                        )
+                        _vm.$set(_vm.newGender, "order", $event.target.value)
                       }
                     }
                   })
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-sm-6" }, [
+                  _c("label", [_vm._v("是否设为初始值")]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    [
+                      _c("toggle-button", {
+                        attrs: {
+                          sync: true,
+                          "v-model": _vm.newGender.isFirst,
+                          value: _vm.newGender.isFirst === "T",
+                          width: 58,
+                          height: 34,
+                          labels: { checked: "是", unchecked: "否" }
+                        },
+                        on: { change: _vm.changeIsFirst }
+                      })
+                    ],
+                    1
+                  )
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "col-sm-6" }, [
@@ -85293,8 +85179,8 @@ var render = function() {
                       _c("toggle-button", {
                         attrs: {
                           sync: true,
-                          "v-model": _vm.newDepartment.status,
-                          value: _vm.newDepartment.status === "T",
+                          "v-model": _vm.newGender.status,
+                          value: _vm.newGender.status === "T",
                           width: 140,
                           height: 34,
                           labels: {
@@ -85321,23 +85207,19 @@ var render = function() {
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.newDepartment.remarks,
-                        expression: "newDepartment.remarks"
+                        value: _vm.newGender.remarks,
+                        expression: "newGender.remarks"
                       }
                     ],
                     staticClass: "form-control",
                     attrs: { type: "text", placeholder: "备注信息" },
-                    domProps: { value: _vm.newDepartment.remarks },
+                    domProps: { value: _vm.newGender.remarks },
                     on: {
                       input: function($event) {
                         if ($event.target.composing) {
                           return
                         }
-                        _vm.$set(
-                          _vm.newDepartment,
-                          "remarks",
-                          $event.target.value
-                        )
+                        _vm.$set(_vm.newGender, "remarks", $event.target.value)
                       }
                     }
                   })
@@ -85353,360 +85235,6 @@ var render = function() {
               slot: "footer-commit-text"
             },
             [_vm._v("添 加")]
-          )
-        ]
-      ),
-      _vm._v(" "),
-      _c(
-        "department_modal",
-        {
-          directives: [
-            {
-              name: "show",
-              rawName: "v-show",
-              value: _vm.showEditDepartmentModel,
-              expression: "showEditDepartmentModel"
-            }
-          ],
-          on: { close: _vm.closeEditModal, commit: _vm.editDepartment }
-        },
-        [
-          _c("div", { attrs: { slot: "head-title" }, slot: "head-title" }, [
-            _vm._v("编辑部门")
-          ]),
-          _vm._v(" "),
-          _c("div", { attrs: { slot: "body" }, slot: "body" }, [
-            _c("div", { staticClass: "form-group" }, [
-              _c("div", { staticClass: "row" }, [
-                _c("div", { staticClass: "col-sm-6" }, [
-                  _c("label", [
-                    _vm._v("部门名称 "),
-                    _c("span", { staticClass: "text-danger" }, [_vm._v("*")])
-                  ]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.newDepartment.name,
-                        expression: "newDepartment.name"
-                      },
-                      {
-                        name: "validate",
-                        rawName: "v-validate",
-                        value: "required|min:2|unique",
-                        expression: "'required|min:2|unique'"
-                      }
-                    ],
-                    class: {
-                      "form-control": true,
-                      "is-invalid": _vm.errors.has("部门名称")
-                    },
-                    attrs: {
-                      type: "text",
-                      placeholder: "新部门的名称",
-                      name: "部门名称"
-                    },
-                    domProps: { value: _vm.newDepartment.name },
-                    on: {
-                      input: [
-                        function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.newDepartment,
-                            "name",
-                            $event.target.value
-                          )
-                        },
-                        _vm.checkName
-                      ]
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: _vm.errors.has("部门名称"),
-                          expression: "errors.has('部门名称')"
-                        }
-                      ],
-                      staticClass: "text-danger"
-                    },
-                    [_vm._v(_vm._s(_vm.errors.first("部门名称")))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "col-sm-6" },
-                  [
-                    _c("label", [_vm._v("选择上级部门")]),
-                    _vm._v(" "),
-                    _c("treeselect", {
-                      attrs: {
-                        placeholder: "选择上级科室,不选默认为顶级科室",
-                        normalizer: _vm.normalizer,
-                        options: _vm.treeselectLists
-                      },
-                      on: { open: _vm.reloadOptions },
-                      model: {
-                        value: _vm.newDepartment.pid,
-                        callback: function($$v) {
-                          _vm.$set(_vm.newDepartment, "pid", $$v)
-                        },
-                        expression: "newDepartment.pid"
-                      }
-                    })
-                  ],
-                  1
-                )
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "form-group" }, [
-              _c("div", { staticClass: "row" }, [
-                _c("div", { staticClass: "col-sm-6" }, [
-                  _c("label", [
-                    _vm._v("部门主管 "),
-                    _c("span", { staticClass: "text-danger" }, [_vm._v("*")])
-                  ]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.newDepartment.manager,
-                        expression: "newDepartment.manager"
-                      },
-                      {
-                        name: "validate",
-                        rawName: "v-validate",
-                        value: "required|min:2",
-                        expression: "'required|min:2'"
-                      }
-                    ],
-                    class: {
-                      "form-control": true,
-                      "is-invalid": _vm.errors.has("部门主管")
-                    },
-                    attrs: {
-                      type: "text",
-                      placeholder: "部门主管",
-                      name: "部门主管"
-                    },
-                    domProps: { value: _vm.newDepartment.manager },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(
-                          _vm.newDepartment,
-                          "manager",
-                          $event.target.value
-                        )
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: _vm.errors.has("部门主管"),
-                          expression: "errors.has('部门主管')"
-                        }
-                      ],
-                      staticClass: "text-danger"
-                    },
-                    [_vm._v(_vm._s(_vm.errors.first("部门主管")))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-sm-6" }, [
-                  _c("label", [
-                    _vm._v("部门电话 "),
-                    _c("span", { staticClass: "text-danger" }, [_vm._v("*")])
-                  ]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.newDepartment.phone,
-                        expression: "newDepartment.phone"
-                      },
-                      {
-                        name: "validate",
-                        rawName: "v-validate",
-                        value: {
-                          required: true,
-                          numeric: true,
-                          regex: /^(\d{8}|\d{11})$/
-                        },
-                        expression:
-                          "{required:true,numeric:true,regex: /^(\\d{8}|\\d{11})$/}"
-                      }
-                    ],
-                    class: {
-                      "form-control": true,
-                      "is-invalid": _vm.errors.has("部门电话")
-                    },
-                    attrs: {
-                      type: "text",
-                      placeholder: "部门电话8位或11位",
-                      name: "部门电话"
-                    },
-                    domProps: { value: _vm.newDepartment.phone },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(
-                          _vm.newDepartment,
-                          "phone",
-                          $event.target.value
-                        )
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: _vm.errors.has("部门电话"),
-                          expression: "errors.has('部门电话')"
-                        }
-                      ],
-                      staticClass: "text-danger"
-                    },
-                    [_vm._v(_vm._s(_vm.errors.first("部门电话")))]
-                  )
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "form-group" }, [
-              _c("div", { staticClass: "row" }, [
-                _c("div", { staticClass: "col-sm-6" }, [
-                  _c("label", [_vm._v("排序NO.")]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.newDepartment.order,
-                        expression: "newDepartment.order"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    attrs: {
-                      type: "text",
-                      placeholder: "数值越大排名越靠前,默认为0"
-                    },
-                    domProps: { value: _vm.newDepartment.order },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(
-                          _vm.newDepartment,
-                          "order",
-                          $event.target.value
-                        )
-                      }
-                    }
-                  })
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-sm-6" }, [
-                  _c("label", [_vm._v("启用标志")]),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    [
-                      _c("toggle-button", {
-                        attrs: {
-                          sync: true,
-                          "v-model": _vm.newDepartment.status,
-                          value: _vm.newDepartment.status === "T",
-                          width: 140,
-                          height: 34,
-                          labels: {
-                            checked: "当前处于启用状态",
-                            unchecked: "当前处于停用状态"
-                          }
-                        },
-                        on: { change: _vm.changeStatus }
-                      })
-                    ],
-                    1
-                  )
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "form-group" }, [
-              _c("div", { staticClass: "row" }, [
-                _c("div", { staticClass: "col-sm-12" }, [
-                  _c("label", [_vm._v("备注信息")]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.newDepartment.remarks,
-                        expression: "newDepartment.remarks"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    attrs: { type: "text", placeholder: "备注信息" },
-                    domProps: { value: _vm.newDepartment.remarks },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(
-                          _vm.newDepartment,
-                          "remarks",
-                          $event.target.value
-                        )
-                      }
-                    }
-                  })
-                ])
-              ])
-            ])
-          ]),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              attrs: { slot: "footer-commit-text" },
-              slot: "footer-commit-text"
-            },
-            [_vm._v("修 改")]
           )
         ]
       ),
