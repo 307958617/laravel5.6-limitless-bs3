@@ -1,7 +1,7 @@
 <template>
     <!-- Column selectors -->
     <div>
-        <table class="table datatable-department">
+        <table class="table datatable-system-code-gender">
             <thead>
             <tr>
                 <th>NO.</th>
@@ -19,13 +19,14 @@
                 <tr v-for="gen in gender">
                     <td>{{ gen.order?gen.order:'0' }}</td> <!-- 默认排序为order字段，datatable必须将order放到第一列才行 -->
                     <td>{{ gen.description }}</td><!-- 上级部门的id -->
-                    <td>{{ gen.order }}</td>
+                    <td>{{ gen.order?gen.order:'0' }}</td>
                     <td><span :class="[gen.isFirst==='T'? 'label label-success' : 'label label-default']">{{ gen.isFirst==='T'?'是':'否' }}</span></td>
                     <td><span :class="[gen.status==='T'? 'label label-success' : 'label label-danger']">{{ gen.status==='T'?'已启用':'未启用' }}</span></td>
-                    <td>{{ gen.remarks }}</td>
+                    <td>{{ gen.remarks?gen.remarks:'/' }}</td>
                     <td>{{ gen.created_at }}</td>
-                    <td>
-                        <button class="edit btn btn-xxs btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 修改</button>
+                    <td style="width: 122px;">
+                        <button class="edit btn btn-xxs btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 改</button>
+                        <button class="edit btn btn-xxs btn-danger"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 删</button>
                     </td>
                 </tr>
             </tbody>
@@ -236,7 +237,7 @@
 //                    this.showEditDepartmentModel = true;
 //                    this.reloadOptions();
 //                    $('body').css('overflow','hidden');
-//                    let table = $('.datatable-department').DataTable();
+//                    let table = $('.datatable-system-code-gender').DataTable();
 //                    let tr = $(e.target.closest('tr'));
 //                    let row = table.row(tr.get(0));
 //                    this.selectedRow = row;
@@ -278,7 +279,7 @@
 //                        console.log(this.newDepartment);
 //                        console.log(this.isEditDepartmentName);
 //                        axios.post('/departments/edit',{department:this.newDepartment,isEdit:this.isEditDepartmentName}).then(res=> {
-//                            let table = $('.datatable-department').DataTable();
+//                            let table = $('.datatable-system-code-gender').DataTable();
 //                            let data = [
 //                                this.newDepartment.order?this.newDepartment.order:0,
 //                                this.newDepartment.pid,
@@ -339,17 +340,19 @@
                 this.$validator.validateAll().then((result)=> {//验证是否符合表单规则
                     if(result) {//如果符合才提交
                         axios.post('/system_code/add/gender',{gender:this.newGender}).then(res=> {
-//                            let table = $('.datatable-department').DataTable();
-//                            table.row.add([
-//                                this.newGender.order,
-//                                this.newGender.description,
-//                                this.newGender.order?this.newGender.order:'0',
-//                                this.newGender.isFirst==='T'?'<span class="label label-success">是</span>':'<span class="label label-danger">否</span>',
-//                                this.newGender.status==='T'?'<span class="label label-success">已启用</span>':'<span class="label label-danger">未启用</span>',
-//                                this.newGender.remarks?this.newGender.remarks:'/',
-//                                moment(res.data[0]['date']).format("YYYY-MM-DD HH:mm:ss"),//格式化日期
-//                                '<button class="edit btn btn-xxs btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 修改</button>',
-//                            ]).draw(false);
+                            let table = $('.datatable-system-code-gender').DataTable();
+                            table.row.add([
+                                this.newGender.order,
+                                this.newGender.description,
+                                this.newGender.order?this.newGender.order:'0',
+                                this.newGender.isFirst==='T'?'<span class="label label-success">是</span>':'<span class="label label-default">否</span>',
+                                this.newGender.status==='T'?'<span class="label label-success">已启用</span>':'<span class="label label-danger">未启用</span>',
+                                this.newGender.remarks?this.newGender.remarks:'/',
+                                moment(res.data[0]['date']).format("YYYY-MM-DD HH:mm:ss"),//格式化日期
+                                '<button class="edit btn btn-xxs btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 改</button>'+
+                                '<button class="edit btn btn-xxs btn-danger"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 删</button>',
+                            ]).draw(false);
+                            table.ajax.reload();
                             this.closeAddModal();
                             console.log(res.data[0]['date']);
                             this.$snotify.success('添加成功！');
@@ -387,7 +390,7 @@
                         }
                     });
                     // Column selectors
-                    let t = $('.datatable-department').DataTable({
+                    let t = $('.datatable-system-code-gender').DataTable({
                         buttons: {
                             buttons: [
                                 {

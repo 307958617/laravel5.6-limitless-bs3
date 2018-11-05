@@ -84649,6 +84649,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
@@ -84746,7 +84747,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
         //                    this.showEditDepartmentModel = true;
         //                    this.reloadOptions();
         //                    $('body').css('overflow','hidden');
-        //                    let table = $('.datatable-department').DataTable();
+        //                    let table = $('.datatable-system-code-gender').DataTable();
         //                    let tr = $(e.target.closest('tr'));
         //                    let row = table.row(tr.get(0));
         //                    this.selectedRow = row;
@@ -84788,7 +84789,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
         //                        console.log(this.newDepartment);
         //                        console.log(this.isEditDepartmentName);
         //                        axios.post('/departments/edit',{department:this.newDepartment,isEdit:this.isEditDepartmentName}).then(res=> {
-        //                            let table = $('.datatable-department').DataTable();
+        //                            let table = $('.datatable-system-code-gender').DataTable();
         //                            let data = [
         //                                this.newDepartment.order?this.newDepartment.order:0,
         //                                this.newDepartment.pid,
@@ -84853,17 +84854,10 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
                 if (result) {
                     //如果符合才提交
                     axios.post('/system_code/add/gender', { gender: _this2.newGender }).then(function (res) {
-                        //                            let table = $('.datatable-department').DataTable();
-                        //                            table.row.add([
-                        //                                this.newGender.order,
-                        //                                this.newGender.description,
-                        //                                this.newGender.order?this.newGender.order:'0',
-                        //                                this.newGender.isFirst==='T'?'<span class="label label-success">是</span>':'<span class="label label-danger">否</span>',
-                        //                                this.newGender.status==='T'?'<span class="label label-success">已启用</span>':'<span class="label label-danger">未启用</span>',
-                        //                                this.newGender.remarks?this.newGender.remarks:'/',
-                        //                                moment(res.data[0]['date']).format("YYYY-MM-DD HH:mm:ss"),//格式化日期
-                        //                                '<button class="edit btn btn-xxs btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 修改</button>',
-                        //                            ]).draw(false);
+                        var table = $('.datatable-system-code-gender').DataTable();
+                        table.row.add([_this2.newGender.order, _this2.newGender.description, _this2.newGender.order ? _this2.newGender.order : '0', _this2.newGender.isFirst === 'T' ? '<span class="label label-success">是</span>' : '<span class="label label-default">否</span>', _this2.newGender.status === 'T' ? '<span class="label label-success">已启用</span>' : '<span class="label label-danger">未启用</span>', _this2.newGender.remarks ? _this2.newGender.remarks : '/', __WEBPACK_IMPORTED_MODULE_4_moment___default()(res.data[0]['date']).format("YYYY-MM-DD HH:mm:ss"), //格式化日期
+                        '<button class="edit btn btn-xxs btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 改</button>' + '<button class="edit btn btn-xxs btn-danger"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 删</button>']).draw(false);
+                        table.ajax.reload();
                         _this2.closeAddModal();
                         console.log(res.data[0]['date']);
                         _this2.$snotify.success('添加成功！');
@@ -84903,7 +84897,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
                     }
                 });
                 // Column selectors
-                var t = $('.datatable-department').DataTable({
+                var t = $('.datatable-system-code-gender').DataTable({
                     buttons: {
                         buttons: [{
                             extend: 'copyHtml5',
@@ -84971,7 +84965,7 @@ var render = function() {
   return _c(
     "div",
     [
-      _c("table", { staticClass: "table datatable-department" }, [
+      _c("table", { staticClass: "table datatable-system-code-gender" }, [
         _vm._m(0),
         _vm._v(" "),
         _c(
@@ -84989,7 +84983,7 @@ var render = function() {
               _vm._v(" "),
               _c("td", [_vm._v(_vm._s(gen.description))]),
               _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(gen.order))]),
+              _c("td", [_vm._v(_vm._s(gen.order ? gen.order : "0"))]),
               _vm._v(" "),
               _c("td", [
                 _c(
@@ -85019,7 +85013,7 @@ var render = function() {
                 )
               ]),
               _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(gen.remarks))]),
+              _c("td", [_vm._v(_vm._s(gen.remarks ? gen.remarks : "/"))]),
               _vm._v(" "),
               _c("td", [_vm._v(_vm._s(gen.created_at))]),
               _vm._v(" "),
@@ -85273,13 +85267,21 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", [
+    return _c("td", { staticStyle: { width: "122px" } }, [
       _c("button", { staticClass: "edit btn btn-xxs btn-default" }, [
         _c("i", {
           staticClass: "fa fa-pencil-square-o",
           attrs: { "aria-hidden": "true" }
         }),
-        _vm._v(" 修改")
+        _vm._v(" 改")
+      ]),
+      _vm._v(" "),
+      _c("button", { staticClass: "edit btn btn-xxs btn-danger" }, [
+        _c("i", {
+          staticClass: "fa fa-pencil-square-o",
+          attrs: { "aria-hidden": "true" }
+        }),
+        _vm._v(" 删")
       ])
     ])
   }
