@@ -13,7 +13,7 @@
         </div>
 
         <div class="panel-body">
-            <button class="btn btn-primary btn-sm pull-right" @click="showAddModel()"><i class="fa fa-plus" aria-hidden="true"></i> 新增部门 </button>
+            <button class="btn btn-primary btn-sm pull-right" @click="showAddModel()"><i class="fa fa-plus" aria-hidden="true"></i> 新增人员 </button>
         </div>
 
         <table class="table datatable-department">
@@ -60,36 +60,62 @@
             </tbody>
         </table>
 
-        <department_modal v-show="showAddDepartmentModel" @close="closeAddModal" @commit="addDepartment">
-            <div slot="head-title">新增部门</div>
+        <department_modal v-show="showAddUserModel" @close="closeAddModal" @commit="addUser">
+            <div slot="head-title">新增人员</div>
             <div slot="body">
                 <div class="form-group">
                     <div class="row">
                         <div class="col-sm-6">
-                            <label>部门名称 <span class="text-danger">*</span></label>
-                            <input type="text" @input="checkName"  v-model="newDepartment.name" placeholder="新部门的名称" :class="{'form-control': true, 'is-invalid': errors.has('部门名称') }" v-validate="'required|min:2|unique_bm'" name="部门名称">
-                            <div v-show="errors.has('部门名称')" class="text-danger">{{ errors.first('部门名称') }}</div>
+                            <label>姓  名 <span class="text-danger">*</span></label>
+                            <input type="text" @input="checkName"  v-model="newDepartment.name" placeholder="姓  名" :class="{'form-control': true, 'is-invalid': errors.has('姓名') }" v-validate="'required|min:2'" name="姓名">
+                            <div v-show="errors.has('姓名')" class="text-danger">{{ errors.first('姓名') }}</div>
                         </div>
 
                         <div class="col-sm-6">
-                            <label>选择上级部门</label>
-                            <!--这里引入了'@riophae/vue-treeselect'插件，具体用法参加GitHub-->
-                            <treeselect @open="reloadOptions" v-model="newDepartment.pid" placeholder="选择上级科室,不选默认为顶级科室" :normalizer="normalizer" :options="treeselectLists"></treeselect>
+                            <label>性  别 <span class="text-danger">*</span></label>
+                            <input type="text" v-model="newDepartment.manager" placeholder="性  别" :class="{'form-control': true, 'is-invalid': errors.has('部门主管') }" v-validate="'required|min:2'" name="部门主管">
+                            <div v-show="errors.has('部门主管')" class="text-danger">{{ errors.first('部门主管') }}</div>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="row">
                         <div class="col-sm-6">
-                            <label>部门主管 <span class="text-danger">*</span></label>
-                            <input type="text" v-model="newDepartment.manager" placeholder="部门主管" :class="{'form-control': true, 'is-invalid': errors.has('部门主管') }" v-validate="'required|min:2'" name="部门主管">
+                            <label>出生日期 <span class="text-danger">*</span></label>
+                            <input type="text" v-model="newDepartment.manager" placeholder="出生日期" :class="{'form-control': true, 'is-invalid': errors.has('部门主管') }" v-validate="'required|min:2'" name="部门主管">
                             <div v-show="errors.has('部门主管')" class="text-danger">{{ errors.first('部门主管') }}</div>
                         </div>
 
                         <div class="col-sm-6">
-                            <label>部门电话 <span class="text-danger">*</span></label>
-                            <input type="text" v-model="newDepartment.phone" placeholder="部门电话8位或11位" :class="{'form-control': true, 'is-invalid': errors.has('部门电话') }" v-validate="{required:true,numeric:true,regex: /^(\d{8}|\d{11})$/}" name="部门电话">
+                            <label>Email <span class="text-danger">*</span></label>
+                            <input type="text" v-model="newDepartment.phone" placeholder="Email地址" :class="{'form-control': true, 'is-invalid': errors.has('部门电话') }" v-validate="{required:true,numeric:true,regex: /^(\d{8}|\d{11})$/}" name="部门电话">
                             <div v-show="errors.has('部门电话')" class="text-danger">{{ errors.first('部门电话') }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label>电话号码</label>
+                            <input type="text" v-model="newDepartment.manager" class="form-control" placeholder="电话号码">
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label>职  务</label>
+                            <input type="text" v-model="newDepartment.phone" class="form-control" placeholder="职  务">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label>身份证号</label>
+                            <input type="text" v-model="newDepartment.order"  placeholder="身份证号" class="form-control">
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label>职  称</label>
+                            <input type="text" v-model="newDepartment.phone" class="form-control" placeholder="职  称">
                         </div>
                     </div>
                 </div>
@@ -201,7 +227,7 @@
     export default {
         data() {
             return {
-                showAddDepartmentModel:false,
+                showAddUserModel:false,
                 showEditDepartmentModel:false,
                 users:[],
                 treeselectLists:[],//所有的节点
@@ -254,13 +280,13 @@
             showAddModel() {
                 //模态框重新显示之前，清空所有的验证提示消息。
                 this.errors.clear();
-                this.showAddDepartmentModel = true;
+                this.showAddUserModel = true;
                 //模态框弹出的时候禁止底层body滚动
                 $('body').css('overflow','hidden');
                 console.log('showAddModel')
             },
             closeAddModal() {
-                this.showAddDepartmentModel = false;
+                this.showAddUserModel = false;
                 //模态框关闭的时候清空表中的数据为初始值
                 this.newDepartment = {
                     name:'',
@@ -372,7 +398,7 @@
                     }
                 })
             },
-            addDepartment() {
+            addUser() {
                 this.$validator.validateAll().then((result)=> {//验证是否符合表单规则
                     if(result) {//如果符合才提交
                         axios.post('/departments/add',{department:this.newDepartment}).then(res=> {

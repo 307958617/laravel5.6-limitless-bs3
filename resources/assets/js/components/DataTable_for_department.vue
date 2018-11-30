@@ -275,6 +275,7 @@
                     let table = $('.datatable-department').DataTable();
                     let tr = $(e.target.closest('tr'));
                     let row = table.row(tr.get(0));
+                    console.log(tr);
                     this.selectedRow = row;
                     let data = row.data();
                     this.newDepartment.name = data['2'];
