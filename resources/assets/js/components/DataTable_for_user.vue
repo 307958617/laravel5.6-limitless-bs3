@@ -72,9 +72,8 @@
                         </div>
 
                         <div class="col-sm-6">
-                            <label>性  别 <span class="text-danger">*</span></label>
-                            <input type="text" v-model="newDepartment.manager" placeholder="性  别" :class="{'form-control': true, 'is-invalid': errors.has('部门主管') }" v-validate="'required|min:2'" name="部门主管">
-                            <div v-show="errors.has('部门主管')" class="text-danger">{{ errors.first('部门主管') }}</div>
+                            <label>性  别</label>
+                            <treeselect @open="reloadOptions_Gender" v-model="value" placeholder="性  别" :normalizer="normalizer" :options="treeselectLists_Gender"></treeselect>
                         </div>
                     </div>
                 </div>
@@ -161,7 +160,6 @@
                         <div class="col-sm-6">
                             <label>选择上级部门</label>
                             <!--这里引入了'@riophae/vue-treeselect'插件，具体用法参加GitHub-->
-                            <treeselect @open="reloadOptions" v-model="newDepartment.pid" placeholder="选择上级科室,不选默认为顶级科室" :normalizer="normalizer" :options="treeselectLists"></treeselect>
                         </div>
                     </div>
                 </div>
@@ -230,12 +228,13 @@
                 showAddUserModel:false,
                 showEditDepartmentModel:false,
                 users:[],
-                treeselectLists:[],//所有的节点
+                treeselectLists_Gender:[],//性别所有的节点
+                value:[1],
                 //注意，这里必须要用自定义，不然显示不出来的
                 normalizer(node) {
                     return {
                         id: node.id,//指定id是什么字段
-                        label: node.name,//指定label是用的什么字段，即显示什么字段出来
+                        label: node.description,//指定label是用的什么字段，即显示什么字段出来
                     }
                 },
                 selectedRow:{},//当前选中的行
@@ -272,6 +271,8 @@
             $hub.on( 'test', ( data ) => {
                 console.log( 'test', data );
             } );
+
+            this.reloadOptions_Gender();
         },
         methods: {
             getUsers() {
@@ -304,7 +305,7 @@
                 let buttonClass = $(e.target).get(0).className;
                 if(buttonClass.indexOf('edit') !== -1) {
                     this.showEditDepartmentModel = true;
-                    this.reloadOptions();
+                    this.reloadOptions_Gender();
                     $('body').css('overflow','hidden');
                     let table = $('.datatable-department').DataTable();
                     let tr = $(e.target.closest('tr'));
@@ -425,10 +426,10 @@
                     }
                 })
             },
-            reloadOptions() {
-                axios.get('/departments/get/used').then(res=> {
+            reloadOptions_Gender() {
+                axios.get('/system_code/get/gender/used').then(res=> {
                     //console.log(res.data);
-                    this.treeselectLists = res.data;
+                    this.treeselectLists_Gender = res.data;
                 });
             },
             tableSetup() {

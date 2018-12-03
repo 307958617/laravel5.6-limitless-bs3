@@ -24,6 +24,13 @@ class SystemCodeController extends Controller
         return $gender;
     }
 
+    //获取正在使用的'性别'表的数据
+    public function get_used_gender()
+    {
+        $gender_used = Gender::where('status','T')->get();
+        return $gender_used;
+    }
+
     //验证性别描述description是否重名
     public function validate_gender(Request $request)
     {

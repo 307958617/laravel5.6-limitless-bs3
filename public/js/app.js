@@ -83290,8 +83290,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 
 
@@ -83309,12 +83307,13 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
             showAddUserModel: false,
             showEditDepartmentModel: false,
             users: [],
-            treeselectLists: [], //所有的节点
+            treeselectLists_Gender: [], //性别所有的节点
+            value: [1],
             //注意，这里必须要用自定义，不然显示不出来的
             normalizer: function normalizer(node) {
                 return {
                     id: node.id, //指定id是什么字段
-                    label: node.name //指定label是用的什么字段，即显示什么字段出来
+                    label: node.description //指定label是用的什么字段，即显示什么字段出来
                 };
             },
 
@@ -83355,6 +83354,8 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
         __WEBPACK_IMPORTED_MODULE_5_hub_js___default.a.on('test', function (data) {
             console.log('test', data);
         });
+
+        this.reloadOptions_Gender();
     },
 
     methods: {
@@ -83388,7 +83389,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
             var buttonClass = $(e.target).get(0).className;
             if (buttonClass.indexOf('edit') !== -1) {
                 this.showEditDepartmentModel = true;
-                this.reloadOptions();
+                this.reloadOptions_Gender();
                 $('body').css('overflow', 'hidden');
                 var table = $('.datatable-department').DataTable();
                 var tr = $(e.target.closest('tr'));
@@ -83493,12 +83494,12 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
                 }
             });
         },
-        reloadOptions: function reloadOptions() {
+        reloadOptions_Gender: function reloadOptions_Gender() {
             var _this4 = this;
 
-            axios.get('/departments/get/used').then(function (res) {
+            axios.get('/system_code/get/gender/used').then(function (res) {
                 //console.log(res.data);
-                _this4.treeselectLists = res.data;
+                _this4.treeselectLists_Gender = res.data;
             });
         },
         tableSetup: function tableSetup() {
@@ -83756,67 +83757,30 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _c("div", { staticClass: "col-sm-6" }, [
-                  _c("label", [
-                    _vm._v("性  别 "),
-                    _c("span", { staticClass: "text-danger" }, [_vm._v("*")])
-                  ]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.newDepartment.manager,
-                        expression: "newDepartment.manager"
+                _c(
+                  "div",
+                  { staticClass: "col-sm-6" },
+                  [
+                    _c("label", [_vm._v("性  别")]),
+                    _vm._v(" "),
+                    _c("treeselect", {
+                      attrs: {
+                        placeholder: "性  别",
+                        normalizer: _vm.normalizer,
+                        options: _vm.treeselectLists_Gender
                       },
-                      {
-                        name: "validate",
-                        rawName: "v-validate",
-                        value: "required|min:2",
-                        expression: "'required|min:2'"
+                      on: { open: _vm.reloadOptions_Gender },
+                      model: {
+                        value: _vm.value,
+                        callback: function($$v) {
+                          _vm.value = $$v
+                        },
+                        expression: "value"
                       }
-                    ],
-                    class: {
-                      "form-control": true,
-                      "is-invalid": _vm.errors.has("部门主管")
-                    },
-                    attrs: {
-                      type: "text",
-                      placeholder: "性  别",
-                      name: "部门主管"
-                    },
-                    domProps: { value: _vm.newDepartment.manager },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(
-                          _vm.newDepartment,
-                          "manager",
-                          $event.target.value
-                        )
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: _vm.errors.has("部门主管"),
-                          expression: "errors.has('部门主管')"
-                        }
-                      ],
-                      staticClass: "text-danger"
-                    },
-                    [_vm._v(_vm._s(_vm.errors.first("部门主管")))]
-                  )
-                ])
+                    })
+                  ],
+                  1
+                )
               ])
             ]),
             _vm._v(" "),
@@ -84275,30 +84239,9 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "col-sm-6" },
-                  [
-                    _c("label", [_vm._v("选择上级部门")]),
-                    _vm._v(" "),
-                    _c("treeselect", {
-                      attrs: {
-                        placeholder: "选择上级科室,不选默认为顶级科室",
-                        normalizer: _vm.normalizer,
-                        options: _vm.treeselectLists
-                      },
-                      on: { open: _vm.reloadOptions },
-                      model: {
-                        value: _vm.newDepartment.pid,
-                        callback: function($$v) {
-                          _vm.$set(_vm.newDepartment, "pid", $$v)
-                        },
-                        expression: "newDepartment.pid"
-                      }
-                    })
-                  ],
-                  1
-                )
+                _c("div", { staticClass: "col-sm-6" }, [
+                  _c("label", [_vm._v("选择上级部门")])
+                ])
               ])
             ]),
             _vm._v(" "),

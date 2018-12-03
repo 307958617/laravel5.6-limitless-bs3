@@ -33,5 +33,9 @@ Route::get('/system_code/get/gender', 'SystemCodeController@get_gender')->name('
 Route::post('/system_code/add/gender', 'SystemCodeController@add_gender')->name('add_gender');
 Route::post('/system_code/validate/gender', 'SystemCodeController@validate_gender')->name('validate_gender');
 
+Route::get('/system_code/get/gender/used', 'SystemCodeController@get_used_gender')->name('get_used_gender');
+
+
+
 //注册时发送邮件验证
 Route::get('email/verify/{token}', 'EmailController@verify')->name('verify.email');
