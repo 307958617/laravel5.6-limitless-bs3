@@ -52,7 +52,7 @@
                     <td>{{ user.remarks }}</td>
                     <td>{{ user.order?'user.order':'0' }}</td>
                     <td>{{ user.created_at }}</td>
-                    <td><span :class="[user.status==='T'? 'label label-success' : 'label label-danger']">{{ user.status==='T'?'已启用':'未启用' }}</span></td>
+                    <td><span :class="[user.status==='T'? 'label label-success' : 'label label-default']">{{ user.status==='T'?'已启用':'未启用' }}</span></td>
                     <td>
                         <button class="edit btn btn-xxs btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 修改</button>
                     </td>
@@ -73,7 +73,7 @@
 
                         <div class="col-sm-6">
                             <label>性  别</label>
-                            <treeselect @open="reloadOptions_Gender" v-model="value_Gender" :clearable="false" :normalizer="normalizer" :options="treeselectLists_Gender"></treeselect>
+                            <treeselect v-model="value_Gender" :clearable="false" :normalizer="normalizer" :options="treeselectLists_Gender"></treeselect>
                         </div>
                     </div>
                 </div>
@@ -271,8 +271,6 @@
             $hub.on( 'test', ( data ) => {
                 console.log( 'test', data );
             } );
-
-            this.reloadOptions_Gender();
         },
         methods: {
             getUsers() {
@@ -281,13 +279,13 @@
             showAddModel() {
                 //模态框重新显示之前，清空所有的验证提示消息。
                 this.errors.clear();
+                this.reloadOptions_Gender();
                 this.showAddUserModel = true;
                 //模态框弹出的时候禁止底层body滚动
                 $('body').css('overflow','hidden');
                 console.log('showAddModel')
             },
             closeAddModal() {
-                this.reloadOptions_Gender();
                 this.showAddUserModel = false;
                 //模态框关闭的时候清空表中的数据为初始值
                 this.newDepartment = {

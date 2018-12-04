@@ -21,7 +21,7 @@
                     <td>{{ gen.description }}</td><!-- 上级部门的id -->
                     <td>{{ gen.order?gen.order:'0' }}</td>
                     <td><span :class="[gen.isFirst==='T'? 'label label-success' : 'label label-default']">{{ gen.isFirst==='T'?'是':'否' }}</span></td>
-                    <td><span :class="[gen.status==='T'? 'label label-success' : 'label label-danger']">{{ gen.status==='T'?'已启用':'未启用' }}</span></td>
+                    <td><span :class="[gen.status==='T'? 'label label-success' : 'label label-default']">{{ gen.status==='T'?'已启用':'未启用' }}</span></td>
                     <td>{{ gen.remarks?gen.remarks:'/' }}</td>
                     <td>{{ gen.created_at }}</td>
                     <td style="width: 122px;">

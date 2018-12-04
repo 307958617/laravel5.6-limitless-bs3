@@ -44,7 +44,7 @@
                     <td>{{ department.remarks ? department.remarks:'/'}}</td>
                     <td>{{ department.order ? department.order:'0'}}</td>
                     <td>{{ department.created_at }}</td>
-                    <td><span :class="[department.status==='已启用'? 'label label-success' : 'label label-danger']">{{ department.status }}</span></td>
+                    <td><span :class="[department.status==='已启用'? 'label label-success' : 'label label-default']">{{ department.status }}</span></td>
                     <td>
                         <button class="edit btn btn-xxs btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 修改</button>
                     </td>

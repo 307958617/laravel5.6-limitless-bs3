@@ -30,7 +30,7 @@ Route::get('/users/get', 'UsersController@get_users')->name('get_users');
 
 Route::get('/system_code', 'SystemCodeController@show_system_code')->name('show_system_code');
 Route::get('/system_code/get/gender', 'SystemCodeController@get_gender')->name('get_gender');
-Route::get('/system_code/add/gender', 'SystemCodeController@add_gender')->name('add_gender');
+Route::post('/system_code/add/gender', 'SystemCodeController@add_gender')->name('add_gender');
 Route::post('/system_code/validate/gender', 'SystemCodeController@validate_gender')->name('validate_gender');
 
 Route::get('/system_code/get/gender/used', 'SystemCodeController@get_used_gender')->name('get_used_gender');
