@@ -28,7 +28,8 @@ class SystemCodeController extends Controller
     public function get_used_gender()
     {
         $gender_used = Gender::where('status','T')->get();
-        return $gender_used;
+        $default_selectId = Gender::where('isFirst','T')->value('id');
+        return [$gender_used,$default_selectId];
     }
 
     //验证性别描述description是否重名
@@ -54,18 +55,24 @@ class SystemCodeController extends Controller
     {
         $gender = $request->get('gender');
 
+        $isFirst_exist_T =  Gender::where('isFirst','T')->exists();
+
         if($gender['isFirst']==='T') {
             Gender::where('isFirst','T')->update(['isFirst'=>'F']);
         }
 
+        if($isFirst_exist_T) {
+            $isFirst = $gender['isFirst'];
+        }else {
+            $isFirst = 'T';
+        }
         $new_gender = Gender::create([
             'description' => $gender['description'],
-            'isFirst' => $gender['isFirst'],
+            'isFirst' => $isFirst,
             'order' => $gender['order'],
             'status' => $gender['status'],
             'remarks' => $gender['remarks'],
         ]);
-
         return [$new_gender->created_at];
     }
 }

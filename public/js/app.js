@@ -83308,7 +83308,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
             showEditDepartmentModel: false,
             users: [],
             treeselectLists_Gender: [], //性别所有的节点
-            value: [1],
+            value_Gender: [], //性别默认值
             //注意，这里必须要用自定义，不然显示不出来的
             normalizer: function normalizer(node) {
                 return {
@@ -83371,6 +83371,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
             console.log('showAddModel');
         },
         closeAddModal: function closeAddModal() {
+            this.reloadOptions_Gender();
             this.showAddUserModel = false;
             //模态框关闭的时候清空表中的数据为初始值
             this.newDepartment = {
@@ -83498,8 +83499,9 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
             var _this4 = this;
 
             axios.get('/system_code/get/gender/used').then(function (res) {
-                //console.log(res.data);
-                _this4.treeselectLists_Gender = res.data;
+                //                    console.log(res.data);
+                _this4.treeselectLists_Gender = res.data[0];
+                _this4.value_Gender = [res.data[1]];
             });
         },
         tableSetup: function tableSetup() {
@@ -83765,17 +83767,17 @@ var render = function() {
                     _vm._v(" "),
                     _c("treeselect", {
                       attrs: {
-                        placeholder: "性  别",
+                        clearable: false,
                         normalizer: _vm.normalizer,
                         options: _vm.treeselectLists_Gender
                       },
                       on: { open: _vm.reloadOptions_Gender },
                       model: {
-                        value: _vm.value,
+                        value: _vm.value_Gender,
                         callback: function($$v) {
-                          _vm.value = $$v
+                          _vm.value_Gender = $$v
                         },
-                        expression: "value"
+                        expression: "value_Gender"
                       }
                     })
                   ],
@@ -83949,35 +83951,30 @@ var render = function() {
                   })
                 ]),
                 _vm._v(" "),
-                _c("div", { staticClass: "col-sm-6" }, [
-                  _c("label", [_vm._v("职  务")]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.newDepartment.phone,
-                        expression: "newDepartment.phone"
+                _c(
+                  "div",
+                  { staticClass: "col-sm-6" },
+                  [
+                    _c("label", [_vm._v("职  务")]),
+                    _vm._v(" "),
+                    _c("treeselect", {
+                      attrs: {
+                        clearable: false,
+                        normalizer: _vm.normalizer,
+                        options: _vm.treeselectLists_Gender
+                      },
+                      on: { open: _vm.reloadOptions_Gender },
+                      model: {
+                        value: _vm.value_Gender,
+                        callback: function($$v) {
+                          _vm.value_Gender = $$v
+                        },
+                        expression: "value_Gender"
                       }
-                    ],
-                    staticClass: "form-control",
-                    attrs: { type: "text", placeholder: "职  务" },
-                    domProps: { value: _vm.newDepartment.phone },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(
-                          _vm.newDepartment,
-                          "phone",
-                          $event.target.value
-                        )
-                      }
-                    }
-                  })
-                ])
+                    })
+                  ],
+                  1
+                )
               ])
             ]),
             _vm._v(" "),
@@ -84013,35 +84010,30 @@ var render = function() {
                   })
                 ]),
                 _vm._v(" "),
-                _c("div", { staticClass: "col-sm-6" }, [
-                  _c("label", [_vm._v("职  称")]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.newDepartment.phone,
-                        expression: "newDepartment.phone"
+                _c(
+                  "div",
+                  { staticClass: "col-sm-6" },
+                  [
+                    _c("label", [_vm._v("职  称")]),
+                    _vm._v(" "),
+                    _c("treeselect", {
+                      attrs: {
+                        clearable: false,
+                        normalizer: _vm.normalizer,
+                        options: _vm.treeselectLists_Gender
+                      },
+                      on: { open: _vm.reloadOptions_Gender },
+                      model: {
+                        value: _vm.value_Gender,
+                        callback: function($$v) {
+                          _vm.value_Gender = $$v
+                        },
+                        expression: "value_Gender"
                       }
-                    ],
-                    staticClass: "form-control",
-                    attrs: { type: "text", placeholder: "职  称" },
-                    domProps: { value: _vm.newDepartment.phone },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(
-                          _vm.newDepartment,
-                          "phone",
-                          $event.target.value
-                        )
-                      }
-                    }
-                  })
-                ])
+                    })
+                  ],
+                  1
+                )
               ])
             ]),
             _vm._v(" "),

@@ -73,7 +73,7 @@
 
                         <div class="col-sm-6">
                             <label>性  别</label>
-                            <treeselect @open="reloadOptions_Gender" v-model="value" placeholder="性  别" :normalizer="normalizer" :options="treeselectLists_Gender"></treeselect>
+                            <treeselect @open="reloadOptions_Gender" v-model="value_Gender" :clearable="false" :normalizer="normalizer" :options="treeselectLists_Gender"></treeselect>
                         </div>
                     </div>
                 </div>
@@ -101,7 +101,7 @@
 
                         <div class="col-sm-6">
                             <label>职  务</label>
-                            <input type="text" v-model="newDepartment.phone" class="form-control" placeholder="职  务">
+                            <treeselect @open="reloadOptions_Gender" v-model="value_Gender" :clearable="false" :normalizer="normalizer" :options="treeselectLists_Gender"></treeselect>
                         </div>
                     </div>
                 </div>
@@ -114,7 +114,7 @@
 
                         <div class="col-sm-6">
                             <label>职  称</label>
-                            <input type="text" v-model="newDepartment.phone" class="form-control" placeholder="职  称">
+                            <treeselect @open="reloadOptions_Gender" v-model="value_Gender" :clearable="false" :normalizer="normalizer" :options="treeselectLists_Gender"></treeselect>
                         </div>
                     </div>
                 </div>
@@ -229,7 +229,7 @@
                 showEditDepartmentModel:false,
                 users:[],
                 treeselectLists_Gender:[],//性别所有的节点
-                value:[1],
+                value_Gender:[],//性别默认值
                 //注意，这里必须要用自定义，不然显示不出来的
                 normalizer(node) {
                     return {
@@ -287,6 +287,7 @@
                 console.log('showAddModel')
             },
             closeAddModal() {
+                this.reloadOptions_Gender();
                 this.showAddUserModel = false;
                 //模态框关闭的时候清空表中的数据为初始值
                 this.newDepartment = {
@@ -428,8 +429,9 @@
             },
             reloadOptions_Gender() {
                 axios.get('/system_code/get/gender/used').then(res=> {
-                    //console.log(res.data);
-                    this.treeselectLists_Gender = res.data;
+//                    console.log(res.data);
+                    this.treeselectLists_Gender = res.data[0];
+                    this.value_Gender = [res.data[1]]
                 });
             },
             tableSetup() {
