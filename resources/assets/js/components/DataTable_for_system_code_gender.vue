@@ -290,7 +290,8 @@
 //            },
             changeStatus() {
                 if(this.newGender.status==='T') {
-                    this.newGender.status = 'F'
+                    this.newGender.status = 'F';
+                    this.newGender.isFirst = 'F';
                 }else {
                     this.newGender.status = 'T'
                 }
@@ -299,7 +300,8 @@
                 if(this.newGender.isFirst==='T') {
                     this.newGender.isFirst = 'F'
                 }else {
-                    this.newGender.isFirst = 'T'
+                    this.newGender.isFirst = 'T';
+                    this.newGender.status = 'T'
                 }
             },
             checkDescription() {

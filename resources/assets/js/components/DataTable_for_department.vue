@@ -80,8 +80,8 @@
 
                         <div class="col-sm-6">
                             <label>部门电话 <span class="text-danger">*</span></label>
-                            <input type="text" v-model="newDepartment.phone" placeholder="部门电话8位或11位" :class="{'form-control': true, 'is-invalid': errors.has('部门电话') }" v-validate="{required:true,numeric:true,regex: /^(\d{8}|\d{11})$/}" name="部门电话">
-                            <div v-show="errors.has('部门电话')" class="text-danger">{{ errors.first('部门电话') }}</div>
+                            <input type="text" v-model="newDepartment.phone" placeholder="部门电话8位或11位" :class="{'form-control': true, 'is-invalid': errors.has('电话号码') }" v-validate="{required:true,numeric:true,regex: /^(\d{8}|\d{11})$/}" name="电话号码">
+                            <div v-show="errors.has('电话号码')" class="text-danger">{{ errors.first('电话号码') }}</div>
                         </div>
                     </div>
                 </div>

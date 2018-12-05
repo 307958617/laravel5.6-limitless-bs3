@@ -67,13 +67,14 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <label>姓  名 <span class="text-danger">*</span></label>
-                            <input type="text" @input="checkName"  v-model="newDepartment.name" placeholder="姓  名" :class="{'form-control': true, 'is-invalid': errors.has('姓名') }" v-validate="'required|min:2'" name="姓名">
+                            <input type="text" @input="checkName"  v-model="newUser.name" placeholder="姓  名" :class="{'form-control': true, 'is-invalid': errors.has('姓名') }" v-validate="'required|min:2'" name="姓名">
                             <div v-show="errors.has('姓名')" class="text-danger">{{ errors.first('姓名') }}</div>
                         </div>
 
                         <div class="col-sm-6">
-                            <label>性  别</label>
-                            <treeselect v-model="value_Gender" :clearable="false" :normalizer="normalizer" :options="treeselectLists_Gender"></treeselect>
+                            <label>性  别 <span class="text-danger">*</span></label>
+                            <treeselect v-model="value_Gender" :clearable="false" :normalizer="normalizer" :options="treeselectLists_Gender" v-validate="'required'" name="性别"></treeselect>
+                            <div v-show="errors.has('性别')" class="text-danger">{{ errors.first('性别') }}</div>
                         </div>
                     </div>
                 </div>
@@ -81,14 +82,14 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <label>出生日期 <span class="text-danger">*</span></label>
-                            <input type="text" v-model="newDepartment.manager" placeholder="出生日期" :class="{'form-control': true, 'is-invalid': errors.has('部门主管') }" v-validate="'required|min:2'" name="部门主管">
-                            <div v-show="errors.has('部门主管')" class="text-danger">{{ errors.first('部门主管') }}</div>
+                            <vue-datepicker-local placeholder="出生日期" v-model="newUser.birthday" clearable format="YYYY-MM-DD" name="出生日期" v-validate="'required'"></vue-datepicker-local>
+                            <div v-show="errors.has('出生日期')" class="text-danger">{{ errors.first('出生日期') }}</div>
                         </div>
 
                         <div class="col-sm-6">
                             <label>Email <span class="text-danger">*</span></label>
-                            <input type="text" v-model="newDepartment.phone" placeholder="Email地址" :class="{'form-control': true, 'is-invalid': errors.has('部门电话') }" v-validate="{required:true,numeric:true,regex: /^(\d{8}|\d{11})$/}" name="部门电话">
-                            <div v-show="errors.has('部门电话')" class="text-danger">{{ errors.first('部门电话') }}</div>
+                            <input type="text" v-model="newUser.email" placeholder="Email地址" :class="{'form-control': true, 'is-invalid': errors.has('Email') }" v-validate="'required|email'" name="Email">
+                            <div v-show="errors.has('Email')" class="text-danger">{{ errors.first('Email') }}</div>
                         </div>
                     </div>
                 </div>
@@ -96,7 +97,8 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <label>电话号码</label>
-                            <input type="text" v-model="newDepartment.manager" class="form-control" placeholder="电话号码">
+                            <input type="text" v-model="newUser.phone" :class="{'form-control': true, 'is-invalid': errors.has('电话号码') }" v-validate="{numeric:true,regex: /^(\d{8}|\d{11})$/}" name="电话号码" placeholder="电话号码">
+                            <div v-show="errors.has('电话号码')" class="text-danger">{{ errors.first('电话号码') }}</div>
                         </div>
 
                         <div class="col-sm-6">
@@ -109,7 +111,8 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <label>身份证号</label>
-                            <input type="text" v-model="newDepartment.order"  placeholder="身份证号" class="form-control">
+                            <input type="text" v-model="newUser.sf_id"  placeholder="身份证号码" :class="{'form-control': true, 'is-invalid': errors.has('身份证号码') }" v-validate="{regex: /^\d{6}(18|19|20)?\d{2}(0[1-9]|1[012])(0[1-9]|[12]\d|3[01])\d{3}(\d|[xX])$/}" name="身份证号码">
+                            <div v-show="errors.has('身份证号码')" class="text-danger">{{ errors.first('身份证号码') }}</div>
                         </div>
 
                         <div class="col-sm-6">
@@ -121,24 +124,29 @@
                 <div class="form-group">
                     <div class="row">
                         <div class="col-sm-6">
+                            <label>学  历</label>
+                            <input type="text" v-model="newUser.education" placeholder="备注信息" class="form-control">
+                        </div>
+                        <div class="col-sm-6">
+                            <label>备注信息</label>
+                            <input type="text" v-model="newUser.remarks" placeholder="备注信息" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-6">
                             <label>排序NO.</label>
-                            <input type="text" v-model="newDepartment.order" placeholder="数值越大排名越靠前,默认为0" class="form-control">
+                            <input type="text" v-model="newDepartment.order" placeholder="数值越大排名越靠前,默认为0" :class="{'form-control': true, 'is-invalid': errors.has('排序') }" v-validate="'numeric'" name="排序">
+                            <div v-show="errors.has('排序')" class="text-danger">{{ errors.first('排序') }}</div>
                         </div>
 
                         <div class="col-sm-6">
                             <label>启用标志</label>
                             <!--<input type="text" v-model="newDepartment.status" placeholder="" class="form-control">-->
                             <div>
-                                <toggle-button @change="changeStatus" :sync="true" :v-model="newDepartment.status" :value="newDepartment.status==='T'" :width="140" :height="34" :labels="{checked: '当前处于启用状态', unchecked: '当前处于停用状态'}"/>
+                                <toggle-button @change="changeStatus" :sync="true" :v-model="newUser.status" :value="newDepartment.status==='T'" :width="140" :height="34" :labels="{checked: '当前处于启用状态', unchecked: '当前处于停用状态'}"/>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <label>备注信息</label>
-                            <input type="text" v-model="newDepartment.remarks" placeholder="备注信息" class="form-control">
                         </div>
                     </div>
                 </div>
@@ -182,7 +190,8 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <label>排序NO.</label>
-                            <input type="text" v-model="newDepartment.order" placeholder="数值越大排名越靠前,默认为0" class="form-control">
+                            <input type="text" v-model="newDepartment.order" placeholder="数值越大排名越靠前,默认为0" :class="{'form-control': true, 'is-invalid': errors.has('排序') }" v-validate="'numeric'" name="排序">
+                            <div v-show="errors.has('排序')" class="text-danger">{{ errors.first('排序') }}</div>
                         </div>
 
                         <div class="col-sm-6">
@@ -214,6 +223,7 @@
 <script>
     import Vue from 'vue'
     import ToggleButton from 'vue-js-toggle-button'
+    import VueDatepickerLocal from 'vue-datepicker-local'
     //引入vue-treeselect
     import Treeselect from '@riophae/vue-treeselect'
     //引入vue-treeselect的样式
@@ -239,22 +249,36 @@
                 },
                 selectedRow:{},//当前选中的行
                 isEditDepartmentName:'',
-                newDepartment: {
+                newUser: {
                     name:'',
                     pid:null,
-                    manager:'',
+                    birthday:'',
+                    education:'',
+                    title:'',
+                    post:'',
                     phone:'',
-                    order:null,
+                    sf_id:'',
+                    email:'',
                     created_at:'',
                     status:'T',
                     remarks:''
                 },
+                newDepartment: {
+                    name:'',
+                    gender:'',
+                    manager:'',
+                    phone:'',
+                    order:null,
+                    status:'T',
+                    remarks:''
+                }
             }
         },
 
         components: {
             department_modal,
             Treeselect,
+            VueDatepickerLocal,
         },
 
         mounted() {
@@ -290,7 +314,7 @@
                 //模态框关闭的时候清空表中的数据为初始值
                 this.newDepartment = {
                     name:'',
-                    pid:null,
+                    gender:'',
                     manager:'',
                     phone:'',
                     order:null,
