@@ -32,13 +32,13 @@
             </tbody>
         </table>
 
-        <department_modal v-show="showAddGenderModel" @close="closeAddModal" @commit="addGender">
+        <department_modal v-show="showAddGenderModel" @close="closeAddGenderModal" @commit="addGender">
             <div slot="head-title">新增性别类型</div>
             <div slot="body">
                 <div class="form-group">
                     <div class="row">
                         <div class="col-sm-6">
-                            <label>描 述<span class="text-danger">*</span></label>
+                            <label>性别类型描述<span class="text-danger">*</span></label>
                             <input type="text" @input="checkDescription"  v-model="newGender.description" placeholder="性别类型描述" :class="{'form-control': true, 'is-invalid': errors.has('性别类型') }" v-validate="'required|unique_gender'" name="性别类型">
                             <div v-show="errors.has('性别类型')" class="text-danger">{{ errors.first('性别类型') }}</div>
                         </div>
@@ -196,15 +196,15 @@
             getGender() {
                return axios.get('/system_code/get/gender')
             },
-            showAddModel() {
+            showAddGender() {
                 //模态框重新显示之前，清空所有的验证提示消息。
                 this.errors.clear();
                 this.showAddGenderModel = true;
                 //模态框弹出的时候禁止底层body滚动
                 $('body').css('overflow','hidden');
-                console.log('showAddModel')
+                console.log('showAddGender')
             },
-            closeAddModal() {
+            closeAddGenderModal() {
                 this.showAddGenderModel = false;
                 //模态框关闭的时候清空表中的数据为初始值
                 this.newGender = {
@@ -352,7 +352,7 @@
                                 // execute the call to render the table, now that you have the data you need
                                 this.tableSetup();
                             });
-                            this.closeAddModal();
+                            this.closeAddGenderModal();
                             console.log(res.data[0]['date']);
                             this.$snotify.success('添加成功！');
                         }).catch(error=> {
@@ -444,15 +444,15 @@
                     //增加一个按钮在后面用来添加项目用的
                     $('#DataTables_Table_0_filter').after(
                         '<div class="dt-buttons">  ' +
-                          '<button class="showAddModel dt-button btn btn-primary" tabindex="0" type="button">' +
+                          '<button class="showAddGender dt-button btn btn-primary" tabindex="0" type="button">' +
                            '<span><i aria-hidden="true" class="fa fa-plus"></i> 新 增</span>' +
                           '</button>  ' +
                         '</div>'
                     );
 
                     //显示添加窗口
-                    $('.showAddModel').click(function () {
-                        that.showAddModel();
+                    $('.showAddGender').click(function () {
+                        that.showAddGender();
                     })
                 });
             }

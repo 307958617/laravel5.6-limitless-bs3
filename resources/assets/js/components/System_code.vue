@@ -28,7 +28,7 @@
                             </div>
 
                             <div class="tab-pane has-padding" id="left-tab2">
-                                Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid laeggin.
+                                <data-table-for-system-code-title></data-table-for-system-code-title>
                             </div>
 
                             <div class="tab-pane has-padding" id="left-tab3">

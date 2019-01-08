@@ -32,9 +32,17 @@ Route::get('/system_code', 'SystemCodeController@show_system_code')->name('show_
 Route::get('/system_code/get/gender', 'SystemCodeController@get_gender')->name('get_gender');
 Route::post('/system_code/add/gender', 'SystemCodeController@add_gender')->name('add_gender');
 Route::post('/system_code/validate/gender', 'SystemCodeController@validate_gender')->name('validate_gender');
-
 Route::get('/system_code/get/gender/used', 'SystemCodeController@get_used_gender')->name('get_used_gender');
 
+Route::get('/system_code/get/title', 'SystemCodeController@get_title')->name('get_title');
+Route::post('/system_code/add/title', 'SystemCodeController@add_title')->name('add_title');
+Route::post('/system_code/validate/title', 'SystemCodeController@validate_title')->name('validate_title');
+Route::get('/system_code/get/title/used', 'SystemCodeController@get_used_title')->name('get_used_title');
+
+Route::get('/system_code/get/post', 'SystemCodeController@get_post')->name('get_post');
+Route::post('/system_code/add/post', 'SystemCodeController@add_post')->name('add_post');
+Route::post('/system_code/validate/post', 'SystemCodeController@validate_post')->name('validate_post');
+Route::get('/system_code/get/post/used', 'SystemCodeController@get_used_post')->name('get_used_post');
 
 
 //注册时发送邮件验证

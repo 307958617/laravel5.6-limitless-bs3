@@ -60,7 +60,7 @@
             </tbody>
         </table>
 
-        <department_modal v-show="showAddUserModel" @close="closeAddModal" @commit="addUser">
+        <user_modal v-show="showAddUserModel" @close="closeAddModal" @commit="addUser">
             <div slot="head-title">新增人员</div>
             <div slot="body">
                 <div class="form-group">
@@ -102,8 +102,9 @@
                         </div>
 
                         <div class="col-sm-6">
-                            <label>职  务</label>
-                            <treeselect @open="reloadOptions_Gender" v-model="value_Gender" :clearable="false" :normalizer="normalizer" :options="treeselectLists_Gender"></treeselect>
+                            <label>职  称</label>
+                            <treeselect v-model="value_Title" :clearable="false" :normalizer="normalizer" :options="treeselectLists_Title" v-validate="'required'" name="职称"></treeselect>
+                            <div v-show="errors.has('职称')" class="text-danger">{{ errors.first('职称') }}</div>
                         </div>
                     </div>
                 </div>
@@ -116,8 +117,9 @@
                         </div>
 
                         <div class="col-sm-6">
-                            <label>职  称</label>
-                            <treeselect @open="reloadOptions_Gender" v-model="value_Gender" :clearable="false" :normalizer="normalizer" :options="treeselectLists_Gender"></treeselect>
+                            <label>职  务</label>
+                            <treeselect v-model="value_Post" :clearable="false" :normalizer="normalizer" :options="treeselectLists_Post" v-validate="'required'" name="职务"></treeselect>
+                            <div v-show="errors.has('职务')" class="text-danger">{{ errors.first('职务') }}</div>
                         </div>
                     </div>
                 </div>
@@ -152,9 +154,9 @@
                 </div>
             </div>
             <div slot="footer-commit-text">添 加</div>
-        </department_modal>
+        </user_modal>
 
-        <department_modal v-show="showEditDepartmentModel" @close="closeEditModal" @commit="editDepartment">
+        <user_modal v-show="showEditDepartmentModel" @close="closeEditModal" @commit="editDepartment">
             <div slot="head-title">编辑部门</div>
             <div slot="body">
                 <div class="form-group">
@@ -213,7 +215,7 @@
                 </div>
             </div>
             <div slot="footer-commit-text">修 改</div>
-        </department_modal>
+        </user_modal>
         <!--引入‘vue-snotify’插件，用于显示提示消息，比如成功添加，删除确认等提示-->
         <vue-snotify></vue-snotify>
     </div>
@@ -230,7 +232,7 @@
     import '@riophae/vue-treeselect/dist/vue-treeselect.css'
     import moment from 'moment'
     import $hub from 'hub-js'
-    import department_modal from './Modal_form_vertical.vue'
+    import user_modal from './Modal_form_vertical.vue'
     Vue.use(ToggleButton);
     export default {
         data() {
@@ -239,7 +241,11 @@
                 showEditDepartmentModel:false,
                 users:[],
                 treeselectLists_Gender:[],//性别所有的节点
+                treeselectLists_Title:[],//职称所有的节点
+                treeselectLists_Post:[],//职务所有的节点
                 value_Gender:[],//性别默认值
+                value_Title:[],//职称默认值
+                value_Post:[],//职务默认值
                 //注意，这里必须要用自定义，不然显示不出来的
                 normalizer(node) {
                     return {
@@ -276,7 +282,7 @@
         },
 
         components: {
-            department_modal,
+            user_modal,
             Treeselect,
             VueDatepickerLocal,
         },
@@ -304,6 +310,8 @@
                 //模态框重新显示之前，清空所有的验证提示消息。
                 this.errors.clear();
                 this.reloadOptions_Gender();
+                this.reloadOptions_Title();
+                this.reloadOptions_Post();
                 this.showAddUserModel = true;
                 //模态框弹出的时候禁止底层body滚动
                 $('body').css('overflow','hidden');
@@ -454,6 +462,20 @@
 //                    console.log(res.data);
                     this.treeselectLists_Gender = res.data[0];
                     this.value_Gender = [res.data[1]]
+                });
+            },
+            reloadOptions_Title() {
+                axios.get('/system_code/get/title/used').then(res=> {
+                    console.log(res.data);
+                    this.treeselectLists_Title = res.data[0];
+                    this.value_Title = [res.data[1]]
+                });
+            },
+            reloadOptions_Post() {
+                axios.get('/system_code/get/post/used').then(res=> {
+                    console.log(res.data);
+                    this.treeselectLists_Post = res.data[0];
+                    this.value_Post = [res.data[1]]
                 });
             },
             tableSetup() {
