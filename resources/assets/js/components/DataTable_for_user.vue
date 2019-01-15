@@ -127,7 +127,8 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <label>学  历</label>
-                            <input type="text" v-model="newUser.education" placeholder="备注信息" class="form-control">
+                            <treeselect v-model="value_Education" :clearable="false" :normalizer="normalizer" :options="treeselectLists_Education" v-validate="'required'" name="学历"></treeselect>
+                            <div v-show="errors.has('学历')" class="text-danger">{{ errors.first('学历') }}</div>
                         </div>
                         <div class="col-sm-6">
                             <label>备注信息</label>
@@ -243,9 +244,11 @@
                 treeselectLists_Gender:[],//性别所有的节点
                 treeselectLists_Title:[],//职称所有的节点
                 treeselectLists_Post:[],//职务所有的节点
+                treeselectLists_Education:[],//学历所有的节点
                 value_Gender:[],//性别默认值
                 value_Title:[],//职称默认值
                 value_Post:[],//职务默认值
+                value_Education:[],//学历默认值
                 //注意，这里必须要用自定义，不然显示不出来的
                 normalizer(node) {
                     return {
@@ -312,6 +315,7 @@
                 this.reloadOptions_Gender();
                 this.reloadOptions_Title();
                 this.reloadOptions_Post();
+                this.reloadOptions_Education();
                 this.showAddUserModel = true;
                 //模态框弹出的时候禁止底层body滚动
                 $('body').css('overflow','hidden');
@@ -476,6 +480,13 @@
                     console.log(res.data);
                     this.treeselectLists_Post = res.data[0];
                     this.value_Post = [res.data[1]]
+                });
+            },
+            reloadOptions_Education() {
+                axios.get('/system_code/get/education/used').then(res=> {
+                    console.log(res.data);
+                    this.treeselectLists_Education = res.data[0];
+                    this.value_Education = [res.data[1]]
                 });
             },
             tableSetup() {

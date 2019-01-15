@@ -34035,6 +34035,8 @@ Vue.component('data-table-for-department', __webpack_require__(204));
 Vue.component('data-table-for-user', __webpack_require__(246));
 Vue.component('data-table-for-system-code-gender', __webpack_require__(249));
 Vue.component('data-table-for-system-code-title', __webpack_require__(252));
+Vue.component('data-table-for-system-code-post', __webpack_require__(295));
+Vue.component('data-table-for-system-code-education', __webpack_require__(298));
 Vue.component('system-code', __webpack_require__(255));
 
 var app = new Vue({
@@ -72379,6 +72381,14 @@ __WEBPACK_IMPORTED_MODULE_1_vee_validate__["a" /* Validator */].extend('unique_g
         return !!value;
     }
 });
+__WEBPACK_IMPORTED_MODULE_1_vee_validate__["a" /* Validator */].extend('unique_title', {
+    getMessage: function getMessage(性别类型) {
+        return '该职称类型已经存在，请修改！';
+    },
+    validate: function validate(value) {
+        return !!value;
+    }
+});
 //自定义部门电话判断提示--结束
 /* harmony default export */ __webpack_exports__["default"] = ({
     methods: {
@@ -83306,6 +83316,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
@@ -83327,9 +83338,11 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
             treeselectLists_Gender: [], //性别所有的节点
             treeselectLists_Title: [], //职称所有的节点
             treeselectLists_Post: [], //职务所有的节点
+            treeselectLists_Education: [], //学历所有的节点
             value_Gender: [], //性别默认值
             value_Title: [], //职称默认值
             value_Post: [], //职务默认值
+            value_Education: [], //学历默认值
             //注意，这里必须要用自定义，不然显示不出来的
             normalizer: function normalizer(node) {
                 return {
@@ -83401,6 +83414,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
             this.reloadOptions_Gender();
             this.reloadOptions_Title();
             this.reloadOptions_Post();
+            this.reloadOptions_Education();
             this.showAddUserModel = true;
             //模态框弹出的时候禁止底层body滚动
             $('body').css('overflow', 'hidden');
@@ -83555,6 +83569,15 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
                 console.log(res.data);
                 _this6.treeselectLists_Post = res.data[0];
                 _this6.value_Post = [res.data[1]];
+            });
+        },
+        reloadOptions_Education: function reloadOptions_Education() {
+            var _this7 = this;
+
+            axios.get('/system_code/get/education/used').then(function (res) {
+                console.log(res.data);
+                _this7.treeselectLists_Education = res.data[0];
+                _this7.value_Education = [res.data[1]];
             });
         },
         tableSetup: function tableSetup() {
@@ -84197,31 +84220,54 @@ var render = function() {
             _vm._v(" "),
             _c("div", { staticClass: "form-group" }, [
               _c("div", { staticClass: "row" }, [
-                _c("div", { staticClass: "col-sm-6" }, [
-                  _c("label", [_vm._v("学  历")]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.newUser.education,
-                        expression: "newUser.education"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    attrs: { type: "text", placeholder: "备注信息" },
-                    domProps: { value: _vm.newUser.education },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
+                _c(
+                  "div",
+                  { staticClass: "col-sm-6" },
+                  [
+                    _c("label", [_vm._v("学  历")]),
+                    _vm._v(" "),
+                    _c("treeselect", {
+                      directives: [
+                        {
+                          name: "validate",
+                          rawName: "v-validate",
+                          value: "required",
+                          expression: "'required'"
                         }
-                        _vm.$set(_vm.newUser, "education", $event.target.value)
+                      ],
+                      attrs: {
+                        clearable: false,
+                        normalizer: _vm.normalizer,
+                        options: _vm.treeselectLists_Education,
+                        name: "学历"
+                      },
+                      model: {
+                        value: _vm.value_Education,
+                        callback: function($$v) {
+                          _vm.value_Education = $$v
+                        },
+                        expression: "value_Education"
                       }
-                    }
-                  })
-                ]),
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: _vm.errors.has("学历"),
+                            expression: "errors.has('学历')"
+                          }
+                        ],
+                        staticClass: "text-danger"
+                      },
+                      [_vm._v(_vm._s(_vm.errors.first("学历")))]
+                    )
+                  ],
+                  1
+                ),
                 _vm._v(" "),
                 _c("div", { staticClass: "col-sm-6" }, [
                   _c("label", [_vm._v("备注信息")]),
@@ -86251,7 +86297,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
             //需要判断时新增还是编辑窗口，如果时编辑窗口，那么验证的时候就必须排除当前选中的部门名称isEdit:that.isEditDepartmentName
             var that = this;
             //判断部门名称的唯一性
-            this.$validator.extend('unique_gender', {
+            this.$validator.extend('unique_title', {
                 validate: function validate(value) {
                     var promise = new Promise(function (resolve, reject) {
                         axios.post('/system_code/validate/title', { description: that.newTitle.description, isEdit: that.isEditNewGenderDescription }).then(function (res) {
@@ -86479,7 +86525,7 @@ var render = function() {
         },
         [
           _c("div", { attrs: { slot: "head-title" }, slot: "head-title" }, [
-            _vm._v("新增性别类型")
+            _vm._v("新增职称类型")
           ]),
           _vm._v(" "),
           _c("div", { attrs: { slot: "body" }, slot: "body" }, [
@@ -86502,18 +86548,18 @@ var render = function() {
                       {
                         name: "validate",
                         rawName: "v-validate",
-                        value: "required|unique_gender",
-                        expression: "'required|unique_gender'"
+                        value: "required|unique_title",
+                        expression: "'required|unique_title'"
                       }
                     ],
                     class: {
                       "form-control": true,
-                      "is-invalid": _vm.errors.has("性别类型")
+                      "is-invalid": _vm.errors.has("职称类型")
                     },
                     attrs: {
                       type: "text",
-                      placeholder: "性别类型描述",
-                      name: "性别类型"
+                      placeholder: "职称类型描述",
+                      name: "职称类型"
                     },
                     domProps: { value: _vm.newTitle.description },
                     on: {
@@ -86540,13 +86586,13 @@ var render = function() {
                         {
                           name: "show",
                           rawName: "v-show",
-                          value: _vm.errors.has("性别类型"),
-                          expression: "errors.has('性别类型')"
+                          value: _vm.errors.has("职称类型"),
+                          expression: "errors.has('职称类型')"
                         }
                       ],
                       staticClass: "text-danger"
                     },
-                    [_vm._v(_vm._s(_vm.errors.first("性别类型")))]
+                    [_vm._v(_vm._s(_vm.errors.first("职称类型")))]
                   )
                 ]),
                 _vm._v(" "),
@@ -87046,7 +87092,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     mounted: function mounted() {
@@ -87101,11 +87146,8 @@ var render = function() {
                     staticClass: "tab-pane has-padding",
                     attrs: { id: "left-tab3" }
                   },
-                  [
-                    _vm._v(
-                      "\n                            Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid laeggin.\n                        "
-                    )
-                  ]
+                  [_c("data-table-for-system-code-post")],
+                  1
                 ),
                 _vm._v(" "),
                 _c(
@@ -87114,11 +87156,8 @@ var render = function() {
                     staticClass: "tab-pane has-padding",
                     attrs: { id: "left-tab4" }
                   },
-                  [
-                    _vm._v(
-                      "\n                            Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid laeggin.\n                        "
-                    )
-                  ]
+                  [_c("data-table-for-system-code-education")],
+                  1
                 )
               ])
             ]
@@ -87241,6 +87280,2200 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 259 */,
+/* 260 */,
+/* 261 */,
+/* 262 */,
+/* 263 */,
+/* 264 */,
+/* 265 */,
+/* 266 */,
+/* 267 */,
+/* 268 */,
+/* 269 */,
+/* 270 */,
+/* 271 */,
+/* 272 */,
+/* 273 */,
+/* 274 */,
+/* 275 */,
+/* 276 */,
+/* 277 */,
+/* 278 */,
+/* 279 */,
+/* 280 */,
+/* 281 */,
+/* 282 */,
+/* 283 */,
+/* 284 */,
+/* 285 */,
+/* 286 */,
+/* 287 */,
+/* 288 */,
+/* 289 */,
+/* 290 */,
+/* 291 */,
+/* 292 */,
+/* 293 */,
+/* 294 */,
+/* 295 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = __webpack_require__(296)
+/* template */
+var __vue_template__ = __webpack_require__(297)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/DataTable_for_system_code_post.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-a5c8082c", Component.options)
+  } else {
+    hotAPI.reload("data-v-a5c8082c", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 296 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_js_toggle_button__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_js_toggle_button___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vue_js_toggle_button__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__riophae_vue_treeselect__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__riophae_vue_treeselect___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__riophae_vue_treeselect__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__riophae_vue_treeselect_dist_vue_treeselect_css__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__riophae_vue_treeselect_dist_vue_treeselect_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__riophae_vue_treeselect_dist_vue_treeselect_css__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_moment__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_moment__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_hub_js__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_hub_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_hub_js__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__Modal_form_vertical_vue__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__Modal_form_vertical_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__Modal_form_vertical_vue__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+//引入vue-treeselect
+
+//引入vue-treeselect的样式
+
+
+
+
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_js_toggle_button___default.a);
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            showAddPostModel: false,
+            showEditGenderModel: false,
+            post: [],
+            treeselectLists: [], //所有的节点
+            //注意，这里必须要用自定义，不然显示不出来的
+            normalizer: function normalizer(node) {
+                return {
+                    id: node.id, //指定id是什么字段
+                    label: node.name //指定label是用的什么字段，即显示什么字段出来
+                };
+            },
+
+            selectedRow: {}, //当前选中的行
+            isEditNewGenderDescription: '',
+            newPost: {
+                description: '',
+                order: null,
+                created_at: '',
+                isFirst: 'F',
+                status: 'T',
+                remarks: ''
+            }
+        };
+    },
+
+
+    components: {
+        department_modal: __WEBPACK_IMPORTED_MODULE_6__Modal_form_vertical_vue___default.a,
+        Treeselect: __WEBPACK_IMPORTED_MODULE_2__riophae_vue_treeselect___default.a
+    },
+
+    mounted: function mounted() {
+        this.$nextTick(function () {
+            var _this = this;
+
+            this.getPost().then(function (response) {
+                // do what you need to do
+                _this.post = response.data;
+                console.log(response.data);
+            }).then(function () {
+                // execute the call to render the table, now that you have the data you need
+                _this.tableSetup();
+            });
+        });
+        // 注册监听者
+        __WEBPACK_IMPORTED_MODULE_5_hub_js___default.a.on('test', function (data) {
+            console.log('test', data);
+        });
+    },
+
+    methods: {
+        getPost: function getPost() {
+            return axios.get('/system_code/get/post');
+        },
+        showAddPost: function showAddPost() {
+            //模态框重新显示之前，清空所有的验证提示消息。
+            this.errors.clear();
+            this.showAddPostModel = true;
+            //模态框弹出的时候禁止底层body滚动
+            $('body').css('overflow', 'hidden');
+            console.log('showAddPost');
+        },
+        closeAddPost: function closeAddPost() {
+            this.showAddPostModel = false;
+            //模态框关闭的时候清空表中的数据为初始值
+            this.newPost = {
+                description: '',
+                order: null,
+                created_at: '',
+                isFirst: 'F',
+                status: 'T',
+                remarks: ''
+            };
+            //模态框关闭的时候启用body滚动
+            $('body').css('overflow', 'auto');
+        },
+        showEditModel: function showEditModel(e) {
+            var buttonClass = $(e.target).get(0).className;
+            if (buttonClass.indexOf('edit') !== -1) {
+                this.showEditGenderModel = true;
+                this.reloadOptions();
+                $('body').css('overflow', 'hidden');
+                var table = $('.datatable-system-code-post').DataTable();
+                var tr = $(e.target.closest('tr'));
+                var row = table.row(tr.get(0));
+                this.selectedRow = row;
+                var data = row.data();
+                this.newDepartment.name = data['2'];
+                this.newDepartment.manager = data['4'];
+                this.newDepartment.phone = data['5'];
+                this.newDepartment.remarks = data['6'] !== '/' ? data['6'] : '';
+                this.newDepartment.order = data['7'] === 0 ? '' : data['7'];
+                this.newDepartment.created_at = data['8'];
+                this.newDepartment.status = data['9'] === '<span class="label label-success">已启用</span>' ? 'T' : 'F';
+                this.newDepartment.pid = data['1'] ? data['1'] : null;
+                //记录打开编辑窗口时的科室名称
+                this.isEditDepartmentName = this.newDepartment.name;
+                console.log(this.isEditDepartmentName);
+            }
+        },
+        closeEditModal: function closeEditModal() {
+            this.showEditGenderModel = false;
+            this.isEditGenderName = '';
+            //模态框关闭的时候清空表中的数据为初始值
+            this.newPost = {
+                description: '',
+                order: null,
+                created_at: '',
+                isFirst: 'F',
+                status: 'T',
+                remarks: ''
+            };
+
+            //模态框关闭的时候启用body滚动
+            $('body').css('overflow', 'auto');
+        },
+
+        //            editDepartment() {
+        //                this.$validator.validateAll().then((result)=> {//验证是否符合表单规则
+        //                    if(result) {//如果符合才提交
+        //                        console.log(this.newDepartment);
+        //                        console.log(this.isEditDepartmentName);
+        //                        axios.post('/departments/edit',{department:this.newDepartment,isEdit:this.isEditDepartmentName}).then(res=> {
+        //                            let table = $('.datatable-system-code-post').DataTable();
+        //                            let data = [
+        //                                this.newDepartment.order?this.newDepartment.order:0,
+        //                                this.newDepartment.pid,
+        //                                this.newDepartment.name,
+        //                                this.newDepartment.pid?res.data:'/',
+        //                                this.newDepartment.manager,
+        //                                this.newDepartment.phone,
+        //                                this.newDepartment.remarks?this.newDepartment.remarks:'/',
+        //                                this.newDepartment.order?this.newDepartment.order:'0',
+        //                                this.newDepartment.created_at,
+        //                                this.newDepartment.status==='T'?'<span class="label label-success">已启用</span>':'<span class="label label-danger">未启用</span>',
+        //                                '<button class="edit btn btn-xxs btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 修改</button>',
+        //                            ];
+        //                            table.row(this.selectedRow).data(data).draw(false);
+        //                            this.closeEditModal();
+        //                            this.$snotify.success('编辑成功！');
+        //                        }).catch(error=> {
+        //                            throw error
+        //                        });
+        //                    }
+        //                })
+        //            },
+        changeStatus: function changeStatus() {
+            if (this.newPost.status === 'T') {
+                this.newPost.status = 'F';
+            } else {
+                this.newPost.status = 'T';
+            }
+        },
+        changeIsFirst: function changeIsFirst() {
+            if (this.newPost.isFirst === 'T') {
+                this.newPost.isFirst = 'F';
+            } else {
+                this.newPost.isFirst = 'T';
+            }
+        },
+        checkDescription: function checkDescription() {
+            //需要判断时新增还是编辑窗口，如果时编辑窗口，那么验证的时候就必须排除当前选中的部门名称isEdit:that.isEditDepartmentName
+            var that = this;
+            //判断部门名称的唯一性
+            this.$validator.extend('unique_gender', {
+                validate: function validate(value) {
+                    var promise = new Promise(function (resolve, reject) {
+                        axios.post('/system_code/validate/post', { description: that.newPost.description, isEdit: that.isEditNewGenderDescription }).then(function (res) {
+                            resolve(res.data.data);
+                            console.log(res.data.data);
+                            console.log(that.isEditNewGenderDescription);
+                        });
+                    });
+                    //必须返回一个promise对象，否则报错
+                    return promise.then(function (val) {
+                        return !val; //val值取反
+                    });
+                }
+            });
+        },
+        addPost: function addPost() {
+            var _this2 = this;
+
+            this.$validator.validateAll().then(function (result) {
+                //验证是否符合表单规则
+                if (result) {
+                    //如果符合才提交
+                    axios.post('/system_code/add/post', { post: _this2.newPost }).then(function (res) {
+                        var table = $('.datatable-system-code-post').DataTable();
+                        //增加一行数据
+                        //                            table.row.add([
+                        //                                this.newPost.order,
+                        //                                this.newPost.description,
+                        //                                this.newPost.order?this.newPost.order:'0',
+                        //                                this.newPost.isFirst==='T'?'<span class="label label-success">是</span>':'<span class="label label-default">否</span>',
+                        //                                this.newPost.status==='T'?'<span class="label label-success">已启用</span>':'<span class="label label-danger">未启用</span>',
+                        //                                this.newPost.remarks?this.newPost.remarks:'/',
+                        //                                moment(res.data[0]['date']).format("YYYY-MM-DD HH:mm:ss"),//格式化日期
+                        //                                '<button class="edit btn btn-xxs btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 改</button>'+
+                        //                                '<button class="edit btn btn-xxs btn-danger"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 删</button>',
+                        //                            ]).draw(false);
+                        //销毁表格，为什么用这种方法，而不用上面的增加一行数据，修改一行数据呢，因为修改数据时，不好定位哪条需要修改。
+                        console.log(table.data());
+                        table.destroy();
+                        //重建表格
+                        _this2.getPost().then(function (response) {
+                            // do what you need to do
+                            _this2.post = response.data;
+                        }).then(function () {
+                            // execute the call to render the table, now that you have the data you need
+                            _this2.tableSetup();
+                        });
+                        _this2.closeAddPost();
+                        console.log(res.data[0]['date']);
+                        _this2.$snotify.success('添加成功！');
+                    }).catch(function (error) {
+                        throw error;
+                    });
+                }
+            });
+        },
+        reloadOptions: function reloadOptions() {
+            var _this3 = this;
+
+            axios.get('/departments/get/used').then(function (res) {
+                //console.log(res.data);
+                _this3.treeselectLists = res.data;
+            });
+        },
+        tableSetup: function tableSetup() {
+            var that = this;
+            $(function () {
+                // Setting datatable defaults
+                $.extend($.fn.dataTable.defaults, {
+                    autoWidth: false,
+                    colReorder: true,
+                    rowReorder: true,
+                    dom: '<"datatable-header"fBl><"datatable-scroll-wrap"t><"datatable-footer"ip>',
+                    language: {
+                        search: '<span>Filter:</span> _INPUT_',
+                        searchPlaceholder: 'Type to filter...',
+                        info: "第 _PAGE_ 页 / 总 _PAGES_ 页，共 _TOTAL_ 条数据",
+                        sInfoFiltered: "(从 _MAX_ 条记录中过滤)",
+                        zeroRecords: "没有找到记录",
+                        infoEmpty: "无记录",
+                        lengthMenu: '<span>Show:</span> _MENU_',
+                        select: { rows: " , %d 条记录被选中" },
+                        paginate: { 'first': 'First', 'last': 'Last', 'next': $('html').attr('dir') == 'rtl' ? '&larr;' : '&rarr;', 'previous': $('html').attr('dir') == 'rtl' ? '&rarr;' : '&larr;' }
+                    }
+                });
+                // Column selectors
+                var t = $('.datatable-system-code-post').DataTable({
+                    buttons: {
+                        buttons: [{
+                            extend: 'copyHtml5',
+                            className: 'btn btn-default',
+                            exportOptions: {
+                                columns: [0, ':visible']
+                            }
+                        }, {
+                            extend: 'excelHtml5',
+                            className: 'btn btn-default',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        }, {
+                            extend: 'colvis',
+                            text: '<i class="icon-three-bars"></i> <span class="caret"></span>',
+                            className: 'btn bg-blue btn-icon'
+                        }]
+                    },
+                    select: {
+                        style: 'os'
+                    },
+                    columnDefs: [{
+                        orderable: false, //不允许排序
+                        targets: [0, -1]
+                    }],
+                    order: [[2, 'desc']] //默认排序降序
+                });
+                //添加索引列,注意：如果要使拖拽排序看起来比较正常，那么必须让索引列这一栏生成递增的数据，即<td></td>中间必须生成数字
+                t.on('order.dt search.dt', function () {
+                    t.column(0, {
+                        search: 'applied',
+                        order: 'applied'
+                    }).nodes().each(function (cell, i) {
+                        cell.innerHTML = i + 1;
+                    });
+                }).draw();
+
+                // Enable Select2 select for the length option
+                $('.dataTables_length select').select2({
+                    minimumResultsForSearch: Infinity,
+                    width: 'auto'
+                });
+
+                //增加一个按钮在后面用来添加项目用的
+                $('#DataTables_Table_2_filter').after('<div class="dt-buttons">  ' + '<button class="showAddPost dt-button btn btn-primary" tabindex="0" type="button">' + '<span><i aria-hidden="true" class="fa fa-plus"></i> 新 增</span>' + '</button>  ' + '</div>');
+
+                //显示添加窗口
+                $('.showAddPost').click(function () {
+                    that.showAddPost();
+                });
+            });
+        }
+    }
+});
+
+/***/ }),
+/* 297 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c("table", { staticClass: "table datatable-system-code-post" }, [
+        _vm._m(0),
+        _vm._v(" "),
+        _c(
+          "tbody",
+          {
+            on: {
+              click: function($event) {
+                _vm.showEditModel($event)
+              }
+            }
+          },
+          _vm._l(_vm.post, function(po) {
+            return _c("tr", [
+              _c("td", [_vm._v(_vm._s(po.order ? po.order : "0"))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(po.description))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(po.order ? po.order : "0"))]),
+              _vm._v(" "),
+              _c("td", [
+                _c(
+                  "span",
+                  {
+                    class: [
+                      po.isFirst === "T"
+                        ? "label label-success"
+                        : "label label-default"
+                    ]
+                  },
+                  [_vm._v(_vm._s(po.isFirst === "T" ? "是" : "否"))]
+                )
+              ]),
+              _vm._v(" "),
+              _c("td", [
+                _c(
+                  "span",
+                  {
+                    class: [
+                      po.status === "T"
+                        ? "label label-success"
+                        : "label label-danger"
+                    ]
+                  },
+                  [_vm._v(_vm._s(po.status === "T" ? "已启用" : "未启用"))]
+                )
+              ]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(po.remarks ? po.remarks : "/"))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(po.created_at))]),
+              _vm._v(" "),
+              _vm._m(1, true)
+            ])
+          })
+        )
+      ]),
+      _vm._v(" "),
+      _c(
+        "department_modal",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.showAddPostModel,
+              expression: "showAddPostModel"
+            }
+          ],
+          on: { close: _vm.closeAddPost, commit: _vm.addPost }
+        },
+        [
+          _c("div", { attrs: { slot: "head-title" }, slot: "head-title" }, [
+            _vm._v("新增职务类型")
+          ]),
+          _vm._v(" "),
+          _c("div", { attrs: { slot: "body" }, slot: "body" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-sm-6" }, [
+                  _c("label", [
+                    _vm._v("描 述"),
+                    _c("span", { staticClass: "text-danger" }, [_vm._v("*")])
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.newPost.description,
+                        expression: "newPost.description"
+                      },
+                      {
+                        name: "validate",
+                        rawName: "v-validate",
+                        value: "required|unique_post",
+                        expression: "'required|unique_post'"
+                      }
+                    ],
+                    class: {
+                      "form-control": true,
+                      "is-invalid": _vm.errors.has("职务类型")
+                    },
+                    attrs: {
+                      type: "text",
+                      placeholder: "职务类型描述",
+                      name: "职务类型"
+                    },
+                    domProps: { value: _vm.newPost.description },
+                    on: {
+                      input: [
+                        function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            _vm.newPost,
+                            "description",
+                            $event.target.value
+                          )
+                        },
+                        _vm.checkDescription
+                      ]
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: _vm.errors.has("职务类型"),
+                          expression: "errors.has('职务类型')"
+                        }
+                      ],
+                      staticClass: "text-danger"
+                    },
+                    [_vm._v(_vm._s(_vm.errors.first("职务类型")))]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-sm-6" }, [
+                  _c("label", [_vm._v("排序NO.")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.newPost.order,
+                        expression: "newPost.order"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      placeholder: "数值越大排名越靠前,默认为0"
+                    },
+                    domProps: { value: _vm.newPost.order },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.newPost, "order", $event.target.value)
+                      }
+                    }
+                  })
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-sm-6" }, [
+                  _c("label", [_vm._v("是否设为初始值")]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    [
+                      _c("toggle-button", {
+                        attrs: {
+                          sync: true,
+                          "v-model": _vm.newPost.isFirst,
+                          value: _vm.newPost.isFirst === "T",
+                          width: 58,
+                          height: 34,
+                          labels: { checked: "是", unchecked: "否" }
+                        },
+                        on: { change: _vm.changeIsFirst }
+                      })
+                    ],
+                    1
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-sm-6" }, [
+                  _c("label", [_vm._v("启用标志")]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    [
+                      _c("toggle-button", {
+                        attrs: {
+                          sync: true,
+                          "v-model": _vm.newPost.status,
+                          value: _vm.newPost.status === "T",
+                          width: 140,
+                          height: 34,
+                          labels: {
+                            checked: "当前处于启用状态",
+                            unchecked: "当前处于停用状态"
+                          }
+                        },
+                        on: { change: _vm.changeStatus }
+                      })
+                    ],
+                    1
+                  )
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-sm-12" }, [
+                  _c("label", [_vm._v("备注信息")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.newPost.remarks,
+                        expression: "newPost.remarks"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { type: "text", placeholder: "备注信息" },
+                    domProps: { value: _vm.newPost.remarks },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.newPost, "remarks", $event.target.value)
+                      }
+                    }
+                  })
+                ])
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              attrs: { slot: "footer-commit-text" },
+              slot: "footer-commit-text"
+            },
+            [_vm._v("添 加")]
+          )
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "department_modal",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.showEditGenderModel,
+              expression: "showEditGenderModel"
+            }
+          ],
+          on: { close: _vm.closeEditModal, commit: _vm.addPost }
+        },
+        [
+          _c("div", { attrs: { slot: "head-title" }, slot: "head-title" }, [
+            _vm._v("修改职称类型")
+          ]),
+          _vm._v(" "),
+          _c("div", { attrs: { slot: "body" }, slot: "body" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-sm-6" }, [
+                  _c("label", [
+                    _vm._v("描 述"),
+                    _c("span", { staticClass: "text-danger" }, [_vm._v("*")])
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.newPost.description,
+                        expression: "newPost.description"
+                      },
+                      {
+                        name: "validate",
+                        rawName: "v-validate",
+                        value: "required|unique_gender",
+                        expression: "'required|unique_gender'"
+                      }
+                    ],
+                    class: {
+                      "form-control": true,
+                      "is-invalid": _vm.errors.has("性别类型")
+                    },
+                    attrs: {
+                      type: "text",
+                      placeholder: "性别类型描述",
+                      name: "性别类型"
+                    },
+                    domProps: { value: _vm.newPost.description },
+                    on: {
+                      input: [
+                        function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            _vm.newPost,
+                            "description",
+                            $event.target.value
+                          )
+                        },
+                        _vm.checkDescription
+                      ]
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: _vm.errors.has("性别类型"),
+                          expression: "errors.has('性别类型')"
+                        }
+                      ],
+                      staticClass: "text-danger"
+                    },
+                    [_vm._v(_vm._s(_vm.errors.first("性别类型")))]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-sm-6" }, [
+                  _c("label", [_vm._v("排序NO.")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.newPost.order,
+                        expression: "newPost.order"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      placeholder: "数值越大排名越靠前,默认为0"
+                    },
+                    domProps: { value: _vm.newPost.order },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.newPost, "order", $event.target.value)
+                      }
+                    }
+                  })
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-sm-6" }, [
+                  _c("label", [_vm._v("是否设为初始值")]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    [
+                      _c("toggle-button", {
+                        attrs: {
+                          sync: true,
+                          "v-model": _vm.newPost.isFirst,
+                          value: _vm.newPost.isFirst === "T",
+                          width: 58,
+                          height: 34,
+                          labels: { checked: "是", unchecked: "否" }
+                        },
+                        on: { change: _vm.changeIsFirst }
+                      })
+                    ],
+                    1
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-sm-6" }, [
+                  _c("label", [_vm._v("启用标志")]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    [
+                      _c("toggle-button", {
+                        attrs: {
+                          sync: true,
+                          "v-model": _vm.newPost.status,
+                          value: _vm.newPost.status === "T",
+                          width: 140,
+                          height: 34,
+                          labels: {
+                            checked: "当前处于启用状态",
+                            unchecked: "当前处于停用状态"
+                          }
+                        },
+                        on: { change: _vm.changeStatus }
+                      })
+                    ],
+                    1
+                  )
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-sm-12" }, [
+                  _c("label", [_vm._v("备注信息")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.newPost.remarks,
+                        expression: "newPost.remarks"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { type: "text", placeholder: "备注信息" },
+                    domProps: { value: _vm.newPost.remarks },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.newPost, "remarks", $event.target.value)
+                      }
+                    }
+                  })
+                ])
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              attrs: { slot: "footer-commit-text" },
+              slot: "footer-commit-text"
+            },
+            [_vm._v("添 加")]
+          )
+        ]
+      ),
+      _vm._v(" "),
+      _c("vue-snotify")
+    ],
+    1
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("NO.")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("描 述")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("顺序号")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("是否为初值")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("当前状态")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("备注信息")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("创建时间")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("操 作")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticStyle: { width: "122px" } }, [
+      _c("button", { staticClass: "edit btn btn-xxs btn-default" }, [
+        _c("i", {
+          staticClass: "fa fa-pencil-square-o",
+          attrs: { "aria-hidden": "true" }
+        }),
+        _vm._v(" 改")
+      ]),
+      _vm._v(" "),
+      _c("button", { staticClass: "del btn btn-xxs btn-danger" }, [
+        _c("i", {
+          staticClass: "fa fa-pencil-square-o",
+          attrs: { "aria-hidden": "true" }
+        }),
+        _vm._v(" 删")
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-a5c8082c", module.exports)
+  }
+}
+
+/***/ }),
+/* 298 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = __webpack_require__(299)
+/* template */
+var __vue_template__ = __webpack_require__(300)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/DataTable_for_system_code_education.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-4332b664", Component.options)
+  } else {
+    hotAPI.reload("data-v-4332b664", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 299 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_js_toggle_button__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_js_toggle_button___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vue_js_toggle_button__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__riophae_vue_treeselect__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__riophae_vue_treeselect___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__riophae_vue_treeselect__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__riophae_vue_treeselect_dist_vue_treeselect_css__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__riophae_vue_treeselect_dist_vue_treeselect_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__riophae_vue_treeselect_dist_vue_treeselect_css__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_moment__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_moment__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_hub_js__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_hub_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_hub_js__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__Modal_form_vertical_vue__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__Modal_form_vertical_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__Modal_form_vertical_vue__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+//引入vue-treeselect
+
+//引入vue-treeselect的样式
+
+
+
+
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_js_toggle_button___default.a);
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            showAddEducationModel: false,
+            showEditGenderModel: false,
+            education: [],
+            treeselectLists: [], //所有的节点
+            //注意，这里必须要用自定义，不然显示不出来的
+            normalizer: function normalizer(node) {
+                return {
+                    id: node.id, //指定id是什么字段
+                    label: node.name //指定label是用的什么字段，即显示什么字段出来
+                };
+            },
+
+            selectedRow: {}, //当前选中的行
+            isEditNewGenderDescription: '',
+            newEducation: {
+                description: '',
+                order: null,
+                created_at: '',
+                isFirst: 'F',
+                status: 'T',
+                remarks: ''
+            }
+        };
+    },
+
+
+    components: {
+        department_modal: __WEBPACK_IMPORTED_MODULE_6__Modal_form_vertical_vue___default.a,
+        Treeselect: __WEBPACK_IMPORTED_MODULE_2__riophae_vue_treeselect___default.a
+    },
+
+    mounted: function mounted() {
+        this.$nextTick(function () {
+            var _this = this;
+
+            this.getEducation().then(function (response) {
+                // do what you need to do
+                _this.education = response.data;
+                console.log(response.data);
+            }).then(function () {
+                // execute the call to render the table, now that you have the data you need
+                _this.tableSetup();
+            });
+        });
+        // 注册监听者
+        __WEBPACK_IMPORTED_MODULE_5_hub_js___default.a.on('test', function (data) {
+            console.log('test', data);
+        });
+    },
+
+    methods: {
+        getEducation: function getEducation() {
+            return axios.get('/system_code/get/education');
+        },
+        showAddEducation: function showAddEducation() {
+            //模态框重新显示之前，清空所有的验证提示消息。
+            this.errors.clear();
+            this.showAddEducationModel = true;
+            //模态框弹出的时候禁止底层body滚动
+            $('body').css('overflow', 'hidden');
+            console.log('showAddEducation');
+        },
+        closeAddEducation: function closeAddEducation() {
+            this.showAddEducationModel = false;
+            //模态框关闭的时候清空表中的数据为初始值
+            this.newEducation = {
+                description: '',
+                order: null,
+                created_at: '',
+                isFirst: 'F',
+                status: 'T',
+                remarks: ''
+            };
+            //模态框关闭的时候启用body滚动
+            $('body').css('overflow', 'auto');
+        },
+        showEditModel: function showEditModel(e) {
+            var buttonClass = $(e.target).get(0).className;
+            if (buttonClass.indexOf('edit') !== -1) {
+                this.showEditGenderModel = true;
+                this.reloadOptions();
+                $('body').css('overflow', 'hidden');
+                var table = $('.datatable-system-code-education').DataTable();
+                var tr = $(e.target.closest('tr'));
+                var row = table.row(tr.get(0));
+                this.selectedRow = row;
+                var data = row.data();
+                this.newDepartment.name = data['2'];
+                this.newDepartment.manager = data['4'];
+                this.newDepartment.phone = data['5'];
+                this.newDepartment.remarks = data['6'] !== '/' ? data['6'] : '';
+                this.newDepartment.order = data['7'] === 0 ? '' : data['7'];
+                this.newDepartment.created_at = data['8'];
+                this.newDepartment.status = data['9'] === '<span class="label label-success">已启用</span>' ? 'T' : 'F';
+                this.newDepartment.pid = data['1'] ? data['1'] : null;
+                //记录打开编辑窗口时的科室名称
+                this.isEditDepartmentName = this.newDepartment.name;
+                console.log(this.isEditDepartmentName);
+            }
+        },
+        closeEditModal: function closeEditModal() {
+            this.showEditGenderModel = false;
+            this.isEditGenderName = '';
+            //模态框关闭的时候清空表中的数据为初始值
+            this.newEducation = {
+                description: '',
+                order: null,
+                created_at: '',
+                isFirst: 'F',
+                status: 'T',
+                remarks: ''
+            };
+
+            //模态框关闭的时候启用body滚动
+            $('body').css('overflow', 'auto');
+        },
+
+        //            editDepartment() {
+        //                this.$validator.validateAll().then((result)=> {//验证是否符合表单规则
+        //                    if(result) {//如果符合才提交
+        //                        console.log(this.newDepartment);
+        //                        console.log(this.isEditDepartmentName);
+        //                        axios.post('/departments/edit',{department:this.newDepartment,isEdit:this.isEditDepartmentName}).then(res=> {
+        //                            let table = $('.datatable-system-code-education').DataTable();
+        //                            let data = [
+        //                                this.newDepartment.order?this.newDepartment.order:0,
+        //                                this.newDepartment.pid,
+        //                                this.newDepartment.name,
+        //                                this.newDepartment.pid?res.data:'/',
+        //                                this.newDepartment.manager,
+        //                                this.newDepartment.phone,
+        //                                this.newDepartment.remarks?this.newDepartment.remarks:'/',
+        //                                this.newDepartment.order?this.newDepartment.order:'0',
+        //                                this.newDepartment.created_at,
+        //                                this.newDepartment.status==='T'?'<span class="label label-success">已启用</span>':'<span class="label label-danger">未启用</span>',
+        //                                '<button class="edit btn btn-xxs btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 修改</button>',
+        //                            ];
+        //                            table.row(this.selectedRow).data(data).draw(false);
+        //                            this.closeEditModal();
+        //                            this.$snotify.success('编辑成功！');
+        //                        }).catch(error=> {
+        //                            throw error
+        //                        });
+        //                    }
+        //                })
+        //            },
+        changeStatus: function changeStatus() {
+            if (this.newEducation.status === 'T') {
+                this.newEducation.status = 'F';
+            } else {
+                this.newEducation.status = 'T';
+            }
+        },
+        changeIsFirst: function changeIsFirst() {
+            if (this.newEducation.isFirst === 'T') {
+                this.newEducation.isFirst = 'F';
+            } else {
+                this.newEducation.isFirst = 'T';
+            }
+        },
+        checkDescription: function checkDescription() {
+            //需要判断时新增还是编辑窗口，如果时编辑窗口，那么验证的时候就必须排除当前选中的部门名称isEdit:that.isEditDepartmentName
+            var that = this;
+            //判断部门名称的唯一性
+            this.$validator.extend('unique_education', {
+                validate: function validate(value) {
+                    var promise = new Promise(function (resolve, reject) {
+                        axios.post('/system_code/validate/education', { description: that.newEducation.description, isEdit: that.isEditNewGenderDescription }).then(function (res) {
+                            resolve(res.data.data);
+                            console.log(res.data.data);
+                            console.log(that.isEditNewGenderDescription);
+                        });
+                    });
+                    //必须返回一个promise对象，否则报错
+                    return promise.then(function (val) {
+                        return !val; //val值取反
+                    });
+                }
+            });
+        },
+        addEducation: function addEducation() {
+            var _this2 = this;
+
+            this.$validator.validateAll().then(function (result) {
+                //验证是否符合表单规则
+                if (result) {
+                    //如果符合才提交
+                    axios.post('/system_code/add/education', { education: _this2.newEducation }).then(function (res) {
+                        var table = $('.datatable-system-code-education').DataTable();
+                        //增加一行数据
+                        //                            table.row.add([
+                        //                                this.newEducation.order,
+                        //                                this.newEducation.description,
+                        //                                this.newEducation.order?this.newEducation.order:'0',
+                        //                                this.newEducation.isFirst==='T'?'<span class="label label-success">是</span>':'<span class="label label-default">否</span>',
+                        //                                this.newEducation.status==='T'?'<span class="label label-success">已启用</span>':'<span class="label label-danger">未启用</span>',
+                        //                                this.newEducation.remarks?this.newEducation.remarks:'/',
+                        //                                moment(res.data[0]['date']).format("YYYY-MM-DD HH:mm:ss"),//格式化日期
+                        //                                '<button class="edit btn btn-xxs btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 改</button>'+
+                        //                                '<button class="edit btn btn-xxs btn-danger"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 删</button>',
+                        //                            ]).draw(false);
+                        //销毁表格，为什么用这种方法，而不用上面的增加一行数据，修改一行数据呢，因为修改数据时，不好定位哪条需要修改。
+                        console.log(table.data());
+                        table.destroy();
+                        //重建表格
+                        _this2.getEducation().then(function (response) {
+                            // do what you need to do
+                            _this2.education = response.data;
+                        }).then(function () {
+                            // execute the call to render the table, now that you have the data you need
+                            _this2.tableSetup();
+                        });
+                        _this2.closeAddEducation();
+                        console.log(res.data[0]['date']);
+                        _this2.$snotify.success('添加成功！');
+                    }).catch(function (error) {
+                        throw error;
+                    });
+                }
+            });
+        },
+        reloadOptions: function reloadOptions() {
+            var _this3 = this;
+
+            axios.get('/departments/get/used').then(function (res) {
+                //console.log(res.data);
+                _this3.treeselectLists = res.data;
+            });
+        },
+        tableSetup: function tableSetup() {
+            var that = this;
+            $(function () {
+                // Setting datatable defaults
+                $.extend($.fn.dataTable.defaults, {
+                    autoWidth: false,
+                    colReorder: true,
+                    rowReorder: true,
+                    dom: '<"datatable-header"fBl><"datatable-scroll-wrap"t><"datatable-footer"ip>',
+                    language: {
+                        search: '<span>Filter:</span> _INPUT_',
+                        searchPlaceholder: 'Type to filter...',
+                        info: "第 _PAGE_ 页 / 总 _PAGES_ 页，共 _TOTAL_ 条数据",
+                        sInfoFiltered: "(从 _MAX_ 条记录中过滤)",
+                        zeroRecords: "没有找到记录",
+                        infoEmpty: "无记录",
+                        lengthMenu: '<span>Show:</span> _MENU_',
+                        select: { rows: " , %d 条记录被选中" },
+                        paginate: { 'first': 'First', 'last': 'Last', 'next': $('html').attr('dir') == 'rtl' ? '&larr;' : '&rarr;', 'previous': $('html').attr('dir') == 'rtl' ? '&rarr;' : '&larr;' }
+                    }
+                });
+                // Column selectors
+                var t = $('.datatable-system-code-education').DataTable({
+                    buttons: {
+                        buttons: [{
+                            extend: 'copyHtml5',
+                            className: 'btn btn-default',
+                            exportOptions: {
+                                columns: [0, ':visible']
+                            }
+                        }, {
+                            extend: 'excelHtml5',
+                            className: 'btn btn-default',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        }, {
+                            extend: 'colvis',
+                            text: '<i class="icon-three-bars"></i> <span class="caret"></span>',
+                            className: 'btn bg-blue btn-icon'
+                        }]
+                    },
+                    select: {
+                        style: 'os'
+                    },
+                    columnDefs: [{
+                        orderable: false, //不允许排序
+                        targets: [0, -1]
+                    }],
+                    order: [[2, 'desc']] //默认排序降序
+                });
+                //添加索引列,注意：如果要使拖拽排序看起来比较正常，那么必须让索引列这一栏生成递增的数据，即<td></td>中间必须生成数字
+                t.on('order.dt search.dt', function () {
+                    t.column(0, {
+                        search: 'applied',
+                        order: 'applied'
+                    }).nodes().each(function (cell, i) {
+                        cell.innerHTML = i + 1;
+                    });
+                }).draw();
+
+                // Enable Select2 select for the length option
+                $('.dataTables_length select').select2({
+                    minimumResultsForSearch: Infinity,
+                    width: 'auto'
+                });
+
+                //增加一个按钮在后面用来添加项目用的
+                $('#DataTables_Table_3_filter').after('<div class="dt-buttons">  ' + '<button class="showAddEducation dt-button btn btn-primary" tabindex="0" type="button">' + '<span><i aria-hidden="true" class="fa fa-plus"></i> 新 增</span>' + '</button>  ' + '</div>');
+
+                //显示添加窗口
+                $('.showAddEducation').click(function () {
+                    that.showAddEducation();
+                });
+            });
+        }
+    }
+});
+
+/***/ }),
+/* 300 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c("table", { staticClass: "table datatable-system-code-education" }, [
+        _vm._m(0),
+        _vm._v(" "),
+        _c(
+          "tbody",
+          {
+            on: {
+              click: function($event) {
+                _vm.showEditModel($event)
+              }
+            }
+          },
+          _vm._l(_vm.education, function(edu) {
+            return _c("tr", [
+              _c("td", [_vm._v(_vm._s(edu.order ? edu.order : "0"))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(edu.description))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(edu.order ? edu.order : "0"))]),
+              _vm._v(" "),
+              _c("td", [
+                _c(
+                  "span",
+                  {
+                    class: [
+                      edu.isFirst === "T"
+                        ? "label label-success"
+                        : "label label-default"
+                    ]
+                  },
+                  [_vm._v(_vm._s(edu.isFirst === "T" ? "是" : "否"))]
+                )
+              ]),
+              _vm._v(" "),
+              _c("td", [
+                _c(
+                  "span",
+                  {
+                    class: [
+                      edu.status === "T"
+                        ? "label label-success"
+                        : "label label-danger"
+                    ]
+                  },
+                  [_vm._v(_vm._s(edu.status === "T" ? "已启用" : "未启用"))]
+                )
+              ]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(edu.remarks ? _vm.po.remarks : "/"))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(edu.created_at))]),
+              _vm._v(" "),
+              _vm._m(1, true)
+            ])
+          })
+        )
+      ]),
+      _vm._v(" "),
+      _c(
+        "department_modal",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.showAddEducationModel,
+              expression: "showAddEducationModel"
+            }
+          ],
+          on: { close: _vm.closeAddEducation, commit: _vm.addEducation }
+        },
+        [
+          _c("div", { attrs: { slot: "head-title" }, slot: "head-title" }, [
+            _vm._v("新增学历类型")
+          ]),
+          _vm._v(" "),
+          _c("div", { attrs: { slot: "body" }, slot: "body" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-sm-6" }, [
+                  _c("label", [
+                    _vm._v("描 述"),
+                    _c("span", { staticClass: "text-danger" }, [_vm._v("*")])
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.newEducation.description,
+                        expression: "newEducation.description"
+                      },
+                      {
+                        name: "validate",
+                        rawName: "v-validate",
+                        value: "required|unique_education",
+                        expression: "'required|unique_education'"
+                      }
+                    ],
+                    class: {
+                      "form-control": true,
+                      "is-invalid": _vm.errors.has("学历类型")
+                    },
+                    attrs: {
+                      type: "text",
+                      placeholder: "学历类型描述",
+                      name: "学历类型"
+                    },
+                    domProps: { value: _vm.newEducation.description },
+                    on: {
+                      input: [
+                        function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            _vm.newEducation,
+                            "description",
+                            $event.target.value
+                          )
+                        },
+                        _vm.checkDescription
+                      ]
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: _vm.errors.has("学历类型"),
+                          expression: "errors.has('学历类型')"
+                        }
+                      ],
+                      staticClass: "text-danger"
+                    },
+                    [_vm._v(_vm._s(_vm.errors.first("学历类型")))]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-sm-6" }, [
+                  _c("label", [_vm._v("排序NO.")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.newEducation.order,
+                        expression: "newEducation.order"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      placeholder: "数值越大排名越靠前,默认为0"
+                    },
+                    domProps: { value: _vm.newEducation.order },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.newEducation, "order", $event.target.value)
+                      }
+                    }
+                  })
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-sm-6" }, [
+                  _c("label", [_vm._v("是否设为初始值")]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    [
+                      _c("toggle-button", {
+                        attrs: {
+                          sync: true,
+                          "v-model": _vm.newEducation.isFirst,
+                          value: _vm.newEducation.isFirst === "T",
+                          width: 58,
+                          height: 34,
+                          labels: { checked: "是", unchecked: "否" }
+                        },
+                        on: { change: _vm.changeIsFirst }
+                      })
+                    ],
+                    1
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-sm-6" }, [
+                  _c("label", [_vm._v("启用标志")]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    [
+                      _c("toggle-button", {
+                        attrs: {
+                          sync: true,
+                          "v-model": _vm.newEducation.status,
+                          value: _vm.newEducation.status === "T",
+                          width: 140,
+                          height: 34,
+                          labels: {
+                            checked: "当前处于启用状态",
+                            unchecked: "当前处于停用状态"
+                          }
+                        },
+                        on: { change: _vm.changeStatus }
+                      })
+                    ],
+                    1
+                  )
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-sm-12" }, [
+                  _c("label", [_vm._v("备注信息")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.newEducation.remarks,
+                        expression: "newEducation.remarks"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { type: "text", placeholder: "备注信息" },
+                    domProps: { value: _vm.newEducation.remarks },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.newEducation,
+                          "remarks",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ])
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              attrs: { slot: "footer-commit-text" },
+              slot: "footer-commit-text"
+            },
+            [_vm._v("添 加")]
+          )
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "department_modal",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.showEditGenderModel,
+              expression: "showEditGenderModel"
+            }
+          ],
+          on: { close: _vm.closeEditModal, commit: _vm.addEducation }
+        },
+        [
+          _c("div", { attrs: { slot: "head-title" }, slot: "head-title" }, [
+            _vm._v("修改职称类型")
+          ]),
+          _vm._v(" "),
+          _c("div", { attrs: { slot: "body" }, slot: "body" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-sm-6" }, [
+                  _c("label", [
+                    _vm._v("描 述"),
+                    _c("span", { staticClass: "text-danger" }, [_vm._v("*")])
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.newEducation.description,
+                        expression: "newEducation.description"
+                      },
+                      {
+                        name: "validate",
+                        rawName: "v-validate",
+                        value: "required|unique_gender",
+                        expression: "'required|unique_gender'"
+                      }
+                    ],
+                    class: {
+                      "form-control": true,
+                      "is-invalid": _vm.errors.has("性别类型")
+                    },
+                    attrs: {
+                      type: "text",
+                      placeholder: "性别类型描述",
+                      name: "性别类型"
+                    },
+                    domProps: { value: _vm.newEducation.description },
+                    on: {
+                      input: [
+                        function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            _vm.newEducation,
+                            "description",
+                            $event.target.value
+                          )
+                        },
+                        _vm.checkDescription
+                      ]
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: _vm.errors.has("性别类型"),
+                          expression: "errors.has('性别类型')"
+                        }
+                      ],
+                      staticClass: "text-danger"
+                    },
+                    [_vm._v(_vm._s(_vm.errors.first("性别类型")))]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-sm-6" }, [
+                  _c("label", [_vm._v("排序NO.")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.newEducation.order,
+                        expression: "newEducation.order"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      placeholder: "数值越大排名越靠前,默认为0"
+                    },
+                    domProps: { value: _vm.newEducation.order },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.newEducation, "order", $event.target.value)
+                      }
+                    }
+                  })
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-sm-6" }, [
+                  _c("label", [_vm._v("是否设为初始值")]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    [
+                      _c("toggle-button", {
+                        attrs: {
+                          sync: true,
+                          "v-model": _vm.newEducation.isFirst,
+                          value: _vm.newEducation.isFirst === "T",
+                          width: 58,
+                          height: 34,
+                          labels: { checked: "是", unchecked: "否" }
+                        },
+                        on: { change: _vm.changeIsFirst }
+                      })
+                    ],
+                    1
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-sm-6" }, [
+                  _c("label", [_vm._v("启用标志")]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    [
+                      _c("toggle-button", {
+                        attrs: {
+                          sync: true,
+                          "v-model": _vm.newEducation.status,
+                          value: _vm.newEducation.status === "T",
+                          width: 140,
+                          height: 34,
+                          labels: {
+                            checked: "当前处于启用状态",
+                            unchecked: "当前处于停用状态"
+                          }
+                        },
+                        on: { change: _vm.changeStatus }
+                      })
+                    ],
+                    1
+                  )
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-sm-12" }, [
+                  _c("label", [_vm._v("备注信息")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.newEducation.remarks,
+                        expression: "newEducation.remarks"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { type: "text", placeholder: "备注信息" },
+                    domProps: { value: _vm.newEducation.remarks },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.newEducation,
+                          "remarks",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ])
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              attrs: { slot: "footer-commit-text" },
+              slot: "footer-commit-text"
+            },
+            [_vm._v("添 加")]
+          )
+        ]
+      ),
+      _vm._v(" "),
+      _c("vue-snotify")
+    ],
+    1
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("NO.")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("描 述")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("顺序号")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("是否为初值")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("当前状态")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("备注信息")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("创建时间")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("操 作")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticStyle: { width: "122px" } }, [
+      _c("button", { staticClass: "edit btn btn-xxs btn-default" }, [
+        _c("i", {
+          staticClass: "fa fa-pencil-square-o",
+          attrs: { "aria-hidden": "true" }
+        }),
+        _vm._v(" 改")
+      ]),
+      _vm._v(" "),
+      _c("button", { staticClass: "del btn btn-xxs btn-danger" }, [
+        _c("i", {
+          staticClass: "fa fa-pencil-square-o",
+          attrs: { "aria-hidden": "true" }
+        }),
+        _vm._v(" 删")
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-4332b664", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

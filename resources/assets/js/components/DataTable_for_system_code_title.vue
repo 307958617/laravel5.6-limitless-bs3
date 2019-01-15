@@ -33,14 +33,14 @@
         </table>
 
         <department_modal v-show="showAddTitleModel" @close="closeAddTitle" @commit="addTitle">
-            <div slot="head-title">新增性别类型</div>
+            <div slot="head-title">新增职称类型</div>
             <div slot="body">
                 <div class="form-group">
                     <div class="row">
                         <div class="col-sm-6">
                             <label>描 述<span class="text-danger">*</span></label>
-                            <input type="text" @input="checkDescription"  v-model="newTitle.description" placeholder="性别类型描述" :class="{'form-control': true, 'is-invalid': errors.has('性别类型') }" v-validate="'required|unique_gender'" name="性别类型">
-                            <div v-show="errors.has('性别类型')" class="text-danger">{{ errors.first('性别类型') }}</div>
+                            <input type="text" @input="checkDescription"  v-model="newTitle.description" placeholder="职称类型描述" :class="{'form-control': true, 'is-invalid': errors.has('职称类型') }" v-validate="'required|unique_title'" name="职称类型">
+                            <div v-show="errors.has('职称类型')" class="text-danger">{{ errors.first('职称类型') }}</div>
                         </div>
 
                         <div class="col-sm-6">
@@ -306,7 +306,7 @@
                 //需要判断时新增还是编辑窗口，如果时编辑窗口，那么验证的时候就必须排除当前选中的部门名称isEdit:that.isEditDepartmentName
                 let that = this;
                 //判断部门名称的唯一性
-                this.$validator.extend('unique_gender',{
+                this.$validator.extend('unique_title',{
                     validate: value => {
                         const promise = new Promise(function(resolve, reject) {
                             axios.post('/system_code/validate/title',{description:that.newTitle.description,isEdit:that.isEditNewGenderDescription}).then(res=> {

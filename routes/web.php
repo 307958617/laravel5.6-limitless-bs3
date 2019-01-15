@@ -44,6 +44,11 @@ Route::post('/system_code/add/post', 'SystemCodeController@add_post')->name('add
 Route::post('/system_code/validate/post', 'SystemCodeController@validate_post')->name('validate_post');
 Route::get('/system_code/get/post/used', 'SystemCodeController@get_used_post')->name('get_used_post');
 
+Route::get('/system_code/get/education', 'SystemCodeController@get_education')->name('get_education');
+Route::post('/system_code/add/education', 'SystemCodeController@add_education')->name('add_education');
+Route::post('/system_code/validate/education', 'SystemCodeController@validate_education')->name('validate_education');
+Route::get('/system_code/get/education/used', 'SystemCodeController@get_used_education')->name('get_used_education');
+
 
 //注册时发送邮件验证
 Route::get('email/verify/{token}', 'EmailController@verify')->name('verify.email');

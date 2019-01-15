@@ -32,11 +32,10 @@
                             </div>
 
                             <div class="tab-pane has-padding" id="left-tab3">
-                                Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid laeggin.
+                                <data-table-for-system-code-post></data-table-for-system-code-post>
                             </div>
-
                             <div class="tab-pane has-padding" id="left-tab4">
-                                Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid laeggin.
+                                <data-table-for-system-code-education></data-table-for-system-code-education>
                             </div>
                         </div>
                     </div>

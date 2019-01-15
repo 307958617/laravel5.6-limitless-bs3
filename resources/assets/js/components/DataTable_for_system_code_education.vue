@@ -1,7 +1,7 @@
 <template>
     <!-- Column selectors -->
     <div>
-        <table class="table datatable-system-code-post">
+        <table class="table datatable-system-code-education">
             <thead>
             <tr>
                 <th>NO.</th>
@@ -16,14 +16,14 @@
             </thead>
             <!--这里需要特别注意！！！，@click事件必须放到tbody上面，如果放到tr上，那么新增加的行的点击事件将不会被触发-->
             <tbody @click="showEditModel($event)">
-                <tr v-for="po in post">
-                    <td>{{ po.order?po.order:'0' }}</td> <!-- 默认排序为order字段，datatable必须将order放到第一列才行 -->
-                    <td>{{ po.description }}</td><!-- 上级部门的id -->
-                    <td>{{ po.order?po.order:'0' }}</td>
-                    <td><span :class="[po.isFirst==='T'? 'label label-success' : 'label label-default']">{{ po.isFirst==='T'?'是':'否' }}</span></td>
-                    <td><span :class="[po.status==='T'? 'label label-success' : 'label label-danger']">{{ po.status==='T'?'已启用':'未启用' }}</span></td>
-                    <td>{{ po.remarks?po.remarks:'/' }}</td>
-                    <td>{{ po.created_at }}</td>
+                <tr v-for="edu in education">
+                    <td>{{ edu.order?edu.order:'0' }}</td> <!-- 默认排序为order字段，datatable必须将order放到第一列才行 -->
+                    <td>{{ edu.description }}</td><!-- 上级部门的id -->
+                    <td>{{ edu.order?edu.order:'0' }}</td>
+                    <td><span :class="[edu.isFirst==='T'? 'label label-success' : 'label label-default']">{{ edu.isFirst==='T'?'是':'否' }}</span></td>
+                    <td><span :class="[edu.status==='T'? 'label label-success' : 'label label-danger']">{{ edu.status==='T'?'已启用':'未启用' }}</span></td>
+                    <td>{{ edu.remarks?po.remarks:'/' }}</td>
+                    <td>{{ edu.created_at }}</td>
                     <td style="width: 122px;">
                         <button class="edit btn btn-xxs btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 改</button>
                         <button class="del btn btn-xxs btn-danger"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 删</button>
@@ -32,20 +32,20 @@
             </tbody>
         </table>
 
-        <department_modal v-show="showAddPostModel" @close="closeAddPost" @commit="addPost">
-            <div slot="head-title">新增职务类型</div>
+        <department_modal v-show="showAddEducationModel" @close="closeAddEducation" @commit="addEducation">
+            <div slot="head-title">新增学历类型</div>
             <div slot="body">
                 <div class="form-group">
                     <div class="row">
                         <div class="col-sm-6">
                             <label>描 述<span class="text-danger">*</span></label>
-                            <input type="text" @input="checkDescription"  v-model="newPost.description" placeholder="职务类型描述" :class="{'form-control': true, 'is-invalid': errors.has('职务类型') }" v-validate="'required|unique_post'" name="职务类型">
-                            <div v-show="errors.has('职务类型')" class="text-danger">{{ errors.first('职务类型') }}</div>
+                            <input type="text" @input="checkDescription"  v-model="newEducation.description" placeholder="学历类型描述" :class="{'form-control': true, 'is-invalid': errors.has('学历类型') }" v-validate="'required|unique_education'" name="学历类型">
+                            <div v-show="errors.has('学历类型')" class="text-danger">{{ errors.first('学历类型') }}</div>
                         </div>
 
                         <div class="col-sm-6">
                             <label>排序NO.</label>
-                            <input type="text" v-model="newPost.order" placeholder="数值越大排名越靠前,默认为0" class="form-control">
+                            <input type="text" v-model="newEducation.order" placeholder="数值越大排名越靠前,默认为0" class="form-control">
                         </div>
                     </div>
                 </div>
@@ -55,7 +55,7 @@
                             <label>是否设为初始值</label>
                             <!--<input type="text" v-model="newDepartment.status" placeholder="" class="form-control">-->
                             <div>
-                                <toggle-button @change="changeIsFirst" :sync="true" :v-model="newPost.isFirst" :value="newPost.isFirst==='T'" :width="58" :height="34" :labels="{checked: '是', unchecked: '否'}"/>
+                                <toggle-button @change="changeIsFirst" :sync="true" :v-model="newEducation.isFirst" :value="newEducation.isFirst==='T'" :width="58" :height="34" :labels="{checked: '是', unchecked: '否'}"/>
                             </div>
                         </div>
 
@@ -63,7 +63,7 @@
                             <label>启用标志</label>
                             <!--<input type="text" v-model="newDepartment.status" placeholder="" class="form-control">-->
                             <div>
-                                <toggle-button @change="changeStatus" :sync="true" :v-model="newPost.status" :value="newPost.status==='T'" :width="140" :height="34" :labels="{checked: '当前处于启用状态', unchecked: '当前处于停用状态'}"/>
+                                <toggle-button @change="changeStatus" :sync="true" :v-model="newEducation.status" :value="newEducation.status==='T'" :width="140" :height="34" :labels="{checked: '当前处于启用状态', unchecked: '当前处于停用状态'}"/>
                             </div>
                         </div>
                     </div>
@@ -72,7 +72,7 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <label>备注信息</label>
-                            <input type="text" v-model="newPost.remarks" placeholder="备注信息" class="form-control">
+                            <input type="text" v-model="newEducation.remarks" placeholder="备注信息" class="form-control">
                         </div>
                     </div>
                 </div>
@@ -80,20 +80,20 @@
             <div slot="footer-commit-text">添 加</div>
         </department_modal>
 
-        <department_modal v-show="showEditGenderModel" @close="closeEditModal" @commit="addPost">
+        <department_modal v-show="showEditGenderModel" @close="closeEditModal" @commit="addEducation">
             <div slot="head-title">修改职称类型</div>
             <div slot="body">
                 <div class="form-group">
                     <div class="row">
                         <div class="col-sm-6">
                             <label>描 述<span class="text-danger">*</span></label>
-                            <input type="text" @input="checkDescription"  v-model="newPost.description" placeholder="性别类型描述" :class="{'form-control': true, 'is-invalid': errors.has('性别类型') }" v-validate="'required|unique_gender'" name="性别类型">
+                            <input type="text" @input="checkDescription"  v-model="newEducation.description" placeholder="性别类型描述" :class="{'form-control': true, 'is-invalid': errors.has('性别类型') }" v-validate="'required|unique_gender'" name="性别类型">
                             <div v-show="errors.has('性别类型')" class="text-danger">{{ errors.first('性别类型') }}</div>
                         </div>
 
                         <div class="col-sm-6">
                             <label>排序NO.</label>
-                            <input type="text" v-model="newPost.order" placeholder="数值越大排名越靠前,默认为0" class="form-control">
+                            <input type="text" v-model="newEducation.order" placeholder="数值越大排名越靠前,默认为0" class="form-control">
                         </div>
                     </div>
                 </div>
@@ -103,7 +103,7 @@
                             <label>是否设为初始值</label>
                             <!--<input type="text" v-model="newDepartment.status" placeholder="" class="form-control">-->
                             <div>
-                                <toggle-button @change="changeIsFirst" :sync="true" :v-model="newPost.isFirst" :value="newPost.isFirst==='T'" :width="58" :height="34" :labels="{checked: '是', unchecked: '否'}"/>
+                                <toggle-button @change="changeIsFirst" :sync="true" :v-model="newEducation.isFirst" :value="newEducation.isFirst==='T'" :width="58" :height="34" :labels="{checked: '是', unchecked: '否'}"/>
                             </div>
                         </div>
 
@@ -111,7 +111,7 @@
                             <label>启用标志</label>
                             <!--<input type="text" v-model="newDepartment.status" placeholder="" class="form-control">-->
                             <div>
-                                <toggle-button @change="changeStatus" :sync="true" :v-model="newPost.status" :value="newPost.status==='T'" :width="140" :height="34" :labels="{checked: '当前处于启用状态', unchecked: '当前处于停用状态'}"/>
+                                <toggle-button @change="changeStatus" :sync="true" :v-model="newEducation.status" :value="newEducation.status==='T'" :width="140" :height="34" :labels="{checked: '当前处于启用状态', unchecked: '当前处于停用状态'}"/>
                             </div>
                         </div>
                     </div>
@@ -120,7 +120,7 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <label>备注信息</label>
-                            <input type="text" v-model="newPost.remarks" placeholder="备注信息" class="form-control">
+                            <input type="text" v-model="newEducation.remarks" placeholder="备注信息" class="form-control">
                         </div>
                     </div>
                 </div>
@@ -147,9 +147,9 @@
     export default {
         data() {
             return {
-                showAddPostModel:false,
+                showAddEducationModel:false,
                 showEditGenderModel:false,
-                post:[],
+                education:[],
                 treeselectLists:[],//所有的节点
                 //注意，这里必须要用自定义，不然显示不出来的
                 normalizer(node) {
@@ -160,7 +160,7 @@
                 },
                 selectedRow:{},//当前选中的行
                 isEditNewGenderDescription:'',
-                newPost: {
+                newEducation: {
                     description:'',
                     order:null,
                     created_at:'',
@@ -178,9 +178,9 @@
 
         mounted() {
             this.$nextTick(function() {
-                this.getPost().then((response) => {
+                this.getEducation().then((response) => {
                     // do what you need to do
-                    this.post = response.data;
+                    this.education = response.data;
                     console.log(response.data)
                 }).then(() => {
                     // execute the call to render the table, now that you have the data you need
@@ -193,21 +193,21 @@
             } );
         },
         methods: {
-            getPost() {
-               return axios.get('/system_code/get/post')
+            getEducation() {
+               return axios.get('/system_code/get/education')
             },
-            showAddPost() {
+            showAddEducation() {
                 //模态框重新显示之前，清空所有的验证提示消息。
                 this.errors.clear();
-                this.showAddPostModel = true;
+                this.showAddEducationModel = true;
                 //模态框弹出的时候禁止底层body滚动
                 $('body').css('overflow','hidden');
-                console.log('showAddPost')
+                console.log('showAddEducation')
             },
-            closeAddPost() {
-                this.showAddPostModel = false;
+            closeAddEducation() {
+                this.showAddEducationModel = false;
                 //模态框关闭的时候清空表中的数据为初始值
-                this.newPost = {
+                this.newEducation = {
                     description:'',
                     order:null,
                     created_at:'',
@@ -224,7 +224,7 @@
                     this.showEditGenderModel = true;
                     this.reloadOptions();
                     $('body').css('overflow','hidden');
-                    let table = $('.datatable-system-code-post').DataTable();
+                    let table = $('.datatable-system-code-education').DataTable();
                     let tr = $(e.target.closest('tr'));
                     let row = table.row(tr.get(0));
                     this.selectedRow = row;
@@ -247,7 +247,7 @@
                 this.showEditGenderModel = false;
                 this.isEditGenderName = '';
                 //模态框关闭的时候清空表中的数据为初始值
-                this.newPost = {
+                this.newEducation = {
                     description:'',
                     order:null,
                     created_at:'',
@@ -265,7 +265,7 @@
 //                        console.log(this.newDepartment);
 //                        console.log(this.isEditDepartmentName);
 //                        axios.post('/departments/edit',{department:this.newDepartment,isEdit:this.isEditDepartmentName}).then(res=> {
-//                            let table = $('.datatable-system-code-post').DataTable();
+//                            let table = $('.datatable-system-code-education').DataTable();
 //                            let data = [
 //                                this.newDepartment.order?this.newDepartment.order:0,
 //                                this.newDepartment.pid,
@@ -289,27 +289,27 @@
 //                })
 //            },
             changeStatus() {
-                if(this.newPost.status==='T') {
-                    this.newPost.status = 'F'
+                if(this.newEducation.status==='T') {
+                    this.newEducation.status = 'F'
                 }else {
-                    this.newPost.status = 'T'
+                    this.newEducation.status = 'T'
                 }
             },
             changeIsFirst() {
-                if(this.newPost.isFirst==='T') {
-                    this.newPost.isFirst = 'F'
+                if(this.newEducation.isFirst==='T') {
+                    this.newEducation.isFirst = 'F'
                 }else {
-                    this.newPost.isFirst = 'T'
+                    this.newEducation.isFirst = 'T'
                 }
             },
             checkDescription() {
                 //需要判断时新增还是编辑窗口，如果时编辑窗口，那么验证的时候就必须排除当前选中的部门名称isEdit:that.isEditDepartmentName
                 let that = this;
                 //判断部门名称的唯一性
-                this.$validator.extend('unique_gender',{
+                this.$validator.extend('unique_education',{
                     validate: value => {
                         const promise = new Promise(function(resolve, reject) {
-                            axios.post('/system_code/validate/post',{description:that.newPost.description,isEdit:that.isEditNewGenderDescription}).then(res=> {
+                            axios.post('/system_code/validate/education',{description:that.newEducation.description,isEdit:that.isEditNewGenderDescription}).then(res=> {
                                 resolve(res.data.data);
                                 console.log(res.data.data);
                                 console.log(that.isEditNewGenderDescription)
@@ -322,19 +322,19 @@
                     }
                 })
             },
-            addPost() {
+            addEducation() {
                 this.$validator.validateAll().then((result)=> {//验证是否符合表单规则
                     if(result) {//如果符合才提交
-                        axios.post('/system_code/add/post',{post:this.newPost}).then(res=> {
-                            let table = $('.datatable-system-code-post').DataTable();
+                        axios.post('/system_code/add/education',{education:this.newEducation}).then(res=> {
+                            let table = $('.datatable-system-code-education').DataTable();
                             //增加一行数据
 //                            table.row.add([
-//                                this.newPost.order,
-//                                this.newPost.description,
-//                                this.newPost.order?this.newPost.order:'0',
-//                                this.newPost.isFirst==='T'?'<span class="label label-success">是</span>':'<span class="label label-default">否</span>',
-//                                this.newPost.status==='T'?'<span class="label label-success">已启用</span>':'<span class="label label-danger">未启用</span>',
-//                                this.newPost.remarks?this.newPost.remarks:'/',
+//                                this.newEducation.order,
+//                                this.newEducation.description,
+//                                this.newEducation.order?this.newEducation.order:'0',
+//                                this.newEducation.isFirst==='T'?'<span class="label label-success">是</span>':'<span class="label label-default">否</span>',
+//                                this.newEducation.status==='T'?'<span class="label label-success">已启用</span>':'<span class="label label-danger">未启用</span>',
+//                                this.newEducation.remarks?this.newEducation.remarks:'/',
 //                                moment(res.data[0]['date']).format("YYYY-MM-DD HH:mm:ss"),//格式化日期
 //                                '<button class="edit btn btn-xxs btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 改</button>'+
 //                                '<button class="edit btn btn-xxs btn-danger"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 删</button>',
@@ -343,14 +343,14 @@
                             console.log(table.data());
                             table.destroy();
                             //重建表格
-                            this.getPost().then((response) => {
+                            this.getEducation().then((response) => {
                                 // do what you need to do
-                                this.post = response.data;
+                                this.education = response.data;
                             }).then(() => {
                                 // execute the call to render the table, now that you have the data you need
                                 this.tableSetup();
                             });
-                            this.closeAddPost();
+                            this.closeAddEducation();
                             console.log(res.data[0]['date']);
                             this.$snotify.success('添加成功！');
                         }).catch(error=> {
@@ -387,7 +387,7 @@
                         }
                     });
                     // Column selectors
-                    let t = $('.datatable-system-code-post').DataTable({
+                    let t = $('.datatable-system-code-education').DataTable({
                         buttons: {
                             buttons: [
                                 {
@@ -440,17 +440,17 @@
                     });
 
                     //增加一个按钮在后面用来添加项目用的
-                    $('#DataTables_Table_2_filter').after(
+                    $('#DataTables_Table_3_filter').after(
                         '<div class="dt-buttons">  ' +
-                          '<button class="showAddPost dt-button btn btn-primary" tabindex="0" type="button">' +
+                          '<button class="showAddEducation dt-button btn btn-primary" tabindex="0" type="button">' +
                            '<span><i aria-hidden="true" class="fa fa-plus"></i> 新 增</span>' +
                           '</button>  ' +
                         '</div>'
                     );
 
                     //显示添加窗口
-                    $('.showAddPost').click(function () {
-                        that.showAddPost();
+                    $('.showAddEducation').click(function () {
+                        that.showAddEducation();
                     })
                 });
             }

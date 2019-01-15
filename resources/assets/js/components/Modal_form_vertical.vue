@@ -73,6 +73,10 @@
         getMessage: 性别类型 => '该性别类型已经存在，请修改！',
         validate: value => !! value
     });
+    Validator.extend('unique_title', {
+        getMessage: 性别类型 => '该职称类型已经存在，请修改！',
+        validate: value => !! value
+    });
     //自定义部门电话判断提示--结束
     export default {
         methods: {

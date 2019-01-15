@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Gender;
 use App\Post;
+use App\Education;
 use App\Title;
 use Illuminate\Http\Request;
 
@@ -197,5 +198,65 @@ class SystemCodeController extends Controller
             'remarks' => $post['remarks'],
         ]);
         return [$new_post->created_at];
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    //获取'学历'表的数据
+    public function get_education()
+    {
+        $education = Education::all();
+        return $education;
+    }
+
+    //获取正在使用的'学历'表的数据
+    public function get_used_education()
+    {
+        $education_used = Education::where('status','T')->get();
+        $default_selectId = Education::where('isFirst','T')->value('id');
+        return [$education_used,$default_selectId];
+    }
+
+    //验证学历描述description是否重名
+    public function validate_education(Request $request)
+    {
+        $description = $request->get('description');
+        $isEdit = $request->get('isEdit');
+        $collect= Education::all()->pluck('description');
+        $collect2 = $collect->diff([$isEdit]);
+        if($isEdit) {//判断是否打开的是编辑窗口，如果是编辑窗口，将不检测当前编辑的学历描述
+            $descriptions = $collect2;
+        }else {
+            $descriptions = $collect;
+        }
+
+        if ($descriptions->contains($description)) {
+            return response()->json(['data'=>true]);
+        }
+        return response()->json(['data'=>false]);
+    }
+
+    public function add_education(Request $request)
+    {
+        $education = $request->get('post');
+
+        $isFirst_exist_T =  Education::where('isFirst','T')->exists();
+
+        if($education['isFirst']==='T') {
+            Education::where('isFirst','T')->update(['isFirst'=>'F']);
+        }
+
+        if($isFirst_exist_T) {
+            $isFirst = $education['isFirst'];
+        }else {
+            $isFirst = 'T';
+        }
+        $new_education = Education::create([
+            'description' => $education['description'],
+            'isFirst' => $isFirst,
+            'order' => $education['order'],
+            'status' => $education['status'],
+            'remarks' => $education['remarks'],
+        ]);
+        return [$new_education->created_at];
     }
 }

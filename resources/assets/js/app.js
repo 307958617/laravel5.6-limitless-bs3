@@ -30,6 +30,8 @@ Vue.component('data-table-for-department', require('./components/DataTable_for_d
 Vue.component('data-table-for-user', require('./components/DataTable_for_user.vue'));
 Vue.component('data-table-for-system-code-gender', require('./components/DataTable_for_system_code_gender.vue'));
 Vue.component('data-table-for-system-code-title', require('./components/DataTable_for_system_code_title.vue'));
+Vue.component('data-table-for-system-code-post', require('./components/DataTable_for_system_code_post.vue'));
+Vue.component('data-table-for-system-code-education', require('./components/DataTable_for_system_code_education.vue'));
 Vue.component('system-code', require('./components/System_code.vue'));
 
 const app = new Vue({
